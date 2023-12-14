@@ -18,8 +18,8 @@ task("sellSqueeth", "Sell Weth from the pool")
     const weth = await getWETH(ethers, deployer, network.name)
     const squeeth = await ethers.getContract("WPowerPerp", deployer);
 
-    const oSqthDecimal = 18
-    const oSqthAmount = BigNumber.from(inputAmount).mul(BigNumber.from(10).pow(oSqthDecimal))
+    const SBCHDecimal = 18
+    const SBCHAmount = BigNumber.from(inputAmount).mul(BigNumber.from(10).pow(SBCHDecimal))
 
     const sqthBalance = await squeeth.balanceOf(deployer)
 
@@ -30,7 +30,7 @@ task("sellSqueeth", "Sell Weth from the pool")
     // }
 
     const sqthAllowance = await squeeth.allowance(deployer, squeeth.address)
-    if (sqthAllowance.lt(oSqthAmount)) {
+    if (sqthAllowance.lt(SBCHAmount)) {
       console.log('Approving sqth')
       const tx = await squeeth.approve(swapRouter.address, ethers.constants.MaxUint256)
       tx.wait()
@@ -42,13 +42,13 @@ task("sellSqueeth", "Sell Weth from the pool")
       fee: 3000, // uint24
       recipient: deployer, // address
       deadline: Math.floor(Date.now() / 1000 + 86400), // uint256
-      amountIn: oSqthAmount, // uint256
+      amountIn: SBCHAmount, // uint256
       amountOutMinimum: 0, // uint256 // no slippage control now
       sqrtPriceLimitX96: 0, // uint160
     }
 
     const tx = await swapRouter.exactInputSingle(exactInputParam)
     tx.wait()
-    console.log(`Sold oSqth to Uni Pool successfully`)
+    console.log(`Sold SBCH to Uni Pool successfully`)
 
   });

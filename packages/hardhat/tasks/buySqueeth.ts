@@ -6,7 +6,7 @@ import { getUniswapDeployments, getWETH } from "./utils";
 /**
  npx hardhat buySqueeth --input '0.1'
  */
-task("buySqueeth", "Buy Squeeth from the pool")
+task("buySqueeth", "Buy Strike from the pool")
   .addParam('input', 'amount weth paying', '0.05', types.string)
   .setAction(async ({input: inputAmount}, hre) => {
   const { getNamedAccounts, ethers, network } = hre;

@@ -41,13 +41,13 @@ struct DepositAuctionParams {
     uint256 depositsQueued;
     /// @dev minETH equivalent to get from uniswap of the USDC to deposit
     uint256 minEth;
-    /// @dev total ETH to deposit after selling the minted SQTH
+    /// @dev total BCH to deposit after selling the minted SBCH
     uint256 totalDeposit;
     /// @dev orders to buy sqth
     Order[] orders;
     /// @dev price from the auction to sell sqth
     uint256 clearingPrice;
-    /// @dev remaining ETH to flashDeposit
+    /// @dev remaining BCH to flashDeposit
     uint256 ethToFlashDeposit;
     /// @dev fee to pay uniswap for ethUSD swap
     uint24 ethUSDFee;
@@ -63,7 +63,7 @@ struct WithdrawAuctionParams {
     Order[] orders;
     /// @dev price that the auction pays for the purchased sqth
     uint256 clearingPrice;
-    /// @dev minUSDC to receive from swapping the ETH obtained by withdrawing
+    /// @dev minUSDC to receive from swapping the BCH obtained by withdrawing
     uint256 minUSDC;
     /// @dev uniswap fee for swapping eth to USD;
     uint24 ethUSDFee;
@@ -91,7 +91,7 @@ struct Receipt {
  * N8: Not enough withdrawals to net
  * N9: signature incorrect
  * N10: order expired
- * N11: Min ETH out too low
+ * N11: Min BCH out too low
  * N12: auction order not buying sqth
  * N13: buy order price less than clearing
  * N14: not enough buy orders for sqth
@@ -837,7 +837,7 @@ contract CrabNetting is Ownable, EIP712 {
     /**
      * @notice check that the proposed sale price is within a tolerance of the current Uniswap twap
      * @param _price clearing price provided by manager
-     * @param _isAuctionBuying is crab buying or selling oSQTH
+     * @param _isAuctionBuying is crab buying or selling SBCH
      */
     function _checkOTCPrice(uint256 _price, bool _isAuctionBuying) internal view {
         // Get twap

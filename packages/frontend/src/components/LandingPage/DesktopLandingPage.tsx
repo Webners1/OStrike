@@ -4,7 +4,7 @@ import logo from 'public/images/OpynLogo.svg'
 import LandingPageBackground from 'public/images/landing/athena1-desktop.png'
 import LandingPageBackgroundDown from 'public/images/landing-page-background-down.svg'
 import LandingTitle from 'public/images/landing/landing-title.png'
-import Squeeth from 'public/images/landing/squeeth.png'
+import Strike from 'public/images/landing/squeeth.png'
 import Link from 'next/link'
 import Strategies from 'public/images/landing/strategies.png'
 import Auction from 'public/images/landing/auction.png'
@@ -291,7 +291,7 @@ const useStyles = makeStyles((theme) =>
 
 const navLinks = [
   { label: 'Strategies', link: '/strategies/crab' },
-  { label: 'Squeeth', link: '/squeeth' },
+  { label: 'Strike', link: '/squeeth' },
   { label: 'Auction', link: 'https://squeethportal.xyz', analyticsEvent: SITE_EVENTS.NAV_AUCTION },
   {
     label: 'FAQ',
@@ -356,7 +356,7 @@ function DesktopLandingPage() {
           <div className={classes.introSectionLeft}>
             <div>
               <Typography variant="h1" className={clsx([classes.introSectionHeading, classes.gradientText])}>
-                Stack your ETH
+                Stack your BCH
               </Typography>
               <Typography variant="h1" className={clsx([classes.introSectionHeading, classes.gradientText])}>
                 & stables.
@@ -414,7 +414,7 @@ function DesktopLandingPage() {
               </Typography>
               <div style={{ marginTop: '41px' }} />
               <Typography variant="h3" className={classes.contentSectionSubTitle}>
-                Bet on ETH with unlimited upside,
+                Bet on BCH with unlimited upside,
               </Typography>
               <Typography variant="h3" className={classes.contentSectionSubTitle}>
                 protected downside, and no liquidations.
@@ -422,14 +422,14 @@ function DesktopLandingPage() {
               <div style={{ marginTop: '41px' }} />
               <Link href={'/squeeth'} passHref>
                 <Button onClick={() => track(LANDING_EVENTS.NAV_HERO_SQUEETH)} className={classes.contentSectionButton}>
-                  Trade Squeeth
+                  Trade Strike
                 </Button>
               </Link>
             </div>
           </div>
           <div className={classes.imageSectionRight}>
             <div className={classes.imageSection}>
-              <Image src={Squeeth} alt="Squeeth Image" placeholder="blur" />
+              <Image src={Strike} alt="Strike Image" placeholder="blur" />
             </div>
           </div>
         </div>
@@ -450,7 +450,7 @@ function DesktopLandingPage() {
               </Typography>
               <div style={{ marginTop: '41px' }} />
               <Typography variant="h3" className={classes.contentSectionSubTitle}>
-                ETH and USDC strategies to
+                BCH and USDC strategies to
               </Typography>
               <Typography variant="h3" className={classes.contentSectionSubTitle}>
                 supercharge your portfolio.

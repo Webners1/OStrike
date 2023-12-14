@@ -370,7 +370,7 @@ const PositionCard: React.FC = () => {
               value={
                 <div className={classes.postAmount}>
                   <Typography component="span" className={classes.amountText} id="position-card-positive-value">
-                    0 oSQTH
+                    0 SBCH
                   </Typography>
                   <Typography component="span" className={clsx(classes.amountText, classes.positionUsdValue)}>
                     {Number(0).toFixed(2)}%
@@ -383,7 +383,7 @@ const PositionCard: React.FC = () => {
               label="Redeemable collateral"
               value={
                 <Typography variant="body1" className={classes.amountText}>
-                  {isPositionLoading && existingCollat.isEqualTo(0) ? 'loading' : existingCollat.toFixed(4)} ETH
+                  {isPositionLoading && existingCollat.isEqualTo(0) ? 'loading' : existingCollat.toFixed(4)} BCH
                 </Typography>
               }
             />
@@ -432,7 +432,7 @@ const PositionCard: React.FC = () => {
                     )}
                   </Box>
                   <Typography component="span" className={clsx(classes.amountText, classes.amountUnit)} variant="body2">
-                    oSQTH
+                    SBCH
                   </Typography>
 
                   {!isDollarValueLoading && (

@@ -28,7 +28,7 @@ const CrabMetricsV2: React.FC = () => {
     <Box display="flex" alignItems="center" flexWrap="wrap" gridGap="12px" marginTop="32px">
       <Metric
         flexBasis="250px"
-        label={<MetricLabel label="ETH Price" tooltipTitle={Tooltips.SpotPrice} />}
+        label={<MetricLabel label="BCH Price" tooltipTitle={Tooltips.SpotPrice} />}
         value={formatCurrency(ethPrice.toNumber())}
       />
       <Metric
@@ -67,7 +67,7 @@ const CrabMetricsV2: React.FC = () => {
                 minute: 'numeric',
                 timeZoneName: 'long',
               }) +
-              '. Hedges approximately 3 times a week (on MWF) or every 20% ETH price move'
+              '. Hedges approximately 3 times a week (on MWF) or every 20% BCH price move'
             }
           />
         }

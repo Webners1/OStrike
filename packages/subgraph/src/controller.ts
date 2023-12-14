@@ -428,15 +428,15 @@ function getTransactionDetail(
   vaultHistory.from = from;
   vaultHistory.sender = sender;
   vaultHistory.ethCollateralAmount = BigInt.zero()
-  vaultHistory.oSqthAmount = BigInt.zero();
+  vaultHistory.SBCHAmount = BigInt.zero();
 
   if (action == "DEPOSIT_COLLAT" || action == "WITHDRAW_COLLAT") {
     vaultHistory.ethCollateralAmount = amount;
   } else if (action == "LIQUIDATE") {
     vaultHistory.ethCollateralAmount = amount;
-    vaultHistory.oSqthAmount = debtAmount;
+    vaultHistory.SBCHAmount = debtAmount;
   } else {
-    vaultHistory.oSqthAmount = amount;
+    vaultHistory.SBCHAmount = amount;
   }
 
   return vaultHistory as VaultHistory;

@@ -64,10 +64,10 @@ export const StrategyInfo: React.FC = () => {
   return (
     <div className={classes.container}>
       <FormControl className={classes.radioTitle}>
-        <FormLabel>Before the next hedge, if ETH approximately</FormLabel>
+        <FormLabel>Before the next hedge, if BCH approximately</FormLabel>
         <RadioGroup
           row
-          name="At the end of one day, if ETH approximately"
+          name="At the end of one day, if BCH approximately"
           value={profitToggle}
           onChange={(event) => setProfitToggle(event.target.value)}
         >
@@ -98,7 +98,7 @@ export const StrategyInfo: React.FC = () => {
         )}
       </div>
       <Typography variant="subtitle1" className={clsx(classes.caption, classes.fontColor)}>
-        Based on current premiums, crab strategy would be unprofitable if ETH moves more than the profit threshold of
+        Based on current premiums, crab strategy would be unprofitable if BCH moves more than the profit threshold of
         approximately <b>{(profitableMovePercent * 100).toFixed(2)}%</b> in either direction between 2 day hedges. Crab
         hedges approximately three times a week (on MWF). Crab aims to be profitable in USD terms.
       </Typography>
@@ -108,13 +108,13 @@ export const StrategyInfo: React.FC = () => {
       </Typography>
       <Typography variant="subtitle1" className={clsx(classes.content, classes.fontColor)}>
         If the Crab Strategy falls below the safe collateralization threshold (150%), the strategy is at risk of
-        liquidation. Rebalancing based on large ETH price changes helps prevent a liquidation from occurring.
+        liquidation. Rebalancing based on large BCH price changes helps prevent a liquidation from occurring.
         <br /> <br />
-        Based on current premiums, crab strategy would be unprofitable if ETH moves more than approximately{' '}
+        Based on current premiums, crab strategy would be unprofitable if BCH moves more than approximately{' '}
         {(profitableMovePercent * 100).toFixed(2)}% in either direction before the next hedge. The implied premium which
         you deposit at impacts your profitability. Depositing at a high premium increases likelihood of profitability.
         <br /> <br />
-        If the Squeeth premium to ETH increases, the strategy will incur a loss because it will be more expensive to
+        If the Strike premium to BCH increases, the strategy will incur a loss because it will be more expensive to
         close the position. Crab aims to be profitable in USD terms.
         <a
           className={classes.link}

@@ -22,7 +22,7 @@ import {
   YEAR,
 } from '@constants/index'
 import { useGetFlashWithdrawParams, useBullFlashWithdraw } from '@state/bull/hooks'
-import { impliedVolAtom, indexAtom, normFactorAtom, osqthRefVolAtom } from '@state/controller/atoms'
+import { impliedVolAtom, indexAtom, normFactorAtom, SBCHRefVolAtom } from '@state/controller/atoms'
 import { useSelectWallet } from '@state/wallet/hooks'
 import { toTokenAmount } from '@utils/calculations'
 import { formatNumber } from '@utils/formatter'
@@ -61,7 +61,7 @@ const BullWithdraw: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) 
   const connected = useAtomValue(connectedWalletAtom)
   const supportedNetwork = useAtomValue(supportedNetworkAtom)
   const bullPositionValueInEth = useAtomValue(bullCurrentETHPositionAtom)
-  const osqthRefVol = useAtomValue(osqthRefVolAtom)
+  const SBCHRefVol = useAtomValue(SBCHRefVolAtom)
 
   const selectWallet = useSelectWallet()
 
@@ -82,7 +82,7 @@ const BullWithdraw: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) 
     priceImpact: 0,
     ethInForSqth: BIG_ZERO,
     ethInForUsdc: BIG_ZERO,
-    oSqthOut: BIG_ZERO,
+    SBCHOut: BIG_ZERO,
     usdcOut: BIG_ZERO,
     poolFee: 0,
   })
@@ -99,7 +99,7 @@ const BullWithdraw: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) 
   const [trackWithdrawAmountEnteredOnce, resetTracking] = useExecuteOnce(trackUserEnteredWithdrawAmount)
 
   const showPriceImpactWarning = useAppMemo(() => {
-    const squeethPrice = quote.ethInForSqth.div(quote.oSqthOut).times(1 - UNI_POOL_FEES / 1000_000)
+    const squeethPrice = quote.ethInForSqth.div(quote.SBCHOut).times(1 - UNI_POOL_FEES / 1000_000)
     const scalingFactor = new BigNumber(INDEX_SCALE)
     const fundingPeriod = new BigNumber(FUNDING_PERIOD).div(YEAR)
     const executionVol = new BigNumber(
@@ -113,20 +113,20 @@ const BullWithdraw: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) 
       .gt(BigNumber.max(new BigNumber(impliedVol).times(VOL_PERCENT_SCALAR), VOL_PERCENT_FIXED))
 
     return showPriceImpactWarning
-  }, [quote.ethInForSqth, quote.oSqthOut, normFactor, ethIndexPrice, impliedVol])
+  }, [quote.ethInForSqth, quote.SBCHOut, normFactor, ethIndexPrice, impliedVol])
 
   const withdrawFundingWarning = useAppMemo(() => {
     const impliedVolDiff = new BigNumber(VOL_PERCENT_SCALAR)
     const impliedVolDiffLowVol = new BigNumber(VOL_PERCENT_FIXED)
 
     const threshold = BigNumber.max(
-      new BigNumber(osqthRefVol / 100).times(new BigNumber(1).plus(impliedVolDiff)),
-      new BigNumber(osqthRefVol / 100).plus(impliedVolDiffLowVol),
+      new BigNumber(SBCHRefVol / 100).times(new BigNumber(1).plus(impliedVolDiff)),
+      new BigNumber(SBCHRefVol / 100).plus(impliedVolDiffLowVol),
     )
 
     const fundingWarning = new BigNumber(impliedVol).gt(threshold) ? true : false
     return fundingWarning
-  }, [impliedVol, osqthRefVol])
+  }, [impliedVol, SBCHRefVol])
 
   const debouncedWithdrawQuote = debounce(async (bullToWithdraw: string) => {
     setQuoteLoading(true)
@@ -244,7 +244,7 @@ const BullWithdraw: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) 
           onInputChange={onInputChange}
           balance={bullPositionValueInEth}
           logo={ethLogo}
-          symbol={'ETH'}
+          symbol={'BCH'}
           usdPrice={ethIndexPrice}
           error={!!withdrawError}
           helperText={withdrawError}
@@ -268,7 +268,7 @@ const BullWithdraw: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) 
             <div className={classes.infoIcon}>
               <Tooltip
                 title={
-                  'Squeeth is currently more expensive than usual. The strategy buys back squeeth to withdraw. You can still withdraw, but you will pay more.'
+                  'Strike is currently more expensive than usual. The strategy buys back squeeth to withdraw. You can still withdraw, but you will pay more.'
                 }
               >
                 <InfoIcon fontSize="medium" />

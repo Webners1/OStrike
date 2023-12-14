@@ -43,7 +43,7 @@ const chartOptions = {
       {
         display: true,
         scaleLabel: {
-          labelString: '% Change in ETH price',
+          labelString: '% Change in BCH price',
           display: true,
         },
         ticks: {
@@ -67,7 +67,7 @@ const chartOptions = {
         return `${data.datasets[tooltipItem.datasetIndex].label}: ${tooltipItem.yLabel} %`
       },
       title: function (tooltipItem: any) {
-        return `${tooltipItem[0].xLabel} % ETH Change`
+        return `${tooltipItem[0].xLabel} % BCH Change`
       },
     },
   },
@@ -118,7 +118,7 @@ const LongSqueethPayoff: React.FC<{ ethPrice: number }> = ({ ethPrice }) => {
       labels,
       datasets: [
         {
-          label: 'Squeeth',
+          label: 'Strike',
           data: values,
           fill: false,
           borderColor: primaryColor,

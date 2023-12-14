@@ -71,7 +71,7 @@ const generateMethodData = (timestampArr: string[], interval: string | string[])
       interval,
       start_date: date,
       end_date: date,
-      symbols: ['ETH/USD'],
+      symbols: ['BCH/USD'],
     }
     methods.push('time_series', params)
   }

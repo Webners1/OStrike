@@ -1,4 +1,4 @@
-# Squeeth Frontend Contribution Guidelines
+# Strike Frontend Contribution Guidelines
 
 ## Issues
 

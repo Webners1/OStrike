@@ -32,7 +32,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     using StrategyMath for uint256;
     using Address for address payable;
 
-    /// @dev the cap in ETH for the strategy, above which deposits will be rejected
+    /// @dev the cap in BCH for the strategy, above which deposits will be rejected
     uint256 public strategyCap;
 
     /// @dev the TWAP_PERIOD used in the PowerPerp Controller contract
@@ -48,7 +48,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
         FLASH_HEDGE_BUY
     }
 
-    /// @dev ETH:WSqueeth uniswap pool
+    /// @dev BCH:WSqueeth uniswap pool
     address public immutable ethWSqueethPool;
     /// @dev strategy uniswap oracle
     address public immutable oracle;
@@ -167,7 +167,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
         uint256 _maxPriceMultiplier
     ) StrategyBase(_wSqueethController, _weth, "Crab Strategy", "Crab") StrategyFlashSwap(_uniswapFactory) {
         require(_oracle != address(0), "invalid oracle address");
-        require(_ethWSqueethPool != address(0), "invalid ETH:WSqueeth address");
+        require(_ethWSqueethPool != address(0), "invalid BCH:WSqueeth address");
         require(_hedgeTimeThreshold > 0, "invalid hedge time threshold");
         require(_hedgePriceThreshold > 0, "invalid hedge price threshold");
         require(_auctionTime > 0, "invalid auction time");
@@ -187,17 +187,17 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     }
 
     /**
-     * @notice receive function to allow ETH transfer to this contract
+     * @notice receive function to allow BCH transfer to this contract
      */
     receive() external payable {
         require(msg.sender == weth || msg.sender == address(powerTokenController), "Cannot receive eth");
     }
 
     /**
-     * @notice owner can set the strategy cap in ETH collateral terms
+     * @notice owner can set the strategy cap in BCH collateral terms
      * @dev deposits are rejected if it would put the strategy above the cap amount
      * @dev strategy collateral can be above the cap amount due to hedging activities
-     * @param _capAmount the maximum strategy collateral in ETH, checked on deposits
+     * @param _capAmount the maximum strategy collateral in BCH, checked on deposits
      */
     function setStrategyCap(uint256 _capAmount) external onlyOwner {
         strategyCap = _capAmount;
@@ -215,11 +215,11 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     }
 
     /**
-     * @notice flash deposit into strategy, providing ETH, selling wSqueeth and receiving strategy tokens
-     * @dev this function will execute a flash swap where it receives ETH, deposits and mints using flash swap proceeds and msg.value, and then repays the flash swap with wSqueeth
+     * @notice flash deposit into strategy, providing BCH, selling wSqueeth and receiving strategy tokens
+     * @dev this function will execute a flash swap where it receives BCH, deposits and mints using flash swap proceeds and msg.value, and then repays the flash swap with wSqueeth
      * @dev _ethToDeposit must be less than msg.value plus the proceeds from the flash swap
      * @dev the difference between _ethToDeposit and msg.value provides the minimum that a user can receive for their sold wSqueeth
-     * @param _ethToDeposit total ETH that will be deposited in to the strategy which is a combination of msg.value and flash swap proceeds
+     * @param _ethToDeposit total BCH that will be deposited in to the strategy which is a combination of msg.value and flash swap proceeds
      */
     function flashDeposit(uint256 _ethToDeposit) external payable nonReentrant {
         (uint256 cachedStrategyDebt, uint256 cachedStrategyCollateral) = _syncStrategyState();
@@ -259,10 +259,10 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     }
 
     /**
-     * @notice flash withdraw from strategy, providing strategy tokens, buying wSqueeth, burning and receiving ETH
-     * @dev this function will execute a flash swap where it receives wSqueeth, burns, withdraws ETH and then repays the flash swap with ETH
+     * @notice flash withdraw from strategy, providing strategy tokens, buying wSqueeth, burning and receiving BCH
+     * @dev this function will execute a flash swap where it receives wSqueeth, burns, withdraws BCH and then repays the flash swap with BCH
      * @param _crabAmount strategy token amount to burn
-     * @param _maxEthToPay maximum ETH to pay to buy back the owed wSqueeth debt
+     * @param _maxEthToPay maximum BCH to pay to buy back the owed wSqueeth debt
      */
     function flashWithdraw(uint256 _crabAmount, uint256 _maxEthToPay) external nonReentrant {
         uint256 exactWSqueethNeeded = _getDebtFromStrategyAmount(_crabAmount);
@@ -281,8 +281,8 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     }
 
     /**
-     * @notice deposit ETH into strategy
-     * @dev provide ETH, return wSqueeth and strategy token
+     * @notice deposit BCH into strategy
+     * @dev provide BCH, return wSqueeth and strategy token
      */
     function deposit() external payable nonReentrant {
         uint256 amount = msg.value;
@@ -301,18 +301,18 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
         uint256 wSqueethAmount = _getDebtFromStrategyAmount(_crabAmount);
         uint256 ethToWithdraw = _withdraw(msg.sender, _crabAmount, wSqueethAmount, false);
 
-        // send back ETH collateral
+        // send back BCH collateral
         payable(msg.sender).sendValue(ethToWithdraw);
 
         emit Withdraw(msg.sender, _crabAmount, wSqueethAmount, ethToWithdraw);
     }
 
     /**
-     * @notice called to exit a vault if the Squeeth Power Perp contracts are shutdown
+     * @notice called to exit a vault if the Strike Power Perp contracts are shutdown
      * @param _crabAmount amount of strategy token to burn
      */
     function withdrawShutdown(uint256 _crabAmount) external nonReentrant {
-        require(powerTokenController.isShutDown(), "Squeeth contracts not shut down");
+        require(powerTokenController.isShutDown(), "Strike contracts not shut down");
         require(hasRedeemedInShutdown, "Crab must redeemShortShutdown");
 
         uint256 strategyShare = _calcCrabRatio(_crabAmount, totalSupply());
@@ -328,7 +328,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
      * @dev this function atomically hedges on uniswap and provides a bounty to the caller based on the difference
      * @dev between uniswap execution price and the price of the hedging auction
      * @param _minWSqueeth minimum WSqueeth amount the caller willing to receive if hedge auction is selling WSqueeth
-     * @param _minEth minimum ETH amount the caller is willing to receive if hedge auction is buying WSqueeth
+     * @param _minEth minimum BCH amount the caller is willing to receive if hedge auction is buying WSqueeth
      */
     function timeHedgeOnUniswap(uint256 _minWSqueeth, uint256 _minEth) external {
         (bool isTimeHedgeAllowed, uint256 auctionTriggerTime) = _isTimeHedge();
@@ -346,7 +346,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
      * @dev between uniswap execution price and the price of the hedging auction
      * @param _auctionTriggerTime the time when the price deviation threshold was exceeded and when the auction started
      * @param _minWSqueeth minimum WSqueeth amount the caller willing to receive if hedge auction is selling WSqueeth
-     * @param _minEth minimum ETH amount the caller is willing to receive if hedge auction is buying WSqueeth
+     * @param _minEth minimum BCH amount the caller is willing to receive if hedge auction is buying WSqueeth
      */
     function priceHedgeOnUniswap(
         uint256 _auctionTriggerTime,
@@ -422,9 +422,9 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     }
 
     /**
-     * @notice owner can set the delta hedge threshold as a percent scaled by 1e18 of ETH collateral
+     * @notice owner can set the delta hedge threshold as a percent scaled by 1e18 of BCH collateral
      * @dev the strategy will not allow a hedge if the trade size is below this threshold
-     * @param _deltaHedgeThreshold minimum hedge size in a percent of ETH collateral
+     * @param _deltaHedgeThreshold minimum hedge size in a percent of BCH collateral
      */
     function setDeltaHedgeThreshold(uint256 _deltaHedgeThreshold) external onlyOwner {
         deltaHedgeThreshold = _deltaHedgeThreshold;
@@ -509,7 +509,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     /**
      * @notice get current auction details
      * @param _auctionTriggerTime timestamp where auction started
-     * @return if strategy is selling wSqueeth, wSqueeth amount to auction, ETH proceeds, auction price, if auction direction has switched
+     * @return if strategy is selling wSqueeth, wSqueeth amount to auction, BCH proceeds, auction price, if auction direction has switched
      */
     function getAuctionDetails(uint256 _auctionTriggerTime)
         external
@@ -549,7 +549,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
      * @notice check if a user deposit puts the strategy above the cap
      * @dev reverts if a deposit amount puts strategy over the cap
      * @dev it is possible for the strategy to be over the cap from trading/hedging activities, but withdrawals are still allowed
-     * @param _depositAmount the user deposit amount in ETH
+     * @param _depositAmount the user deposit amount in BCH
      * @param _strategyCollateral the updated strategy collateral
      */
     function _checkStrategyCap(uint256 _depositAmount, uint256 _strategyCollateral) internal view {
@@ -576,7 +576,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
         if (FLASH_SOURCE(_callSource) == FLASH_SOURCE.FLASH_DEPOSIT) {
             FlashDepositData memory data = abi.decode(_callData, (FlashDepositData));
 
-            // convert WETH to ETH as Uniswap uses WETH
+            // convert WETH to BCH as Uniswap uses WETH
             IWETH9(weth).withdraw(IWETH9(weth).balanceOf(address(this)));
 
             //use user msg.value and unwrapped WETH from uniswap flash swap proceeds to deposit into strategy
@@ -595,7 +595,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
         } else if (FLASH_SOURCE(_callSource) == FLASH_SOURCE.FLASH_WITHDRAW) {
             FlashWithdrawData memory data = abi.decode(_callData, (FlashWithdrawData));
 
-            //use flash swap wSqueeth proceeds to withdraw ETH along with user crabAmount
+            //use flash swap wSqueeth proceeds to withdraw BCH along with user crabAmount
             uint256 ethToWithdraw = _withdraw(
                 _caller,
                 data.crabAmount,
@@ -603,11 +603,11 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
                 true
             );
 
-            //use some amount of withdrawn ETH to repay flash swap
+            //use some amount of withdrawn BCH to repay flash swap
             IWETH9(weth).deposit{value: _amountToPay}();
             IWETH9(weth).transfer(ethWSqueethPool, _amountToPay);
 
-            //excess ETH not used to repay flash swap is transferred to the user
+            //excess BCH not used to repay flash swap is transferred to the user
             uint256 proceeds = ethToWithdraw.sub(_amountToPay);
 
             emit FlashWithdrawCallback(_caller, _amountToPay, proceeds);
@@ -616,12 +616,12 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
                 payable(_caller).sendValue(proceeds);
             }
         } else if (FLASH_SOURCE(_callSource) == FLASH_SOURCE.FLASH_HEDGE_SELL) {
-            //strategy is selling wSqueeth for ETH
+            //strategy is selling wSqueeth for BCH
             FlashHedgeData memory data = abi.decode(_callData, (FlashHedgeData));
 
-            // convert WETH to ETH as Uniswap uses WETH
+            // convert WETH to BCH as Uniswap uses WETH
             IWETH9(weth).withdraw(IWETH9(weth).balanceOf(address(this)));
-            //mint wSqueeth to pay hedger and repay flash swap, deposit ETH
+            //mint wSqueeth to pay hedger and repay flash swap, deposit BCH
             _executeSellAuction(_caller, data.ethProceeds, data.wSqueethAmount, data.ethProceeds, true);
 
             //determine excess wSqueeth that the auction would have sold but is not needed to repay flash swap
@@ -634,17 +634,17 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
             IWPowerPerp(wPowerPerp).transfer(ethWSqueethPool, _amountToPay);
             IWPowerPerp(wPowerPerp).transfer(_caller, wSqueethProfit);
         } else if (FLASH_SOURCE(_callSource) == FLASH_SOURCE.FLASH_HEDGE_BUY) {
-            //strategy is buying wSqueeth for ETH
+            //strategy is buying wSqueeth for BCH
             FlashHedgeData memory data = abi.decode(_callData, (FlashHedgeData));
 
-            //withdraw ETH to pay hedger and repay flash swap, burn wSqueeth
+            //withdraw BCH to pay hedger and repay flash swap, burn wSqueeth
             _executeBuyAuction(_caller, data.wSqueethAmount, data.ethProceeds, true);
 
-            //determine excess ETH that the auction would have paid but is not needed to repay flash swap
+            //determine excess BCH that the auction would have paid but is not needed to repay flash swap
             uint256 ethProfit = data.ethProceeds.sub(_amountToPay);
 
             //minimum profit check for hedger
-            require(ethProfit >= data.minEth, "profit is less than min ETH");
+            require(ethProfit >= data.minEth, "profit is less than min BCH");
 
             //repay flash swap and transfer profit to hedger
             IWETH9(weth).deposit{value: _amountToPay}();
@@ -657,7 +657,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
      * @notice deposit into strategy
      * @dev if _isFlashDeposit is true, keeps wSqueeth in contract, otherwise sends to user
      * @param _depositor depositor address
-     * @param _amount amount of ETH collateral to deposit
+     * @param _amount amount of BCH collateral to deposit
      * @param _isFlashDeposit true if called by flashDeposit
      * @return wSqueethToMint minted amount of WSqueeth
      * @return depositorCrabAmount minted CRAB strategy token amount
@@ -702,7 +702,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
      * @param _crabAmount amount of strategy token to burn
      * @param _wSqueethAmount amount of wSqueeth to burn
      * @param _isFlashWithdraw flag if called by flashWithdraw
-     * @return ETH amount to withdraw
+     * @return BCH amount to withdraw
      */
     function _withdraw(
         address _from,
@@ -742,14 +742,14 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
         require(_isStrategySellingWSqueeth == isSellingAuction, "wrong auction type");
 
         if (isSellingAuction) {
-            // Receiving ETH and paying wSqueeth
+            // Receiving BCH and paying wSqueeth
             require(auctionWSqueethEthPrice <= _limitPrice, "Auction price > max price");
-            require(msg.value >= ethProceeds, "Low ETH amount received");
+            require(msg.value >= ethProceeds, "Low BCH amount received");
 
             _executeSellAuction(msg.sender, msg.value, wSqueethToAuction, ethProceeds, false);
         } else {
-            require(msg.value == 0, "ETH attached for buy auction");
-            // Receiving wSqueeth and paying ETH
+            require(msg.value == 0, "BCH attached for buy auction");
+            // Receiving wSqueeth and paying BCH
             require(auctionWSqueethEthPrice >= _limitPrice, "Auction price < min price");
             _executeBuyAuction(msg.sender, wSqueethToAuction, ethProceeds, false);
         }
@@ -768,7 +768,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
      * @notice execute arb between auction price and uniswap price
      * @param _auctionTriggerTime auction starting time
      * @param _minWSqueeth minimum WSqueeth amount the caller willing to receive if hedge auction is selling WSqueeth
-     * @param _minEth minimum ETH amount the caller is willing to receive if hedge auction is buying WSqueeth
+     * @param _minEth minimum BCH amount the caller is willing to receive if hedge auction is buying WSqueeth
      */
     function _hedgeOnUniswap(
         uint256 _auctionTriggerTime,
@@ -811,9 +811,9 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
      * @notice execute sell auction based on the parameters calculated
      * @dev if _isHedgingOnUniswap, wSqueeth minted is kept to repay flashswap, otherwise sent to seller
      * @param _buyer buyer address
-     * @param _buyerAmount buyer ETH amount sent
+     * @param _buyerAmount buyer BCH amount sent
      * @param _wSqueethToSell wSqueeth amount to sell
-     * @param _ethToBuy ETH amount to buy
+     * @param _ethToBuy BCH amount to buy
      * @param _isHedgingOnUniswap true if arbing with uniswap price
      */
     function _executeSellAuction(
@@ -840,10 +840,10 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
 
     /**
      * @notice execute buy auction based on the parameters calculated
-     * @dev if _isHedgingOnUniswap, ETH proceeds are not sent to seller
+     * @dev if _isHedgingOnUniswap, BCH proceeds are not sent to seller
      * @param _seller seller address
      * @param _wSqueethToBuy wSqueeth amount to buy
-     * @param _ethToSell ETH amount to sell
+     * @param _ethToSell BCH amount to sell
      * @param _isHedgingOnUniswap true if arbing with uniswap price
      */
     function _executeBuyAuction(
@@ -866,8 +866,8 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
      * @param _auctionTriggerTime auction starting time
      * @return auction type
      * @return WSqueeth amount to sell or buy
-     * @return ETH to sell/buy
-     * @return auction WSqueeth/ETH price
+     * @return BCH to sell/buy
+     * @return auction WSqueeth/BCH price
      */
     function _startAuction(uint256 _auctionTriggerTime)
         internal
@@ -918,7 +918,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     }
 
     /**
-     * @notice calculate the fee adjustment factor, which is the amount of ETH owed per 1 wSqueeth minted
+     * @notice calculate the fee adjustment factor, which is the amount of BCH owed per 1 wSqueeth minted
      * @dev the fee is a based off the index value of squeeth and uses a twap scaled down by the PowerPerp's INDEX_SCALE
      * @return the fee adjustment factor
      */
@@ -940,7 +940,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
      * @param _depositedAmount amount of deposited WETH
      * @param _strategyDebtAmount amount of strategy debt
      * @param _strategyCollateralAmount collateral amount in strategy
-     * @return amount of minted wSqueeth and ETH fee paid on minted squeeth
+     * @return amount of minted wSqueeth and BCH fee paid on minted squeeth
      */
     function _calcWsqueethToMintAndFee(
         uint256 _depositedAmount,
@@ -1008,7 +1008,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     /**
      * @notice calculate auction price based on auction direction, start time and wSqueeth price
      * @param _auctionTriggerTime timestamp where auction started
-     * @param _wSqueethEthPrice WSqueeth/ETH price
+     * @param _wSqueethEthPrice WSqueeth/BCH price
      * @param _isSellingAuction auction type (true for selling, false for buying auction)
      * @return auction price
      */
@@ -1038,9 +1038,9 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     /**
      * @notice check the direction of auction and the target amount of wSqueeth to hedge
      * @param _debt strategy debt
-     * @param _ethDelta ETH delta (amount of ETH in strategy)
-     * @param _wSqueethEthPrice WSqueeth/ETH price
-     * @param _feeAdjustment the fee adjustment, the amount of ETH owed per wSqueeth minted
+     * @param _ethDelta BCH delta (amount of BCH in strategy)
+     * @param _wSqueethEthPrice WSqueeth/BCH price
+     * @param _feeAdjustment the fee adjustment, the amount of BCH owed per wSqueeth minted
      * @return auction type(sell or buy) and auction initial target hedge in wSqueeth
      */
     function _checkAuctionType(
@@ -1065,7 +1065,7 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
 
     /**
      * @dev calculate amount of strategy token to mint for depositor
-     * @param _amount amount of ETH deposited
+     * @param _amount amount of BCH deposited
      * @param _strategyCollateralAmount amount of strategy collateral
      * @param _crabTotalSupply total supply of strategy token
      * @return amount of strategy token to mint
@@ -1093,10 +1093,10 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
     }
 
     /**
-     * @notice calculate ETH to withdraw from strategy given a ownership proportion
+     * @notice calculate BCH to withdraw from strategy given a ownership proportion
      * @param _crabRatio crab ratio
      * @param _strategyCollateralAmount amount of collateral in strategy
-     * @return amount of ETH allowed to withdraw
+     * @return amount of BCH allowed to withdraw
      */
     function _calcEthToWithdraw(uint256 _crabRatio, uint256 _strategyCollateralAmount) internal pure returns (uint256) {
         return _strategyCollateralAmount.wmul(_crabRatio);
@@ -1106,9 +1106,9 @@ contract CrabStrategy is StrategyBase, StrategyFlashSwap, ReentrancyGuard, Ownab
      * @notice determine target hedge and auction type (selling/buying auction)
      * @dev target hedge is the amount of WSqueeth the auction needs to sell or buy to be eth delta neutral
      * @param _wSqueethDelta WSqueeth delta
-     * @param _ethDelta ETH delta
-     * @param _wSqueethEthPrice WSqueeth/ETH price
-     * @param _feeAdjustment the fee adjustment, the amount of ETH owed per wSqueeth minted
+     * @param _ethDelta BCH delta
+     * @param _wSqueethEthPrice WSqueeth/BCH price
+     * @param _feeAdjustment the fee adjustment, the amount of BCH owed per wSqueeth minted
      * @return target hedge in wSqueeth
      * @return auction type: true if auction is selling WSqueeth, false if buying WSqueeth
      */

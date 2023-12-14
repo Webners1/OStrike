@@ -147,7 +147,7 @@ const UI = ({ strategy, depositedAt, pnl }: SharePnlProps) => {
           <div className={clsx(classes.flex, classes.alignCenter)}>
             <Image src={isCrab ? crabLogo : zenBullLogo} alt="opyn crab logo" height="32px" width="32px" />
             <Typography variant="h2" className={clsx(classes.title, classes.textMargin)}>
-              {isCrab ? 'Crabber - Stacking USDC' : 'Zen Bull - Stacking ETH'}
+              {isCrab ? 'Crabber - Stacking USDC' : 'Zen Bull - Stacking BCH'}
             </Typography>
           </div>
           {!isMobileBreakpoint && <Image src={opynLogo} alt="opyn logo" width="80px" height="62px" />}
@@ -163,7 +163,7 @@ const UI = ({ strategy, depositedAt, pnl }: SharePnlProps) => {
               {formatNumber(pnl) + '%'}
             </Typography>
             <Typography className={clsx(classes.positionUnit, classes.textMargin)}>
-              {isCrab ? 'USD Return' : 'ETH Return'}
+              {isCrab ? 'USD Return' : 'BCH Return'}
             </Typography>
           </div>
         </div>
@@ -190,8 +190,8 @@ const UI = ({ strategy, depositedAt, pnl }: SharePnlProps) => {
 const SharePnl = ({ strategy, depositedAt, pnl }: SharePnlProps) => {
   const isCrab = strategy === 'crab'
 
-  const title = isCrab ? 'Opyn Crab Strategy - Stack USDC' : 'Opyn Zen Bull Strategy - Stack ETH'
-  const description = isCrab ? 'Stack USDC when ETH is flat' : 'Stack ETH when ETH increases slow and steady'
+  const title = isCrab ? 'Opyn Crab Strategy - Stack BCH' : 'Opyn Zen Bull Strategy - Stack BCH'
+  const description = isCrab ? 'Stack BCH when BCH is flat' : 'Stack BCH when BCH increases slow and steady'
   const ogImageUrl = SQUEETH_BASE_URL + '/api/pnl?strategy=' + strategy + '&depositedAt=' + depositedAt + '&pnl=' + pnl
 
   const depositDate = new Date(depositedAt * 1000)

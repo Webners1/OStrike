@@ -90,7 +90,7 @@ this will open a vault in the power token contract and store the vault ID
 
 ## `receive()`
 
-receive function to allow ETH transfer to this contract
+receive function to allow BCH transfer to this contract
 
 ## `flashDeposit(uint256 _ethToDeposit, uint256 _ethToBorrow)`
 
@@ -100,25 +100,25 @@ this function sells minted WSqueeth for _ethToBorrow
 
 ### Parameters:
 
-- `uint256 _ethToDeposit`: ETH sent from depositor
+- `uint256 _ethToDeposit`: BCH sent from depositor
 
-- `uint256 _ethToBorrow`: ETH to flashswap on uniswap
+- `uint256 _ethToBorrow`: BCH to flashswap on uniswap
 
 ## `flashWithdraw(uint256 _crabAmount, uint256 _maxEthToPay)`
 
 flash withdraw from strategy
 
-this function will borrow wSqueeth amount and repay for selling some of the ETH collateral
+this function will borrow wSqueeth amount and repay for selling some of the BCH collateral
 
 ### Parameters:
 
 - `uint256 _crabAmount`: crab token amount to burn
 
-- `uint256 _maxEthToPay`: maximum ETH to pay
+- `uint256 _maxEthToPay`: maximum BCH to pay
 
 ## `deposit() → uint256, uint256`
 
-deposit ETH into strategy
+deposit BCH into strategy
 
 provide eth, return wSqueeth and strategy token
 

@@ -187,7 +187,7 @@ describe("Crab V2 integration test: ERC20 deposit and withdrawals", function () 
       await dai.connect(depositor2).approve(crabHelper.address, usdcAmount.toString())
     })
 
-    it("Should fail if it minimum ETH is not swapped in ERC20 transfer", async () => {
+    it("Should fail if it minimum BCH is not swapped in ERC20 transfer", async () => {
       await expect(crabHelper.connect(depositor2).flashDepositERC20(ethToDeposit, usdcAmount, ethers.utils.parseEther('1'), 3000, poolFee, dai.address)).to.be.revertedWith("Too little received")
     })
 
@@ -252,7 +252,7 @@ describe("Crab V2 integration test: ERC20 deposit and withdrawals", function () 
       await dai.connect(depositor2).approve(crabHelper.address, usdcAmount.toString())
     })
 
-    it("Should fail if it minimum ETH is not swapped in ERC20 transfer", async () => {
+    it("Should fail if it minimum BCH is not swapped in ERC20 transfer", async () => {
       await expect(crabHelper.connect(depositor2).flashDepositERC20(ethToDeposit, usdcAmount, ethers.utils.parseEther('1'), 3000, poolFeePool2, dai.address)).to.be.revertedWith("Too little received")
     })
 

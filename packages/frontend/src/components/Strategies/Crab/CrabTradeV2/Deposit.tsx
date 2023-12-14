@@ -27,7 +27,7 @@ import {
   useQueueDepositUSDC,
 } from '@state/crab/hooks'
 import { readyAtom } from '@state/squeethPool/atoms'
-import { impliedVolAtom, indexAtom, normFactorAtom, osqthRefVolAtom } from '@state/controller/atoms'
+import { impliedVolAtom, indexAtom, normFactorAtom, SBCHRefVolAtom } from '@state/controller/atoms'
 import { addressesAtom } from '@state/positions/atoms'
 import useAppMemo from '@hooks/useAppMemo'
 import { useTokenBalance } from '@hooks/contracts/useTokenBalance'
@@ -128,7 +128,7 @@ const CrabDeposit: React.FC<CrabDepositProps> = ({ onTxnConfirm }) => {
   const vault = useAtomValue(crabStrategyVaultAtomV2)
   const impliedVol = useAtomValue(impliedVolAtom)
   const normFactor = useAtomValue(normFactorAtom)
-  const osqthRefVol = useAtomValue(osqthRefVolAtom)
+  const SBCHRefVol = useAtomValue(SBCHRefVolAtom)
   const { track } = useAmplitude()
 
   const trackUserEnteredDepositAmount = useCallback(
@@ -173,13 +173,13 @@ const CrabDeposit: React.FC<CrabDepositProps> = ({ onTxnConfirm }) => {
     const impliedVolDiffLowVol = new BigNumber(-VOL_PERCENT_FIXED)
     // const dailyHistoricalImpliedVol = new BigNumber(dailyHistoricalFunding.funding).times(YEAR).sqrt()
     const threshold = BigNumber.max(
-      new BigNumber(osqthRefVol / 100).times(new BigNumber(1).plus(impliedVolDiff)),
-      new BigNumber(osqthRefVol / 100).plus(impliedVolDiffLowVol),
+      new BigNumber(SBCHRefVol / 100).times(new BigNumber(1).plus(impliedVolDiff)),
+      new BigNumber(SBCHRefVol / 100).plus(impliedVolDiffLowVol),
     )
 
     const showFundingWarning = new BigNumber(impliedVol).lt(threshold) ? true : false
     return showFundingWarning
-  }, [osqthRefVol, impliedVol])
+  }, [SBCHRefVol, impliedVol])
 
   const depositError = useAppMemo(() => {
     let inputError
@@ -190,7 +190,7 @@ const CrabDeposit: React.FC<CrabDepositProps> = ({ onTxnConfirm }) => {
       } else if (depositEthAmount.plus(depositedAmount).plus(borrowEth).gte(maxCap)) {
         inputError = `Amount greater than strategy cap since it flash borrows ${borrowEth.toFixed(
           2,
-        )} ETH. Input a smaller amount`
+        )} BCH. Input a smaller amount`
       } else if (usdcBalance.lt(depositAmountBN)) {
         inputError = 'Insufficient USDC balance'
       }

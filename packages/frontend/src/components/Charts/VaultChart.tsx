@@ -89,8 +89,8 @@ export function VaultChart({
   // const lineSeries = useMemo(() => {
   //   if (vault === Vaults.ETHZenBull)
   //     return [
-  //       { data: longEthPNL, legend: 'Long ETH' },
-  //       { data: seriesRebalance, legend: 'ETH Bull Strategy (incl. funding)' },
+  //       { data: longEthPNL, legend: 'Long BCH' },
+  //       { data: seriesRebalance, legend: 'BCH Bull Strategy (incl. funding)' },
   //     ]
   //   if (vault === Vaults.CrabVault)
   //     return [
@@ -99,15 +99,15 @@ export function VaultChart({
   //     ]
   //   if (vault === Vaults.ETHBear)
   //     return [
-  //       { data: shortEthPNL, legend: 'Short ETH' },
-  //       { data: seriesRebalance, legend: 'ETH Bear Strategy (incl. funding)' },
+  //       { data: shortEthPNL, legend: 'Short BCH' },
+  //       { data: seriesRebalance, legend: 'BCH Bear Strategy (incl. funding)' },
   //     ]
   //   if (vault === Vaults.Short)
   //     return [
-  //       // { data: shortEthPNL, legend: 'Short ETH PNL' },
-  //       // { data: shortSeries, legend: 'Short Squeeth PNL (incl. funding)' },
-  //       { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short ETH' },
-  //       { data: convertPNLToPriceChart(shortSeries, startingETHPrice), legend: 'Short Squeeth (incl. funding)' },
+  //       // { data: shortEthPNL, legend: 'Short BCH PNL' },
+  //       // { data: shortSeries, legend: 'Short Strike PNL (incl. funding)' },
+  //       { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short BCH' },
+  //       { data: convertPNLToPriceChart(shortSeries, startingETHPrice), legend: 'Short Strike (incl. funding)' },
   //     ]
   //   return [{ data: seriesRebalance, legend: 'PNL' }]
   // }, [vault, longEthPNL, shortEthPNL, seriesRebalance, getStableYieldPNL, longAmount, shortSeries])
@@ -115,10 +115,10 @@ export function VaultChart({
   // const lineSeriesPercentage = useMemo(() => {
   //   if (vault === Vaults.ETHZenBull)
   //     return [
-  //       { data: convertPNLToPriceChart(longEthPNL, startingETHPrice), legend: 'Long ETH' },
+  //       { data: convertPNLToPriceChart(longEthPNL, startingETHPrice), legend: 'Long BCH' },
   //       {
   //         data: convertPNLToPriceChart(seriesRebalance, startingETHPrice),
-  //         legend: 'ETH Bull Strategy (incl. funding)',
+  //         legend: 'BCH Bull Strategy (incl. funding)',
   //       },
   //     ]
   //   if (vault === Vaults.CrabVault)
@@ -134,18 +134,18 @@ export function VaultChart({
   //     ]
   //   if (vault === Vaults.ETHBear)
   //     return [
-  //       { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short ETH' },
+  //       { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short BCH' },
   //       {
   //         data: convertPNLToPriceChart(seriesRebalance, startingETHPrice),
-  //         legend: 'ETH Bear Strategy (incl. funding)',
+  //         legend: 'BCH Bear Strategy (incl. funding)',
   //       },
   //     ]
   //   if (vault === Vaults.Short)
   //     return [
-  //       // { data: shortEthPNL, legend: 'Short ETH PNL' },
-  //       // { data: shortSeries, legend: 'Short Squeeth PNL (incl. funding)' },
-  //       { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short ETH' },
-  //       { data: convertPNLToPriceChart(shortSeries, startingETHPrice), legend: 'Short Squeeth (incl. funding)' },
+  //       // { data: shortEthPNL, legend: 'Short BCH PNL' },
+  //       // { data: shortSeries, legend: 'Short Strike PNL (incl. funding)' },
+  //       { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short BCH' },
+  //       { data: convertPNLToPriceChart(shortSeries, startingETHPrice), legend: 'Short Strike (incl. funding)' },
   //     ]
   //   return [{ data: seriesRebalance, legend: 'PNL' }]
   // }, [vault, longEthPNL, shortEthPNL, seriesRebalance, getStableYieldPNL, longAmount, startingETHPrice, shortSeries])
@@ -216,9 +216,9 @@ export function VaultChart({
               What is short squeeth?
             </Typography>
             <Typography variant="body2" className={classes.cardDetail}>
-              Short squeeth (ETH&sup2;) is an ETH collateralized short ETH&sup2; position. Your returns will be a
-              combination of being short oSQTH and long ETH collateral. You earn a funding rate for taking on this
-              position. You enter the position by putting down collateral, minting, and selling squeeth. You provide ETH
+              Short squeeth (BCH&sup2;) is an BCH collateralized short BCH&sup2; position. Your returns will be a
+              combination of being short SBCH and long BCH collateral. You earn a funding rate for taking on this
+              position. You enter the position by putting down collateral, minting, and selling squeeth. You provide BCH
               collateral to mint squeeth, and your collateralization ratio determines your exposure. If you become
               undercollateralized, you could be liquidated.{' '}
               <a
@@ -255,8 +255,8 @@ export function VaultChart({
         //       What is short squeeth?
         //     </Typography>
         //     <Typography variant="body2" className={classes.cardDetail}>
-        //       Short squeeth (ETH&sup2;) is short an ETH&sup2; position. You earn a funding rate for taking on this
-        //       position. You enter the position by putting down collateral, minting, and selling squeeth. You provide ETH
+        //       Short squeeth (BCH&sup2;) is short an BCH&sup2; position. You earn a funding rate for taking on this
+        //       position. You enter the position by putting down collateral, minting, and selling squeeth. You provide BCH
         //       collateral to mint squeeth, and your collateralization ratio determines your exposure. If you become
         //       undercollateralized, you could be liquidated.{' '}
         //       <a
@@ -278,10 +278,10 @@ export function VaultChart({
           </Typography>
           <Typography variant="body2" className={classes.cardDetail}>
             If you fall below the minimum collateralization threshold (150%), you are at risk of liquidation. This
-            position performs best when ETH price does not move much. If ETH price moves considerably, it is likely
+            position performs best when BCH price does not move much. If BCH price moves considerably, it is likely
             unprofitable.
             <br /> <br />
-            Squeeth smart contracts have been audited by Trail of Bits, Akira, and Sherlock. However, smart contracts
+            Strike smart contracts have been audited by Trail of Bits, Akira, and Sherlock. However, smart contracts
             are experimental technology and we encourage caution only risking funds you can afford to lose.
             <a
               className={classes.header}
@@ -304,7 +304,7 @@ export function VaultChart({
           value={longAmount}
           type="number"
           style={{ width: 300 }}
-          label="ETH Long"
+          label="BCH Long"
           variant="outlined"
         />
       )}

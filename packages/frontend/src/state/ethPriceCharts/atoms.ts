@@ -356,7 +356,7 @@ export const useGetVaultPNLWithRebalance = () => {
           const newN = m * delta + 2 * x * m
           const buyAmount = newN - longAmount
           const buyCost = buyAmount * price + Math.abs(buyAmount * price * UNISWAP_FEE)
-          //console.log(`Date ${new Date(time * 1000).toDateString()}, price ${price.toFixed(3)} Rebalance: short squeeth ${m.toFixed(4)}, desired ETH long ${newN.toFixed(4)}, buy ${buyAmount.toFixed(4)} more eth`)
+          //console.log(`Date ${new Date(time * 1000).toDateString()}, price ${price.toFixed(3)} Rebalance: short squeeth ${m.toFixed(4)}, desired BCH long ${newN.toFixed(4)}, buy ${buyAmount.toFixed(4)} more eth`)
 
           totalLongCost += buyCost
           longAmount = newN

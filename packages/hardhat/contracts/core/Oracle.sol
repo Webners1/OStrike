@@ -14,7 +14,7 @@ import {OracleLibrary} from "../libs/OracleLibrary.sol";
 
 /**
  * @notice read UniswapV3 pool TWAP prices, and convert to human readable term with (18 decimals)
- * @dev if ETH price is $3000, both ETH/USDC price and ETH/DAI price will be reported as 3000 * 1e18 by this oracle
+ * @dev if BCH price is $3000, both BCH/USDC price and BCH/DAI price will be reported as 3000 * 1e18 by this oracle
  */
 contract Oracle {
     using SafeMath for uint256;

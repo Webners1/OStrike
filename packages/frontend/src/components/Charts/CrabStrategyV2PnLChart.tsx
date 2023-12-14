@@ -84,7 +84,7 @@ function CrabStrategyV2PnLChart() {
         valueDecimals: 2,
         valueSuffix: '%',
       },
-      color: '#70E3F6',
+      color: '#0cbf94',
     }
   ]
 

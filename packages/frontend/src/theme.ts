@@ -174,7 +174,7 @@ const newDarkPalette: ThemeOptions = {
   palette: {
     type: 'dark',
     primary: {
-      main: '#70E3F6',
+      main: '#0cbf94',
       light: '#18F5D7',
       dark: '#0ebcd8', // todo: not sure what this should be since its not specified in figma
       contrastText: '#FFFFFF',

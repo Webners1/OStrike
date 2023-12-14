@@ -80,7 +80,7 @@ contract WithdrawEthTest is Test {
         uint256 recoveryTokenAmount = emergencyWithdraw.balanceOf(user1);
 
         vm.startPrank(user1);
-        vm.expectRevert(bytes("ETH withdrawal not activated yet"));
+        vm.expectRevert(bytes("BCH withdrawal not activated yet"));
         emergencyWithdraw.withdrawEth(recoveryTokenAmount);
         vm.stopPrank();
     }
@@ -143,7 +143,7 @@ contract WithdrawEthTest is Test {
 
     function _emergencyWithdrawEthFromCrab(address _user, uint256 _zenBullAmount) internal {
         uint256 emergencyRedeemedBull = emergencyWithdraw.redeemedZenBullAmountForCrabWithdrawal();
-        uint256 maxWethForOsqth;
+        uint256 maxWethForSBCH;
         uint256 ethToWithdrawFromCrab;
         {
             uint256 bullShare =
@@ -154,14 +154,14 @@ contract WithdrawEthTest is Test {
             uint256 wPowerPerpToRedeem =
                 crabToRedeem.wmul(wPowerPerpInCrab).wdiv(IERC20(CRAB).totalSupply());
 
-            maxWethForOsqth =
+            maxWethForSBCH =
                 Quoter(QUOTER).quoteExactOutputSingle(WETH, WPOWERPERP, 3000, wPowerPerpToRedeem, 0);
             ethToWithdrawFromCrab = crabToRedeem.wdiv(IERC20(CRAB).totalSupply()).wmul(ethInCrab);
         }
 
         vm.startPrank(_user);
         IERC20(ZEN_BULL).approve(address(emergencyWithdraw), type(uint256).max);
-        emergencyWithdraw.emergencyWithdrawEthFromCrab(_zenBullAmount, maxWethForOsqth);
+        emergencyWithdraw.emergencyWithdrawEthFromCrab(_zenBullAmount, maxWethForSBCH);
         vm.stopPrank();
     }
 }

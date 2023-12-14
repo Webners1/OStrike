@@ -40,7 +40,7 @@ import {
   impliedVolAtom,
   indexAtom,
   normFactorAtom,
-  osqthRefVolAtom,
+  SBCHRefVolAtom,
 } from '@state/controller/atoms'
 import { addressesAtom } from '@state/positions/atoms'
 import { userMigratedSharesETHAtom } from '@state/crabMigration/atom'
@@ -119,7 +119,7 @@ const CrabWithdraw: React.FC<{ onTxnConfirm: (txn: CrabTransactionConfirmation) 
   const [slippage, setSlippage] = useAtom(crabStrategySlippageAtomV2)
   const network = useAtomValue(networkIdAtom)
   const supportedNetwork = useAtomValue(supportedNetworkAtom)
-  const osqthRefVol = useAtomValue(osqthRefVolAtom)
+  const SBCHRefVol = useAtomValue(SBCHRefVolAtom)
   const selectWallet = useSelectWallet()
 
   const currentEthValue = migratedCurrentEthValue.gt(0) ? migratedCurrentEthValue : currentEthActualValue
@@ -221,13 +221,13 @@ const CrabWithdraw: React.FC<{ onTxnConfirm: (txn: CrabTransactionConfirmation) 
     const impliedVolDiffLowVol = new BigNumber(VOL_PERCENT_FIXED)
 
     const threshold = BigNumber.max(
-      new BigNumber(osqthRefVol / 100).times(new BigNumber(1).plus(impliedVolDiff)),
-      new BigNumber(osqthRefVol / 100).plus(impliedVolDiffLowVol),
+      new BigNumber(SBCHRefVol / 100).times(new BigNumber(1).plus(impliedVolDiff)),
+      new BigNumber(SBCHRefVol / 100).plus(impliedVolDiffLowVol),
     )
 
     const fundingWarning = new BigNumber(impliedVol).gt(threshold) ? true : false
     return fundingWarning
-  }, [impliedVol, osqthRefVol])
+  }, [impliedVol, SBCHRefVol])
 
   const withdrawError = useAppMemo(() => {
     let withdrawError: string | undefined
@@ -342,7 +342,7 @@ const CrabWithdraw: React.FC<{ onTxnConfirm: (txn: CrabTransactionConfirmation) 
           const userForceInstantAnalytics = queueOptionAvailable && !useQueue
           ongoingTransaction.current = {
             amount: withdrawAmountBN,
-            token: useUsdc ? 'USDC' : 'ETH',
+            token: useUsdc ? 'USDC' : 'BCH',
             queuedTransaction: useQueue,
             analytics: userForceInstantAnalytics ? [CRAB_EVENTS.USER_FORCE_INSTANT_WIT_CRAB] : undefined,
           }
@@ -391,7 +391,7 @@ const CrabWithdraw: React.FC<{ onTxnConfirm: (txn: CrabTransactionConfirmation) 
     else onInputChange(currentUsdcValue.toString())
   }
 
-  const depositToken = useMemo(() => (useQueue ? 'USDC' : useUsdc ? 'USDC' : 'ETH'), [useUsdc, useQueue])
+  const depositToken = useMemo(() => (useQueue ? 'USDC' : useUsdc ? 'USDC' : 'BCH'), [useUsdc, useQueue])
 
   // Update withdraw step
   useEffect(() => {
@@ -491,7 +491,7 @@ const CrabWithdraw: React.FC<{ onTxnConfirm: (txn: CrabTransactionConfirmation) 
         {showTokenToggle && (
           <Box className={classes.tokenSelectBox}>
             <Typography variant="caption" className={classes.tokenChoice}>
-              ETH
+              BCH
             </Typography>
             <Switch
               checked={useUsdc}
@@ -546,16 +546,16 @@ const CrabWithdraw: React.FC<{ onTxnConfirm: (txn: CrabTransactionConfirmation) 
         {isClaimAndWithdraw && currentEthActualValue.gt(0) ? (
           <div className={classes.withdrawStepsContainer}>
             <Typography variant="caption" component="div">
-              Step 1: Withdraw migrated crab position, <b>{migratedCurrentEthValue.toFixed(4)}</b> ETH
+              Step 1: Withdraw migrated crab position, <b>{migratedCurrentEthValue.toFixed(4)}</b> BCH
             </Typography>
             <Typography variant="caption">
-              Step 2: Withdraw crab v2 position, {currentEthActualValue.toFixed(4)} ETH
+              Step 2: Withdraw crab v2 position, {currentEthActualValue.toFixed(4)} BCH
             </Typography>
           </div>
         ) : isClaimAndWithdraw ? (
           <div className={classes.withdrawStepsContainer}>
             <Typography variant="caption" component="div">
-              Withdraw migrated crab position, <b>{migratedCurrentEthValue.toFixed(4)}</b> ETH
+              Withdraw migrated crab position, <b>{migratedCurrentEthValue.toFixed(4)}</b> BCH
             </Typography>
           </div>
         ) : null}
@@ -578,7 +578,7 @@ const CrabWithdraw: React.FC<{ onTxnConfirm: (txn: CrabTransactionConfirmation) 
             <div className={classes.infoIcon}>
               <Tooltip
                 title={
-                  'Squeeth is currently more expensive than usual. The strategy buys back squeeth to withdraw. You can still withdraw, but you will pay more.'
+                  'Strike is currently more expensive than usual. The strategy buys back squeeth to withdraw. You can still withdraw, but you will pay more.'
                 }
               >
                 <InfoIcon fontSize="medium" />

@@ -35,7 +35,7 @@ import { Address } from "openzeppelin/utils/Address.sol";
  * AB12: order already expired
  * AB13: nonce already used
  * AB14: clearning price tolerance is too high
- * AB15: ETH limit price is out of tolerance range
+ * AB15: BCH limit price is out of tolerance range
  * AB16: WETH limit price tolerance is too high
  * AB17: price too low relative to Uniswap twap
  * AB18: price too high relative to Uniswap twap
@@ -220,7 +220,7 @@ contract ZenAuction is UniFlash, Ownable, EIP712 {
     }
 
     /**
-     * @notice receive function to allow ETH transfer to this contract
+     * @notice receive function to allow BCH transfer to this contract
      */
     receive() external payable {
         require(msg.sender == address(bullStrategy), "AB20");
@@ -292,7 +292,7 @@ contract ZenAuction is UniFlash, Ownable, EIP712 {
     }
 
     /**
-     * @notice set strategy lower and upper delta to ETH price
+     * @notice set strategy lower and upper delta to BCH price
      * @dev can only be callable by owner
      * @param _deltaLower lower delta scaled by 1e18
      * @param _deltaUpper upper delta scaled by 1e18
@@ -726,7 +726,7 @@ contract ZenAuction is UniFlash, Ownable, EIP712 {
     ) internal {
         uint256 wethInCollateral = IEulerEToken(eToken).balanceOfUnderlying(address(bullStrategy));
         if (_params.wethTargetInEuler > _params.netWethReceived.add(wethInCollateral)) {
-            // have less ETH than we need in Euler, we have to buy and deposit it
+            // have less BCH than we need in Euler, we have to buy and deposit it
             // borrow more USDC to buy WETH
             uint256 wethToBuy =
                 _params.wethTargetInEuler.sub(_params.netWethReceived.add(wethInCollateral));
@@ -740,8 +740,8 @@ contract ZenAuction is UniFlash, Ownable, EIP712 {
                 abi.encodePacked(wethToBuy.add(_params.netWethReceived))
             );
         } else {
-            // have more ETH than we need in either Euler or from withdrawing from crab
-            //we need to sell ETH and either deposit or withdraw from euler
+            // have more BCH than we need in either Euler or from withdrawing from crab
+            //we need to sell BCH and either deposit or withdraw from euler
             uint256 wethToSell =
                 _params.netWethReceived.add(wethInCollateral).sub(_params.wethTargetInEuler);
             // wethToSell + wEthTargetInEuler = _params.netWethReceived+wethInCollateral
@@ -949,10 +949,10 @@ contract ZenAuction is UniFlash, Ownable, EIP712 {
     }
 
     /**
-     * @dev calculate amount of wPowerPerp to mint and fee based on ETH to deposit into crab
-     * @param _depositedEthAmount amount of ETH deposited
+     * @dev calculate amount of wPowerPerp to mint and fee based on BCH to deposit into crab
+     * @param _depositedEthAmount amount of BCH deposited
      * @param _strategyDebtAmount amount of wPowerperp debt in strategy vault before deposit
-     * @param _strategyCollateralAmount amount of ETH collatal in strategy vault before deposit
+     * @param _strategyCollateralAmount amount of BCH collatal in strategy vault before deposit
      * @return amount of wPowerPerp to mint and fee
      */
     function _calcWPowerPerpToMintAndFee(

@@ -79,7 +79,7 @@ describe("Oracle", function () {
     });
     positionManager = await ethers.getContract("NonfungibleTokenPositionManager", deployer);
 
-    // Create ETH/SQUEETH Pool with positionManager
+    // Create BCH/SQUEETH Pool with positionManager
     squeeth = (await (await ethers.getContractFactory("MockWPowerPerp")).deploy()) as MockWPowerPerp;
     isWethToken0 = parseInt(weth.address, 16) < parseInt(squeeth.address, 16)
     

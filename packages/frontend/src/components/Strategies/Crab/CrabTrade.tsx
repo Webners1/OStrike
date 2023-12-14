@@ -135,9 +135,9 @@ const CrabTrade: React.FC<CrabTradeType> = ({ maxCap, depositedAmount }) => {
       } else if (ethAmount.plus(depositedAmount).plus(borrowEth).gte(maxCap)) {
         depositError = `Amount greater than strategy cap since it flash borrows ${borrowEth.toFixed(
           2,
-        )} ETH. Input a smaller amount`
+        )} BCH. Input a smaller amount`
       } else if (toTokenAmount(balance ?? BIG_ZERO, 18).lt(ethAmount)) {
-        depositError = 'Insufficient ETH balance'
+        depositError = 'Insufficient BCH balance'
       }
       if (withdrawAmount.gt(currentEthValue)) {
         withdrawError = 'Withdraw amount greater than strategy balance'
@@ -229,7 +229,7 @@ const CrabTrade: React.FC<CrabTradeType> = ({ maxCap, depositedAmount }) => {
             confirmationMessage={
               depositOption === 0
                 ? `Woohoo! You're guaranteed a spot in crab v2 `
-                : `Withdrawn ${withdrawAmount.toFixed(4)} ETH`
+                : `Withdrawn ${withdrawAmount.toFixed(4)} BCH`
             }
             txnHash={transactionData?.hash ?? ''}
             confirmType={ConfirmType.CRAB}
@@ -288,15 +288,15 @@ const CrabTrade: React.FC<CrabTradeType> = ({ maxCap, depositedAmount }) => {
                     value={ethAmount.toString()}
                     onChange={(v) => setEthAmount(new BigNumber(v))}
                     label="Amount"
-                    tooltip="ETH Amount to deposit"
+                    tooltip="BCH Amount to deposit"
                     actionTxt="Max"
-                    unit="ETH"
+                    unit="BCH"
                     hint={
                       depositError
                         ? depositError
                         : warning
                           ? warning
-                          : `Balance ${toTokenAmount(balance ?? BIG_ZERO, 18).toFixed(6)} ETH`
+                          : `Balance ${toTokenAmount(balance ?? BIG_ZERO, 18).toFixed(6)} BCH`
                     }
                     convertedValue={ethIndexPrice.times(ethAmount).toFixed(2)}
                     onActionClicked={() => setEthAmount(toTokenAmount(balance ?? BIG_ZERO, 18))}
@@ -308,9 +308,9 @@ const CrabTrade: React.FC<CrabTradeType> = ({ maxCap, depositedAmount }) => {
                     value={withdrawAmount.toString()}
                     onChange={(v) => setWithdrawAmount(new BigNumber(v))}
                     label="Amount"
-                    tooltip="Amount of ETH to withdraw"
+                    tooltip="Amount of BCH to withdraw"
                     actionTxt="Max"
-                    unit="ETH"
+                    unit="BCH"
                     convertedValue={ethIndexPrice.times(withdrawAmount).toFixed(2)}
                     hint={
                       withdrawError ? (
@@ -321,7 +321,7 @@ const CrabTrade: React.FC<CrabTradeType> = ({ maxCap, depositedAmount }) => {
                           <span id="current-crab-eth-bal-input">
                             {(isQueued ? BIG_ZERO : currentEthValue).toFixed(6)}
                           </span>{' '}
-                          ETH
+                          BCH
                         </span>
                       )
                     }

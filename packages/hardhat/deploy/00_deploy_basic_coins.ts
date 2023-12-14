@@ -12,7 +12,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
 
   // if goerli, deploy custom WETH and USDC
-  if (network.name === 'goerli') {
+  if (network.name === 'hardhat') {
     // Deploy USD
     const opynUsdcArgs = ["OpynUSDC", "OpynUSDC", 6]
     const usdc = await deploy("MockErc20", { from: deployer, args: opynUsdcArgs, skipIfAlreadyDeployed: true});
@@ -37,7 +37,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       const weth = await ethers.getContract("WETH9", deployer);
       console.log(`WETH9 Deployed at ${weth.address} 🍇`)
     } else {
+
       console.log(`Using WETH9 at ${wethAddr}`)
+      
     }
 
     // Deploy USD

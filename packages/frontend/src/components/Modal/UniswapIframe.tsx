@@ -115,7 +115,7 @@ export const UniswapIframe: React.FC<UniswapIframeProps> = ({ text, closePositio
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle className={classes.dialogTitle} id="alert-dialog-title">
-          <p>Deposit Squeeth and ETH into Uniswap V3 Pool 🦄</p>
+          <p>Deposit Strike and BCH into Uniswap V3 Pool 🦄</p>
           <Button
             variant="outlined"
             color="primary"
@@ -128,7 +128,7 @@ export const UniswapIframe: React.FC<UniswapIframeProps> = ({ text, closePositio
               <>Copied</>
             ) : (
               <>
-                oSQTH: {oSqueeth?.substring(0, 6)}...{oSqueeth?.substring(oSqueeth.length - 4)}
+                SBCH: {oSqueeth?.substring(0, 6)}...{oSqueeth?.substring(oSqueeth.length - 4)}
               </>
             )}
           </Button>

@@ -6,7 +6,7 @@ import {
   normFactorAtom,
   impliedVolAtom,
   markAtom,
-  osqthRefVolAtom,
+  SBCHRefVolAtom,
   dailyHistoricalFundingAtom,
   currentImpliedFundingAtom,
 } from '@state/controller/atoms'
@@ -19,7 +19,7 @@ import { useOnChainETHPrice } from '@hooks/useETHPrice'
 const SqueethMetrics: React.FC<BoxProps> = (props) => {
   const mark = useAtomValue(markAtom)
   const impliedVol = useAtomValue(impliedVolAtom)
-  const osqthRefVol = useAtomValue(osqthRefVolAtom)
+  const SBCHRefVol = useAtomValue(SBCHRefVolAtom)
   const normFactor = useAtomValue(normFactorAtom)
   const currentImpliedFunding = useAtomValue(currentImpliedFundingAtom)
   const dailyHistoricalFunding = useAtomValue(dailyHistoricalFundingAtom)
@@ -36,12 +36,12 @@ const SqueethMetrics: React.FC<BoxProps> = (props) => {
   return (
     <Box display="flex" alignItems="center" flexWrap="wrap" gridGap="12px" {...props}>
       <Metric
-        label={<MetricLabel label="ETH Price" tooltipTitle={Tooltips.SpotPrice} />}
+        label={<MetricLabel label="BCH Price" tooltipTitle={Tooltips.SpotPrice} />}
         value={formatCurrency(ethPrice.toNumber())}
       />
 
       <Metric
-        label={<MetricLabel label="ETH&sup2; Price" tooltipTitle={Tooltips.SpotPrice} />}
+        label={<MetricLabel label="BCH&sup2; Price" tooltipTitle={Tooltips.SpotPrice} />}
         value={formatCurrency(eth2Price.toNumber())}
       />
 
@@ -56,8 +56,8 @@ const SqueethMetrics: React.FC<BoxProps> = (props) => {
       />
 
       <Metric
-        label={<MetricLabel label="Reference Volatility" tooltipTitle={Tooltips.osqthRefVol} />}
-        value={`${formatNumber(osqthRefVol)}%`}
+        label={<MetricLabel label="Reference Volatility" tooltipTitle={Tooltips.SBCHRefVol} />}
+        value={`${formatNumber(SBCHRefVol)}%`}
       />
 
       <Metric

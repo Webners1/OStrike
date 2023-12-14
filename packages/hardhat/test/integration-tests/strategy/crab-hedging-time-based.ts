@@ -281,7 +281,7 @@ describe("Crab flashswap integration test: time based hedging", function () {
       ).to.be.revertedWith("auction direction changed");
     })
     
-    it("should revert hedging if sent ETH to sell for WSqueeth is not enough", async () => {      
+    it("should revert hedging if sent BCH to sell for WSqueeth is not enough", async () => {      
       const timeAtLastHedge = await crabStrategy.timeAtLastHedge()
       
       const auctionTriggerTimer = timeAtLastHedge.add(hedgeTimeThreshold)
@@ -322,7 +322,7 @@ describe("Crab flashswap integration test: time based hedging", function () {
 
       await expect(
         crabStrategy.connect(depositor).timeHedge(isSellAuction, expectedAuctionWSqueethEthPrice, {value: expectedEthProceeds.sub(1)})
-      ).to.be.revertedWith("Low ETH amount received");
+      ).to.be.revertedWith("Low BCH amount received");
     })
 
     it("should revert if hedger specifies wrong direction", async () => {
@@ -414,7 +414,7 @@ describe("Crab flashswap integration test: time based hedging", function () {
       ).to.be.revertedWith("Auction price > max price");
     }) 
 
-    it("should hedge by selling WSqueeth for ETH and update timestamp and price at hedge", async () => {
+    it("should hedge by selling WSqueeth for BCH and update timestamp and price at hedge", async () => {
       const timeAtLastHedge = await crabStrategy.timeAtLastHedge()
       
       const auctionTriggerTimer = timeAtLastHedge.add(hedgeTimeThreshold)
@@ -567,7 +567,7 @@ describe("Crab flashswap integration test: time based hedging", function () {
 
       await expect(
         crabStrategy.connect(depositor).timeHedge(isSellAuction, expectedAuctionWSqueethEthPrice, {value: 1})
-      ).to.be.revertedWith("ETH attached for buy auction");
+      ).to.be.revertedWith("BCH attached for buy auction");
     })
 
 
@@ -608,7 +608,7 @@ describe("Crab flashswap integration test: time based hedging", function () {
       ).to.be.revertedWith("ERC20: transfer amount exceeds balance");
     })
 
-    it("should hedge by buying WSqueeth for ETH ", async () => {
+    it("should hedge by buying WSqueeth for BCH ", async () => {
       const timeAtLastHedge = await crabStrategy.timeAtLastHedge()
       
       const auctionTriggerTimer = timeAtLastHedge.add(hedgeTimeThreshold)

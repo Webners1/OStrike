@@ -26,7 +26,7 @@ task('wallet', 'Create a wallet (pk) link', async (_, { ethers }) => {
 });
 
 task('fundedwallet', 'Create a wallet (pk) link and fund it with deployer?')
-  .addOptionalParam('amount', 'Amount of ETH to send to wallet after generating')
+  .addOptionalParam('amount', 'Amount of BCH to send to wallet after generating')
   .addOptionalParam('url', 'URL to add pk to')
   .setAction(async (taskArgs, { network, ethers }) => {
     const randomWallet = ethers.Wallet.createRandom();
@@ -54,13 +54,13 @@ task('fundedwallet', 'Create a wallet (pk) link and fund it with deployer?')
       let deployerWallet = ethers.Wallet.fromMnemonic(localDeployerMnemonic);
       deployerWallet = deployerWallet.connect(ethers.provider);
       console.log(
-        '💵 Sending ' + amount + ' ETH to ' + randomWallet.address + ' using deployer account'
+        '💵 Sending ' + amount + ' BCH to ' + randomWallet.address + ' using deployer account'
       );
       const sendresult = await deployerWallet.sendTransaction(tx);
       console.log('\n' + url + '/pk#' + privateKey + '\n');
       
     } else {
-      console.log('💵 Sending ' + amount + ' ETH to ' + randomWallet.address + ' using local node');
+      console.log('💵 Sending ' + amount + ' BCH to ' + randomWallet.address + ' using local node');
       console.log('\n' + url + '/pk#' + privateKey + '\n');
       return send(ethers.provider.getSigner(), tx);
     }
@@ -205,7 +205,7 @@ task('balance', "Prints an account's balance")
   .addPositionalParam('account', "The account's address")
   .setAction(async (taskArgs, { ethers }) => {
     const balance = await ethers.provider.getBalance(await addr(ethers, taskArgs.account));
-    console.log(formatUnits(balance, 'ether'), 'ETH');
+    console.log(formatUnits(balance, 'ether'), 'BCH');
   });
 
 function send(signer: any, txparams: any) {
@@ -218,7 +218,7 @@ function send(signer: any, txparams: any) {
   });
 }
 
-task('send', 'Send ETH')
+task('send', 'Send BCH')
   .addParam('from', 'From address or account index')
   .addOptionalParam('to', 'To address or account index')
   .addOptionalParam('amount', 'Amount to send in ether')

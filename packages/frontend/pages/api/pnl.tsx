@@ -105,7 +105,7 @@ const UserPnl: React.FC<UserPnlProps> = ({ strategy, depositTimestamp, pnl, pnlD
           </div>
           <div tw="flex text-4xl text-white font-bold ml-4">
             {strategy === 'crab' && 'Crabber - Stacking USDC'}
-            {strategy === 'zenbull' && 'Zen Bull - Stacking ETH'}
+            {strategy === 'zenbull' && 'Zen Bull - Stacking BCH'}
           </div>
         </div>
         <div tw="flex text-2xl text-white text-opacity-60 ml-5">
@@ -126,7 +126,7 @@ const UserPnl: React.FC<UserPnlProps> = ({ strategy, depositTimestamp, pnl, pnlD
 
           <div tw="flex text-2xl text-white text-opacity-60 ml-4">
             {strategy === 'crab' && 'USD return'}
-            {strategy === 'zenbull' && 'ETH return'}
+            {strategy === 'zenbull' && 'BCH return'}
           </div>
         </div>
       </div>
@@ -144,7 +144,7 @@ const UserPnl: React.FC<UserPnlProps> = ({ strategy, depositTimestamp, pnl, pnlD
             </marker>
           </defs>
 
-          <polyline fill="none" stroke="#70E3F6" strokeWidth="3" points={points} />
+          <polyline fill="none" stroke="#0cbf94" strokeWidth="3" points={points} />
           <g>
             <line
               x1={Y_AXIS_WIDTH}

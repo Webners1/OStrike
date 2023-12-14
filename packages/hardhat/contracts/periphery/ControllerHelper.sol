@@ -74,7 +74,7 @@ contract ControllerHelper is UniswapControllerHelper, EulerControllerHelper, IER
     }
 
     /**
-     * @notice receive function to allow ETH transfer to this contract
+     * @notice receive function to allow BCH transfer to this contract
      */
     receive() external payable {}
 
@@ -108,7 +108,7 @@ contract ControllerHelper is UniswapControllerHelper, EulerControllerHelper, IER
 
     /**
      * @notice sell long wPowerPerp and flashswap mint short position
-     * @dev flashswap amount = collateral amount - msg.value - ETH from selling long wPowerPerp
+     * @dev flashswap amount = collateral amount - msg.value - BCH from selling long wPowerPerp
      * @param _params ControllerHelperDataType.FlashSellLongWMintParams struct
      */
     function flashswapSellLongWMint(ControllerHelperDataType.FlashSellLongWMintParams calldata _params)
@@ -235,8 +235,8 @@ contract ControllerHelper is UniswapControllerHelper, EulerControllerHelper, IER
     }
 
     /**
-     * @notice FLash mint short position, LP in Uni v3, use LP NFT as collateral and withdraw ETH collateral to repay flashloan
-     * @dev sender can specify the amount of ETH collateral to withdraw in case vault.collateralAmount > ETH to repay for loan
+     * @notice FLash mint short position, LP in Uni v3, use LP NFT as collateral and withdraw BCH collateral to repay flashloan
+     * @dev sender can specify the amount of BCH collateral to withdraw in case vault.collateralAmount > BCH to repay for loan
      * @param _params ControllerHelperDataType.FlashloanWMintLpDepositNftParams struct
      */
     function flashloanWMintLpDepositNft(ControllerHelperDataType.FlashloanWMintLpDepositNftParams calldata _params)
@@ -735,7 +735,7 @@ contract ControllerHelper is UniswapControllerHelper, EulerControllerHelper, IER
                 }
             }
 
-            // remove flashloan amount in ETH from vault + any amount of collateral user want to withdraw (sum <= vault.collateralAmount)
+            // remove flashloan amount in BCH from vault + any amount of collateral user want to withdraw (sum <= vault.collateralAmount)
             ControllerHelperUtil.burnWithdrawFromVault(controller, weth, vaultId, 0, _amount);
         }
     }
@@ -835,7 +835,7 @@ contract ControllerHelper is UniswapControllerHelper, EulerControllerHelper, IER
     }
 
     /**
-     * @notice wrap ETH to WETH
+     * @notice wrap BCH to WETH
      * @param _amount amount to wrap
      */
     function wrapInternal(uint256 _amount) internal {
@@ -902,7 +902,7 @@ contract ControllerHelper is UniswapControllerHelper, EulerControllerHelper, IER
             }
         }
 
-        // wrap ETH to WETH
+        // wrap BCH to WETH
         wrapInternal(address(this).balance);
     }
 }

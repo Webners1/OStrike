@@ -161,7 +161,7 @@ contract ZenAuctionTestFork is Test {
         vm.label(eulerMarketsModule, "EulerMarkets");
         vm.label(usdc, "USDC");
         vm.label(weth, "WETH");
-        vm.label(wPowerPerp, "oSQTH");
+        vm.label(wPowerPerp, "SBCH");
         vm.label(address(crabV2), "crabV2");
         vm.label(address(swapRouter), "SwapRouter");
         vm.label(address(sigUtil), "SigUtils");
@@ -183,12 +183,12 @@ contract ZenAuctionTestFork is Test {
         vm.prank(0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf);
         IERC20(usdc).transfer(user2, 250000000e6);
         //vm.stopPrank();
-        // osQTH whale
+        // SBCH whale
         vm.prank(0x35AeD16f957b39342744B8366A8c13172507D7b8);
         IERC20(wPowerPerp).transfer(user1, 500e18);
         vm.prank(0x35AeD16f957b39342744B8366A8c13172507D7b8);
         IERC20(wPowerPerp).transfer(user2, 500e18);
-        // mint more oSQTH
+        // mint more SBCH
         vm.prank(user1);
         controller.mintWPowerPerpAmount{ value: 100000e18 }(0, 10000e18, 0);
         vm.prank(user2);
@@ -5115,7 +5115,7 @@ contract ZenAuctionTestFork is Test {
 
     /**
      * @dev calculate amount of strategy token to mint for depositor
-     * @param _amount amount of ETH deposited
+     * @param _amount amount of BCH deposited
      * @param _strategyCollateralAmount amount of strategy collateral
      * @param _crabTotalSupply total supply of strategy token
      * @return amount of strategy token to mint

@@ -59,7 +59,7 @@ const CrabPosition: React.FC<CrabPositionType> = ({
             <Typography variant="body1">$ {depositedUsd.toFixed(2)}</Typography>
             <Typography variant="body2" color="textSecondary">
               <span id="pos-page-crab-deposited-amount">{depositedEth.toFixed(6)}</span>
-              &nbsp; ETH
+              &nbsp; BCH
             </Typography>
           </div>
           <div style={{ width: '50%' }}>
@@ -68,7 +68,7 @@ const CrabPosition: React.FC<CrabPositionType> = ({
             </Typography>
             <Typography variant="body1">{!loading ? `$ ${currentCrabPositionValue.toFixed(2)}` : 'Loading'}</Typography>
             <Typography variant="body2" color="textSecondary">
-              {!loading ? `${currentCrabPositionValueInETH.toFixed(6)}  ETH` : 'Loading'}
+              {!loading ? `${currentCrabPositionValueInETH.toFixed(6)}  BCH` : 'Loading'}
             </Typography>
           </div>
         </div>

@@ -107,13 +107,13 @@ const LPInfo: React.FC<{ lpType: number }> = ({ lpType }) => {
           Buy squeeth and LP
         </Typography>
         <Typography variant="body1" className={classes.content}>
-          Earn a payoff similar to ETH<sup>1.5</sup>
+          Earn a payoff similar to BCH<sup>1.5</sup>
         </Typography>
         <Typography variant="subtitle1" className={classes.sectionTitle}>
           Strategy Overview
         </Typography>
         <Typography variant="body1" className={classes.content}>
-          Buying and LPing gives you a leverage position with a payoff similar to ETH<sup>1.5</sup>. You give up some of
+          Buying and LPing gives you a leverage position with a payoff similar to BCH<sup>1.5</sup>. You give up some of
           your squeeth upside in exchange for trading fees. You are paying daily premiums for being long squeeth, but
           earning fees from LPing on Uniswap.
         </Typography>
@@ -129,12 +129,12 @@ const LPInfo: React.FC<{ lpType: number }> = ({ lpType }) => {
         </Typography>
         <Typography variant="body1" className={classes.content}>
           You are exposed to squeeth premiums, so if you hold the position for a long period of time without upward
-          price movements in ETH, you can lose considerable funds to premium payments.
+          price movements in BCH, you can lose considerable funds to premium payments.
         </Typography>
         <br />
         <Typography variant="body1" className={classes.content}>
           {' '}
-          Squeeth smart contracts have been audited by Trail of Bits, Akira, and Sherlock. However, smart contracts are
+          Strike smart contracts have been audited by Trail of Bits, Akira, and Sherlock. However, smart contracts are
           experimental technology and we encourage caution only risking funds you can afford to lose.
         </Typography>
       </>
@@ -147,14 +147,14 @@ const LPInfo: React.FC<{ lpType: number }> = ({ lpType }) => {
         Mint squeeth and LP
       </Typography>
       <Typography variant="body1" className={classes.content}>
-        Earn yield from trading fees while being long ETH
+        Earn yield from trading fees while being long BCH
       </Typography>
       <Typography variant="subtitle1" className={classes.sectionTitle}>
         Strategy Overview
       </Typography>
       <Typography variant="body1" className={classes.content}>
-        Minting and LPing is similar to a covered call. You start off with a position similar to 1x long ETH that gets
-        less long ETH as the price moves up and longer ETH as the price moves down.
+        Minting and LPing is similar to a covered call. You start off with a position similar to 1x long BCH that gets
+        less long BCH as the price moves up and longer BCH as the price moves down.
       </Typography>
       <Typography variant="subtitle1" className={classes.sectionTitle}>
         Payoff
@@ -168,12 +168,12 @@ const LPInfo: React.FC<{ lpType: number }> = ({ lpType }) => {
       </Typography>
       <Typography variant="body1" className={classes.content}>
         You enter this position neutral to squeeth exposure, but could end up long squeeth exposed to premiums or short
-        squeeth depending on ETH price movements. If you fall below the minimum collateralization threshold (150%), you
+        squeeth depending on BCH price movements. If you fall below the minimum collateralization threshold (150%), you
         are at risk of liquidation.
       </Typography>
       <br />
       <Typography variant="body1" className={classes.content}>
-        Squeeth smart contracts have been audited by Trail of Bits, Akira, and Sherlock. However, smart contracts are
+        Strike smart contracts have been audited by Trail of Bits, Akira, and Sherlock. However, smart contracts are
         experimental technology and we encourage caution only risking funds you can afford to lose.
       </Typography>
     </>
@@ -192,10 +192,10 @@ export function LPCalculator() {
         <div className={classes.leftColumn}>
           <>
             <Typography variant="h3" className={classes.title}>
-              Uniswap V3 LP SQTH-ETH Pool
+              Uniswap V3 LP SBCH-BCH Pool
             </Typography>
             <Typography variant="subtitle1" className={classes.description}>
-              Earn LP fees for providing SQTH-ETH liquidity
+              Earn LP fees for providing SBCH-BCH liquidity
             </Typography>
           </>
 

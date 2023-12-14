@@ -89,7 +89,7 @@ contract ZenBullStrategyFuzzTest is Test {
         vm.label(eulerMarketsModule, "EulerMarkets");
         vm.label(usdc, "USDC");
         vm.label(weth, "WETH");
-        vm.label(wPowerPerp, "oSQTH");
+        vm.label(wPowerPerp, "SBCH");
         vm.label(address(crabV2), "crabV2");
 
         vm.deal(user1, 100000000e18);
@@ -151,7 +151,7 @@ contract ZenBullStrategyFuzzTest is Test {
             _calcWPowerPerpAndCrabNeededForWithdraw(bullToMint);
         uint256 usdcToRepay = _calcUsdcNeededForWithdraw(bullToMint);
         uint256 wethToWithdraw = testUtil.calcWethToWithdraw(bullToMint);
-        // transfer some oSQTH from some squeether
+        // transfer some SBCH from some squeether
         vm.prank(0x56178a0d5F301bAf6CF3e1Cd53d9863437345Bf9);
         IERC20(wPowerPerp).transfer(user1, wPowerPerpToRedeem);
 
@@ -176,7 +176,7 @@ contract ZenBullStrategyFuzzTest is Test {
         assertEq(
             ethInLendingBefore.sub(wethToWithdraw),
             IEulerEToken(eToken).balanceOfUnderlying(address(bullStrategy)),
-            "Bull ETH in leverage amount mismatch"
+            "Bull BCH in leverage amount mismatch"
         );
         assertEq(
             userUsdcBalanceBefore.sub(usdcToRepay),
@@ -191,7 +191,7 @@ contract ZenBullStrategyFuzzTest is Test {
         assertEq(
             userWPowerPerpBalanceBefore.sub(wPowerPerpToRedeem),
             IERC20(wPowerPerp).balanceOf(user1),
-            "User1 oSQTH balance mismatch"
+            "User1 SBCH balance mismatch"
         );
         assertEq(
             crabBalanceBefore.sub(crabToRedeem),

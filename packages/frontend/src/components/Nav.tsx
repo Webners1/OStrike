@@ -147,7 +147,7 @@ const Nav: React.FC = () => {
                 path="/strategies/crab"
                 name="Strategies"
               />
-              <NavLink path="/squeeth" name="Squeeth" />
+              <NavLink path="/squeeth" name="Strike" />
               <NavLink path="/positions" name="Positions" />
               <a
                 href="https://squeethportal.xyz"
@@ -184,7 +184,7 @@ const Nav: React.FC = () => {
                 <>Copied</>
               ) : (
                 <>
-                  <span style={{ textTransform: 'none' }}>oSQTH</span>
+                  <span style={{ textTransform: 'none' }}>SBCH</span>
                   <Hidden mdDown>
                     : {oSqueeth?.substring(0, 6)}...{oSqueeth?.substring(oSqueeth.length - 4)}
                   </Hidden>
@@ -196,7 +196,7 @@ const Nav: React.FC = () => {
           </div>
         </Hidden>
         <Hidden mdUp>
-          <Typography color="primary">{toTokenAmount(balance ?? BIG_ZERO, 18).toFixed(4)} ETH</Typography>
+          <Typography color="primary">{toTokenAmount(balance ?? BIG_ZERO, 18).toFixed(4)} BCH</Typography>
           <IconButton onClick={() => setNavOpen(true)}>
             <MenuIcon />
           </IconButton>
@@ -221,7 +221,7 @@ const Nav: React.FC = () => {
                   <>Copied</>
                 ) : (
                   <>
-                    <span style={{ textTransform: 'none' }}>oSQTH</span>: {oSqueeth?.substring(0, 6)}...
+                    <span style={{ textTransform: 'none' }}>SBCH</span>: {oSqueeth?.substring(0, 6)}...
                     {oSqueeth?.substring(oSqueeth.length - 4)}
                   </>
                 )}
@@ -231,7 +231,7 @@ const Nav: React.FC = () => {
                 path="/strategies/crab"
                 name="Strategies"
               />
-              <NavLink path="/squeeth" name="Squeeth" />
+              <NavLink path="/squeeth" name="Strike" />
               <NavLink path="/positions" name="Positions" />
               <a
                 href="https://squeethportal.xyz"

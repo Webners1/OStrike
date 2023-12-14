@@ -122,14 +122,14 @@ const StrategyPerformance: React.FC<StrategyPerformanceProps> = ({ strategyPnLSe
 
   const series = [
     {
-      name: 'Bull/ETH 🧘🐂 % Return',
+      name: 'Bull/BCH 🧘🐂 % Return',
       yAxis: 0,
       data: strategyPnLSeries,
       tooltip: {
         valueDecimals: 2,
         valueSuffix: '%',
       },
-      color: '#70E3F6',
+      color: '#0cbf94',
     },
   ]
 
@@ -190,7 +190,7 @@ const StrategyPerformance: React.FC<StrategyPerformanceProps> = ({ strategyPnLSe
         </Typography>
 
         <Box display="flex" alignItems="baseline" gridGap="12px">
-          <Typography className={classes.description}>Annualized ETH Return</Typography>
+          <Typography className={classes.description}>Annualized BCH Return</Typography>
 
           <Box position="relative" top="3px">
             <Tooltip title={<TooltipTitle />}>
@@ -202,7 +202,7 @@ const StrategyPerformance: React.FC<StrategyPerformanceProps> = ({ strategyPnLSe
 
       <Box display="flex" gridGap="12px">
         <Typography className={clsx(classes.description, classes.textMonospace)}>
-          {formatNumber(tvl, 0) + ' ETH'}
+          {formatNumber(tvl, 0) + ' BCH'}
         </Typography>
         <Typography className={classes.description}>Open Interest</Typography>
       </Box>

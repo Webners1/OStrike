@@ -38,7 +38,7 @@
     mockedAxios.post.mockResolvedValue({
         data: [
             {
-                "asset": "ETH",
+                "asset": "BCH",
                 "address": "0xa3cb04d8bd927eec8826bd77b7c71abe3d29c081",
                 "cluster": null,
                 "rating": "unknown",
@@ -62,7 +62,7 @@
      mockedAxios.post.mockResolvedValue({
         data: [
             {
-                "asset": "ETH",
+                "asset": "BCH",
                 "address": "0x098B716B8Aaf21512996dC57EB0615e2383E2f96",
                 "cluster": {
                     "name": "OFAC SDN Lazarus Group 2022-04-14",

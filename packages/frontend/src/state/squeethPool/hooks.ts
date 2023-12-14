@@ -150,7 +150,7 @@ export const useGetBuyQuoteForETH = () => {
   const wethToken = useAtomValue(wethTokenAtom)
   const squeethToken = useAtomValue(squeethTokenAtom)
 
-  //If I input an exact amount of ETH I want to spend, tells me how much Squeeth I'd purchase
+  //If I input an exact amount of BCH I want to spend, tells me how much Strike I'd purchase
   const getBuyQuoteForETH = useAppCallback(
     async (ETHAmount: BigNumber, slippageAmount = new BigNumber(DEFAULT_SLIPPAGE)) => {
       const emptyState = {
@@ -263,7 +263,7 @@ export const useGetBuyQuote = () => {
   const pool = useAtomValue(poolAtom)
   const wethToken = useAtomValue(wethTokenAtom)
   const squeethToken = useAtomValue(squeethTokenAtom)
-  //If I input an exact amount of squeeth I want to buy, tells me how much ETH I need to pay to purchase that squeeth
+  //If I input an exact amount of squeeth I want to buy, tells me how much BCH I need to pay to purchase that squeeth
   const getBuyQuote = useAppCallback(
     async (squeethAmount: BigNumber, slippageAmount = new BigNumber(DEFAULT_SLIPPAGE)) => {
       const emptyState = {
@@ -276,9 +276,9 @@ export const useGetBuyQuote = () => {
       if (!squeethAmount || !pool) return emptyState
 
       try {
-        //WETH is input token, squeeth is output token. I'm using WETH to buy Squeeth
+        //WETH is input token, squeeth is output token. I'm using WETH to buy Strike
         const route = new Route([pool], wethToken!, squeethToken!)
-        //getting the amount of ETH I need to put in to get an exact amount of squeeth I inputted out
+        //getting the amount of BCH I need to put in to get an exact amount of squeeth I inputted out
         const rawAmount = CurrencyAmount.fromRawAmount(
           squeethToken!,
           fromTokenAmount(squeethAmount, OSQUEETH_DECIMALS).toFixed(0),
@@ -291,7 +291,7 @@ export const useGetBuyQuote = () => {
         const trade = await Trade.exactOut(route, rawAmount)
         const feePercent = new BigNumber(pool.fee).div(10000)
 
-        //the amount of ETH I need to put in
+        //the amount of BCH I need to put in
         return {
           amountIn: new BigNumber(trade.inputAmount.toSignificant(18)),
           maximumAmountIn: new BigNumber(
@@ -511,7 +511,7 @@ export const useAutoRoutedGetSellQuote = () => {
   const web3 = useAtomValue(web3Atom)
   const address = useAtomValue(addressAtom)
 
-  //I input an exact amount of squeeth I want to sell, tells me how much ETH I'd receive
+  //I input an exact amount of squeeth I want to sell, tells me how much BCH I'd receive
   const getSellQuote = useAppCallback(
     async (squeethAmount: BigNumber, slippageAmount = new BigNumber(DEFAULT_SLIPPAGE)) => {
       const emptyState = {
@@ -572,7 +572,7 @@ export const useGetSellQuote = () => {
   const pool = useAtomValue(poolAtom)
   const squeethToken = useAtomValue(squeethTokenAtom)
   const wethToken = useAtomValue(wethTokenAtom)
-  //I input an exact amount of squeeth I want to sell, tells me how much ETH I'd receive
+  //I input an exact amount of squeeth I want to sell, tells me how much BCH I'd receive
   const getSellQuote = useAppCallback(
     async (squeethAmount: BigNumber, slippageAmount = new BigNumber(DEFAULT_SLIPPAGE)) => {
       const emptyState = {
@@ -586,7 +586,7 @@ export const useGetSellQuote = () => {
       try {
         //squeeth is input token, WETH is output token. I'm selling squeeth for WETH
         const route = new Route([pool], squeethToken!, wethToken!)
-        //getting the amount of ETH I'd receive for inputting the amount of squeeth I want to sell
+        //getting the amount of BCH I'd receive for inputting the amount of squeeth I want to sell
         const rawAmount = CurrencyAmount.fromRawAmount(
           squeethToken!,
           fromTokenAmount(squeethAmount, OSQUEETH_DECIMALS).toFixed(0),
@@ -599,7 +599,7 @@ export const useGetSellQuote = () => {
         const trade = await Trade.exactIn(route, rawAmount)
         const feePercent = new BigNumber(pool.fee).div(10000)
 
-        //the amount of ETH I'm receiving
+        //the amount of BCH I'm receiving
         return {
           amountOut: new BigNumber(trade.outputAmount.toSignificant(18)),
           minimumAmountOut: new BigNumber(
@@ -753,7 +753,7 @@ export const useGetSellQuoteForETH = () => {
   const pool = useAtomValue(poolAtom)
   const squeethToken = useAtomValue(squeethTokenAtom)
   const wethToken = useAtomValue(wethTokenAtom)
-  //I input an exact amount of ETH I want to receive, tells me how much squeeth I'd need to sell
+  //I input an exact amount of BCH I want to receive, tells me how much squeeth I'd need to sell
   const getSellQuoteForETH = useAppCallback(
     async (ETHAmount: BigNumber, slippageAmount = new BigNumber(DEFAULT_SLIPPAGE)) => {
       const emptyState = {
@@ -766,7 +766,7 @@ export const useGetSellQuoteForETH = () => {
       try {
         //squeeth is input token, WETH is output token. I'm selling squeeth for WETH
         const route = new Route([pool], squeethToken!, wethToken!)
-        //getting the amount of squeeth I'd need to sell to receive my desired amount of ETH
+        //getting the amount of squeeth I'd need to sell to receive my desired amount of BCH
         const rawAmount = CurrencyAmount.fromRawAmount(wethToken!, fromTokenAmount(ETHAmount, 18).toFixed(0))
 
         if (rawAmount.equalTo(0)) {

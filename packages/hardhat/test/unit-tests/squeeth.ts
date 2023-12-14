@@ -21,7 +21,7 @@ describe("WPowerPerp", function () {
   describe("Deploymenl", async() => {
     it("Deployment", async function () {
       const WPowerPerpContract = await ethers.getContractFactory("WPowerPerp");
-      wsqueeth = (await WPowerPerpContract.deploy('Wrapped Squeeth', 'WSQU')) as WPowerPerp;
+      wsqueeth = (await WPowerPerpContract.deploy('Wrapped Strike', 'WSQU')) as WPowerPerp;
     });
   })
 

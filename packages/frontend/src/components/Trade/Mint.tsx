@@ -27,11 +27,11 @@ import { useVaultData } from '@hooks/useVaultData'
 import useAppEffect from '@hooks/useAppEffect'
 import { useETHPrice } from '@hooks/useETHPrice'
 import ethLogo from 'public/images/eth-logo.svg'
-import osqthLogo from 'public/images/osqth-logo.svg'
+import SBCHLogo from 'public/images/OSQTH-logo.svg'
 import Alert from '@components/Alert'
 import Checkbox from '@components/Checkbox'
 import useAppCallback from '@hooks/useAppCallback'
-import { useOSQTHPrice } from '@hooks/useOSQTHPrice'
+import { useSBCHPrice } from '@hooks/useOSQTHPrice'
 import Metric, { MetricLabel } from '@components/Metric'
 import { formatNumber, formatCurrency } from '@utils/formatter'
 import RestrictionInfo from '@components/RestrictionInfo'
@@ -70,7 +70,7 @@ const MintSqueeth: React.FC<MintProps> = ({ onMint, showManageLink }) => {
   const { validVault: vault, vaultId } = useFirstValidVault()
   const { existingCollat, existingCollatPercent } = useVaultData(vault)
   const ethPrice = useETHPrice()
-  const { data: osqthPrice } = useOSQTHPrice()
+  const { data: SBCHPrice } = useSBCHPrice()
   const { isRestricted, isWithdrawAllowed } = useRestrictUser()
   const selectWallet = useSelectWallet()
 
@@ -123,9 +123,9 @@ const MintSqueeth: React.FC<MintProps> = ({ onMint, showManageLink }) => {
     }
 
     if (connected && collatAmountBN.isGreaterThan(balance)) {
-      setMintMinCollatError('Insufficient ETH balance')
+      setMintMinCollatError('Insufficient BCH balance')
     } else if (connected && collatAmountBN.plus(existingCollat).lt(MIN_COLLATERAL_AMOUNT)) {
-      setMintMinCollatError('Minimum collateral is 6.9 ETH')
+      setMintMinCollatError('Minimum collateral is 6.9 BCH')
     }
   }, [balance.toString(), connected, existingCollat.toString(), collatAmountBN.toString(), collatPercent])
 
@@ -166,7 +166,7 @@ const MintSqueeth: React.FC<MintProps> = ({ onMint, showManageLink }) => {
           id="lp-page-mint-eth-input"
           value={collatAmount}
           onInputChange={(v) => setCollatAmount(v)}
-          symbol="ETH"
+          symbol="BCH"
           logo={ethLogo}
           balance={balance}
           usdPrice={ethPrice}
@@ -237,10 +237,10 @@ const MintSqueeth: React.FC<MintProps> = ({ onMint, showManageLink }) => {
           id="lp-page-mint-trade-details"
           label="Mint"
           value={mintAmount.toFixed(6)}
-          symbol="oSQTH"
-          logo={osqthLogo}
+          symbol="SBCH"
+          logo={SBCHLogo}
           balance={oSqueethBal}
-          usdPrice={osqthPrice}
+          usdPrice={SBCHPrice}
           showMaxAction={false}
           readOnly
         />

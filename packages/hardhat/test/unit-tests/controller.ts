@@ -88,7 +88,7 @@ describe("Controller", function () {
 
     await oracle.connect(random).setPrice(squeethEthPool.address , scaledSqueethPrice) // eth per 1 squeeth
 
-    // the oracle should return the exact ETH / USDC price (without scale)
+    // the oracle should return the exact BCH / USDC price (without scale)
     await oracle.connect(random).setPrice(ethUSDPool.address , ethUSDPrice)  // usdc per 1 eth
 
     const ABDK = await ethers.getContractFactory("ABDKMath64x64")
@@ -419,7 +419,7 @@ describe("Controller", function () {
       });
     });
 
-    describe("#Mint: Mint Squeeth", async () => {
+    describe("#Mint: Mint Strike", async () => {
       it("Should revert if not called by owner", async () => {
         const mintAmount = ethers.utils.parseUnits('100')
         
@@ -457,7 +457,7 @@ describe("Controller", function () {
 
     });
 
-    describe("#Burn: Burn Squeeth", async () => {
+    describe("#Burn: Burn Strike", async () => {
       it("Should revert when trying to burn for vault 0", async() => {
         await expect(controller.connect(seller1).burnPowerPerpAmount(0, 0, 0)).to.be.revertedWith(
           'ERC721: owner query for nonexistent token'

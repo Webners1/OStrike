@@ -1,6 +1,6 @@
 # `WSqueeth`
 
-this is the ERC20 contract for long position of Squeeth
+this is the ERC20 contract for long position of Strike
 
 this contract implements IWPowerPerp interface, makes it controllable by Controller.
 

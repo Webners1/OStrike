@@ -223,7 +223,7 @@ contract DepositAuctionTest is BaseForkSetup {
         // find out the root cause of this rounding issue
 
         // turns out the issue did not occur,
-        // so we go ahead as though the auction closed for 0.993 osqth price
+        // so we go ahead as though the auction closed for 0.993 SBCH price
 
         Order memory order =
             Order(0, mm1, toMint - 1e18, (sqthPrice * 1005) / 1000, true, block.timestamp, 0, 1, 0x00, 0x00);
@@ -329,7 +329,7 @@ contract DepositAuctionTest is BaseForkSetup {
     }
 
     // TODO find a way to make this reusable and test easily
-    // for multiple ETH movements and external events like partial fills
+    // for multiple BCH movements and external events like partial fills
     // eth going down
     function testDepositAuctionEthUp() public {
         DepositAuctionParams memory p;
@@ -337,7 +337,7 @@ contract DepositAuctionTest is BaseForkSetup {
         p.depositsQueued = netting.depositsQueued();
         // find the eth value of it
         p.minEth = _convertUSDToETH(p.depositsQueued);
-        console.log("Starting ETH", p.minEth / 10 ** 18);
+        console.log("Starting BCH", p.minEth / 10 ** 18);
 
         // lets get the uniswap price, you can get this from uniswap function in crabstratgegy itself
         uint256 sqthPrice = (_getSqthPrice(1e18) * 988) / 1000;
@@ -357,7 +357,7 @@ contract DepositAuctionTest is BaseForkSetup {
         // find out the root cause of this rounding issue
 
         // turns out the issue did not occur,
-        // so we go ahead as though the auction closed for 0.993 osqth price
+        // so we go ahead as though the auction closed for 0.993 SBCH price
 
         Order memory order = Order(
             0,
@@ -403,7 +403,7 @@ contract DepositAuctionTest is BaseForkSetup {
         console.log(address(depositor).balance, "starting");
         p.minEth = _convertUSDToETH(p.depositsQueued);
         p.clearingPrice = _getSqthPrice(1e18);
-        console.log("Ending ETH", p.minEth / 10 ** 18);
+        console.log("Ending BCH", p.minEth / 10 ** 18);
         (,, collateral, debt) = ICrabStrategyV2(crab).getVaultDetails();
         p.totalDeposit = _findTotalDepositFromAuctioned(collateral, debt, toMint);
         console.log("Using only", toMint, "sqth");
@@ -460,12 +460,12 @@ contract DepositAuctionTest is BaseForkSetup {
         return mid + 1e7;
     }
 
-    function _isEnough(uint256 _userETh, uint256 oSqthQuantity, uint256 oSqthPrice, uint256 _totalDep)
+    function _isEnough(uint256 _userETh, uint256 SBCHQuantity, uint256 SBCHPrice, uint256 _totalDep)
         internal
         pure
         returns (bool)
     {
-        uint256 totalAfterSelling = (_userETh + ((oSqthQuantity * oSqthPrice)) / 1e18);
+        uint256 totalAfterSelling = (_userETh + ((SBCHQuantity * SBCHPrice)) / 1e18);
         return totalAfterSelling > _totalDep;
     }
 

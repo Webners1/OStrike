@@ -116,12 +116,12 @@ export const CrabStrategyHistory: React.FC = () => {
                 </div>
                 <div className={clsx(classes.txSubItem, d.isSellingSqueeth ? classes.red : classes.green)}>
                   <Typography variant="subtitle1">
-                    <b style={{ fontWeight: 600 }}>{d.oSqueethAmount.toFixed(6)}</b> oSQTH
+                    <b style={{ fontWeight: 600 }}>{d.oSqueethAmount.toFixed(6)}</b> SBCH
                   </Typography>
                 </div>
                 <div className={clsx(classes.txSubItem, d.isSellingSqueeth ? classes.green : classes.red)}>
                   <Typography variant="subtitle1">
-                    <b style={{ fontWeight: 600 }}>{d.ethAmount.toFixed(6)}</b> ETH
+                    <b style={{ fontWeight: 600 }}>{d.ethAmount.toFixed(6)}</b> BCH
                   </Typography>
                 </div>
                 <div className={classes.txLink}>
@@ -163,7 +163,7 @@ const UserCrabHistory: React.FC<{ user: string; networkId: Networks }> = ({ user
                 variant="subtitle1"
                 className={d.type === CrabStrategyTxType.FLASH_DEPOSIT ? classes.red : classes.green}
               >
-                <b style={{ fontWeight: 600 }}>{d.ethAmount.toFixed(6)}</b> ETH
+                <b style={{ fontWeight: 600 }}>{d.ethAmount.toFixed(6)}</b> BCH
               </Typography>
               <Typography variant="caption" color="textSecondary">
                 ${d.ethUsdValue.toFixed(2)}

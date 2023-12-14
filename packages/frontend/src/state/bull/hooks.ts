@@ -312,7 +312,7 @@ export const useGetFlashBulldepositParams = () => {
       minEthFromUsdc: BIG_ZERO,
       ethOutForSqth: BIG_ZERO,
       ethOutForUsdc: BIG_ZERO,
-      oSqthIn: BIG_ZERO,
+      SBCHIn: BIG_ZERO,
       usdcIn: BIG_ZERO,
       wPowerPerpPoolFee: UNI_POOL_FEES,
       usdcPoolFee: getUSDCPoolFee(network),
@@ -336,7 +336,7 @@ export const useGetFlashBulldepositParams = () => {
         const middle = start.plus(end).div(2)
 
         const ethToCrab = totalEthDeposit.times(middle)
-        const { oSqthToMint, wethToLend, usdcToBorrow } = await getWethToLendFromCrabEth(
+        const { SBCHToMint, wethToLend, usdcToBorrow } = await getWethToLendFromCrabEth(
           bullStrategyContract,
           ethToCrab,
           crabV2Vault,
@@ -347,11 +347,11 @@ export const useGetFlashBulldepositParams = () => {
 
         if (ethToCrab.eq(prevState.ethToCrab)) break
 
-        const oSqthProceedsPromise = getExactIn(
+        const SBCHProceedsPromise = getExactIn(
           quoterContract,
           oSqueeth,
           weth,
-          fromTokenAmount(oSqthToMint, 18),
+          fromTokenAmount(SBCHToMint, 18),
           UNI_POOL_FEES,
           slippage,
         )
@@ -365,16 +365,16 @@ export const useGetFlashBulldepositParams = () => {
         )
 
         const [
-          { minAmountOut: oSqthMinProceeds, amountOut: oSqthProceeds },
+          { minAmountOut: SBCHMinProceeds, amountOut: SBCHProceeds },
           { minAmountOut: usdcMinProceeds, amountOut: usdcProceeds },
-        ] = await Promise.all([oSqthProceedsPromise, usdcProceedsPromise])
+        ] = await Promise.all([SBCHProceedsPromise, usdcProceedsPromise])
 
-        const minEthFromSqth = toTokenAmount(oSqthMinProceeds, 18)
+        const minEthFromSqth = toTokenAmount(SBCHMinProceeds, 18)
         const minEthFromUsdc = toTokenAmount(usdcMinProceeds, 18)
-        const cumulativeSpotPrice = oSqthToMint.times(sqthPrice).plus(usdcToBorrow.div(ethPrice))
-        const executionPrice = toTokenAmount(oSqthProceeds, 18).plus(toTokenAmount(usdcProceeds, 18))
+        const cumulativeSpotPrice = SBCHToMint.times(sqthPrice).plus(usdcToBorrow.div(ethPrice))
+        const executionPrice = toTokenAmount(SBCHProceeds, 18).plus(toTokenAmount(usdcProceeds, 18))
 
-        const squeethSpot = oSqthToMint.times(sqthPrice) // eth from sqth trade
+        const squeethSpot = SBCHToMint.times(sqthPrice) // eth from sqth trade
         const usdcSpot = usdcToBorrow.div(ethPrice) // eth from usdc trade
 
         // cumulative uniswap fees
@@ -393,10 +393,10 @@ export const useGetFlashBulldepositParams = () => {
           minEthFromUsdc,
           priceImpact,
           wethToLend,
-          ethOutForSqth: toTokenAmount(oSqthProceeds, 18),
+          ethOutForSqth: toTokenAmount(SBCHProceeds, 18),
           ethOutForUsdc: toTokenAmount(usdcProceeds, 18),
           usdcIn: usdcToBorrow,
-          oSqthIn: oSqthToMint,
+          SBCHIn: SBCHToMint,
           poolFee: poolFee.div(10000).toNumber(),
         }
 
@@ -570,7 +570,7 @@ export const useGetFlashWithdrawParams = () => {
     priceImpact: 0,
     ethInForSqth: BIG_ZERO,
     ethInForUsdc: BIG_ZERO,
-    oSqthOut: BIG_ZERO,
+    SBCHOut: BIG_ZERO,
     usdcOut: BIG_ZERO,
     poolFee: 0,
   }
@@ -587,7 +587,7 @@ export const useGetFlashWithdrawParams = () => {
       crabTotalSupply,
     )
 
-    const oSqthProceedsPromise = getExactOut(
+    const SBCHProceedsPromise = getExactOut(
       quoterContract,
       weth,
       oSqueeth,
@@ -606,15 +606,15 @@ export const useGetFlashWithdrawParams = () => {
     )
 
     const [
-      { maxAmountIn: oSqthMinProceeds, amountIn: oSqthProceeds },
+      { maxAmountIn: SBCHMinProceeds, amountIn: SBCHProceeds },
       { maxAmountIn: usdcMinProceeds, amountIn: usdcProceeds },
-    ] = await Promise.all([oSqthProceedsPromise, usdcProceedsPromise])
+    ] = await Promise.all([SBCHProceedsPromise, usdcProceedsPromise])
 
-    const maxEthForWPowerPerp = toTokenAmount(oSqthMinProceeds, 18)
+    const maxEthForWPowerPerp = toTokenAmount(SBCHMinProceeds, 18)
     const maxEthForUsdc = toTokenAmount(usdcMinProceeds, 18)
 
     const cumulativeSpotPrice = wPowerPerpToRedeem.times(sqthPrice).plus(usdcToRepay.div(ethPrice))
-    const executionPrice = toTokenAmount(oSqthProceeds, 18).plus(toTokenAmount(usdcProceeds, 18))
+    const executionPrice = toTokenAmount(SBCHProceeds, 18).plus(toTokenAmount(usdcProceeds, 18))
 
     const squeethSpot = wPowerPerpToRedeem.times(sqthPrice)
     const usdcSpot = usdcToRepay.div(ethPrice)
@@ -633,10 +633,10 @@ export const useGetFlashWithdrawParams = () => {
       maxEthForUsdc,
       maxEthForWPowerPerp,
       priceImpact,
-      ethInForSqth: toTokenAmount(oSqthProceeds, 18),
+      ethInForSqth: toTokenAmount(SBCHProceeds, 18),
       ethInForUsdc: toTokenAmount(usdcProceeds, 18),
       usdcOut: usdcToRepay,
-      oSqthOut: wPowerPerpToRedeem,
+      SBCHOut: wPowerPerpToRedeem,
       poolFee: poolFee.div(10000).toNumber(),
     }
   }
@@ -767,8 +767,8 @@ export const useGetEmergencyWithdrawParams = () => {
 
   const emptyState = {
     maxEthForWPowerPerp: BIG_ZERO,
-    ethInForOsqth: BIG_ZERO,
-    osqthOut: BIG_ZERO,
+    ethInForSBCH: BIG_ZERO,
+    SBCHOut: BIG_ZERO,
     wPowerPerpPoolFee: UNI_POOL_FEES,
     priceImpact: 0,
   }
@@ -786,7 +786,7 @@ export const useGetEmergencyWithdrawParams = () => {
       crabTotalSupply,
     )
 
-    const { maxAmountIn: maxEthForOsqth, amountIn: ethForOsqth } = await getExactOut(
+    const { maxAmountIn: maxEthForSBCH, amountIn: ethForSBCH } = await getExactOut(
       quoterContract,
       weth,
       oSqueeth,
@@ -795,19 +795,19 @@ export const useGetEmergencyWithdrawParams = () => {
       slippage,
     )
 
-    const maxEthForWPowerPerp = toTokenAmount(maxEthForOsqth, 18)
-    const ethInForOsqth = toTokenAmount(ethForOsqth, 18)
+    const maxEthForWPowerPerp = toTokenAmount(maxEthForSBCH, 18)
+    const ethInForSBCH = toTokenAmount(ethForSBCH, 18)
 
     const spotPrice = wPowerPerpToRedeem.times(sqthPriceInEth)
-    const executionPrice = ethInForOsqth
+    const executionPrice = ethInForSBCH
 
     const priceImpact = (executionPrice.div(spotPrice).toNumber() - 1) * 100
 
     return {
       ...emptyState,
       maxEthForWPowerPerp,
-      ethInForOsqth,
-      osqthOut: wPowerPerpToRedeem,
+      ethInForSBCH,
+      SBCHOut: wPowerPerpToRedeem,
       priceImpact,
     }
   }

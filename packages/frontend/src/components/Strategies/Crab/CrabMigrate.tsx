@@ -130,7 +130,7 @@ const CrabMigration: React.FC = () => {
       <div className={classes.position}>
         <TradeInfoItem
           label="Crab v1 Position"
-          value={`${positionInEth.toFixed(4)} ETH`}
+          value={`${positionInEth.toFixed(4)} BCH`}
           unit={`$${positionInUsd.toFixed(1)}`}
           tooltip={
             ' Your position is still participating in crab v1 until crab v2 drops. When crab v2 drops, your position will automatically be transferred to crab v2.'
@@ -139,7 +139,7 @@ const CrabMigration: React.FC = () => {
         {/* <Typography variant="body2" color="textSecondary">
           Crab Position
         </Typography>
-        <Typography variant="body2">{positionInEth.toFixed(6)} ETH</Typography> */}
+        <Typography variant="body2">{positionInEth.toFixed(6)} BCH</Typography> */}
       </div>
       <PrimaryButton
         variant="contained"

@@ -28,7 +28,7 @@ import { connectedWalletAtom, isTransactionFirstStepAtom, supportedNetworkAtom }
 import { useSelectWallet, useTransactionStatus, useWalletBalance } from '@state/wallet/hooks'
 import { addressesAtom, isLongAtom, vaultHistoryUpdatingAtom } from '@state/positions/atoms'
 import { useETHPrice } from '@hooks/useETHPrice'
-import { useOSQTHPrice } from '@hooks/useOSQTHPrice'
+import { useSBCHPrice } from '@hooks/useOSQTHPrice'
 import { collatRatioAtom } from '@state/ethPriceCharts/atoms'
 import { useGetBuyQuote, useGetSellQuote } from '@state/squeethPool/hooks'
 import {
@@ -59,7 +59,7 @@ import { useVaultHistoryQuery } from '@hooks/useVaultHistory'
 import useAppMemo from '@hooks/useAppMemo'
 import Metric from '@components/Metric'
 import ethLogo from 'public/images/eth-logo.svg'
-import osqthLogo from 'public/images/osqth-logo.svg'
+import SBCHLogo from 'public/images/OSQTH-logo.svg'
 import Checkbox from '@components/Checkbox'
 import CollatRatioSlider from '@components/CollatRatioSlider'
 import { formatNumber, formatCurrency } from '@utils/formatter'
@@ -389,7 +389,7 @@ const OpenShort: React.FC<SellType> = ({ open }) => {
   }, [amount, collatPercent, shortVaults, open, tradeType, getDebtAmount, vault])
 
   const ethPrice = useETHPrice()
-  const { data: osqthPrice } = useOSQTHPrice()
+  const { data: SBCHPrice } = useSBCHPrice()
   const setCollatRatio = useUpdateAtom(collatRatioAtom)
 
   let openError: string | undefined
@@ -407,9 +407,9 @@ const OpenShort: React.FC<SellType> = ({ open }) => {
       priceImpactWarning = 'High Price Impact'
     }
     if (collateral.isGreaterThan(new BigNumber(balance))) {
-      openError = 'Insufficient ETH balance'
+      openError = 'Insufficient BCH balance'
     } else if (amount.isGreaterThan(0) && collateral.plus(existingCollat).lt(MIN_COLLATERAL_AMOUNT)) {
-      openError = `Minimum collateral is ${MIN_COLLATERAL_AMOUNT} ETH`
+      openError = `Minimum collateral is ${MIN_COLLATERAL_AMOUNT} BCH`
     } else if (vault && vaultId === 0 && vault?.shortAmount.gt(0)) {
       vaultIdDontLoadedError = 'Loading Vault...'
     }
@@ -425,7 +425,7 @@ const OpenShort: React.FC<SellType> = ({ open }) => {
       amount.lt(vault.shortAmount) &&
       neededCollat.isLessThan(MIN_COLLATERAL_AMOUNT)
     ) {
-      // closeError = `You must have at least ${MIN_COLLATERAL_AMOUNT} ETH collateral unless you fully close out your position. Either fully close your position, or close out less`
+      // closeError = `You must have at least ${MIN_COLLATERAL_AMOUNT} BCH collateral unless you fully close out your position. Either fully close your position, or close out less`
     }
     if (isLong) {
       existingLongError = 'Close your long position to open a short'
@@ -472,7 +472,7 @@ const OpenShort: React.FC<SellType> = ({ open }) => {
       {confirmed && !isTxFirstStep ? (
         <div>
           <Confirmed
-            confirmationMessage={`Opened ${confirmedAmount} Squeeth Short Position`}
+            confirmationMessage={`Opened ${confirmedAmount} Strike Short Position`}
             txnHash={transactionData?.hash ?? ''}
             confirmType={ConfirmType.TRADE}
           />
@@ -510,7 +510,7 @@ const OpenShort: React.FC<SellType> = ({ open }) => {
       ) : (
         <>
           <Typography variant="h4" className={classes.title}>
-            Use ETH collateral to mint & sell oSQTH
+            Use BCH collateral to mint & sell SBCH
           </Typography>
 
           <Box display="flex" flexDirection="column">
@@ -518,7 +518,7 @@ const OpenShort: React.FC<SellType> = ({ open }) => {
               id="open-short-eth-input"
               value={ethTradeAmount}
               onInputChange={(v) => setEthTradeAmount(v)}
-              symbol="ETH"
+              symbol="BCH"
               logo={ethLogo}
               balance={new BigNumber(balance)}
               usdPrice={ethPrice}
@@ -594,10 +594,10 @@ const OpenShort: React.FC<SellType> = ({ open }) => {
                 label="Sell"
                 value={!amount.isNaN() ? amount.toFixed(4) : Number(0).toLocaleString()}
                 readOnly
-                symbol="oSQTH"
-                logo={osqthLogo}
+                symbol="SBCH"
+                logo={SBCHLogo}
                 balance={shortSqueethAmount}
-                usdPrice={osqthPrice}
+                usdPrice={SBCHPrice}
                 showMaxAction={false}
               />
             </Box>
@@ -611,7 +611,7 @@ const OpenShort: React.FC<SellType> = ({ open }) => {
             <Box marginTop="24px">
               <Metric
                 label="Initial Premium"
-                value={formatNumber(quote.amountOut.toNumber()) + ' ETH'}
+                value={formatNumber(quote.amountOut.toNumber()) + ' BCH'}
                 isSmall
                 flexDirection="row"
                 justifyContent="space-between"
@@ -776,7 +776,7 @@ const CloseShort: React.FC<SellType> = ({ open }) => {
   const { existingCollatPercent } = useVaultData(vault)
   const setCollatRatio = useUpdateAtom(collatRatioAtom)
   const ethPrice = useETHPrice()
-  const { data: osqthPrice } = useOSQTHPrice()
+  const { data: SBCHPrice } = useSBCHPrice()
   const [isVaultHistoryUpdating, setVaultHistoryUpdating] = useAtom(vaultHistoryUpdatingAtom)
   const vaultHistoryQuery = useVaultHistoryQuery(Number(vaultId), isVaultHistoryUpdating)
   const { isRestricted, isWithdrawAllowed } = useRestrictUser()
@@ -919,7 +919,7 @@ const CloseShort: React.FC<SellType> = ({ open }) => {
       priceImpactWarning = 'High Price Impact'
     }
     if (amount.isGreaterThan(0) && existingCollat.lt(MIN_COLLATERAL_AMOUNT)) {
-      // openError = `Minimum collateral is ${MIN_COLLATERAL_AMOUNT} ETH`
+      // openError = `Minimum collateral is ${MIN_COLLATERAL_AMOUNT} BCH`
     } else if (vaultId === 0 && finalShortAmount.gt(0)) {
       vaultIdDontLoadedError = 'Loading Vault...'
     }
@@ -930,13 +930,13 @@ const CloseShort: React.FC<SellType> = ({ open }) => {
       amount.lt(finalShortAmount) &&
       neededCollat.isLessThan(MIN_COLLATERAL_AMOUNT)
     ) {
-      closeError = `You must have at least ${MIN_COLLATERAL_AMOUNT} ETH collateral unless you fully close out your position. Either fully close your position, or close out less`
+      closeError = `You must have at least ${MIN_COLLATERAL_AMOUNT} BCH collateral unless you fully close out your position. Either fully close your position, or close out less`
     }
     if (isLong && !finalShortAmount.isGreaterThan(0)) {
       existingLongError = 'Close your long position to open a short'
     }
     if (sellCloseQuote.amountIn.gt(balance)) {
-      insufficientETHBalance = 'Insufficient ETH Balance'
+      insufficientETHBalance = 'Insufficient BCH Balance'
     }
   }
 
@@ -988,7 +988,7 @@ const CloseShort: React.FC<SellType> = ({ open }) => {
       {confirmed && !isTxFirstStep ? (
         <div>
           <Confirmed
-            confirmationMessage={`Closed ${confirmedAmount} Squeeth Short Position`}
+            confirmationMessage={`Closed ${confirmedAmount} Strike Short Position`}
             txnHash={transactionData?.hash ?? ''}
             confirmType={ConfirmType.TRADE}
           />
@@ -1026,18 +1026,18 @@ const CloseShort: React.FC<SellType> = ({ open }) => {
       ) : (
         <>
           <Typography variant="h4" className={classes.title}>
-            Buy back oSQTH & close position
+            Buy back SBCH & close position
           </Typography>
 
           <Box display="flex" flexDirection="column">
             <InputToken
-              id="close-short-osqth-input"
+              id="close-short-SBCH-input"
               value={sqthTradeAmount}
               onInputChange={(v) => handleAmountInput(v)}
-              symbol="oSQTH"
-              logo={osqthLogo}
+              symbol="SBCH"
+              logo={SBCHLogo}
               balance={finalShortAmount}
-              usdPrice={osqthPrice}
+              usdPrice={SBCHPrice}
               onBalanceClick={() => handleAmountInput(finalShortAmount.toString())}
               error={!!closeError}
               helperText={closeError}
@@ -1140,7 +1140,7 @@ const CloseShort: React.FC<SellType> = ({ open }) => {
                 id="close-short-trade-details"
                 label="Spend"
                 value={sellCloseQuote.amountIn.toFixed(6)}
-                symbol="ETH"
+                symbol="BCH"
                 logo={ethLogo}
                 balance={new BigNumber(balance)}
                 usdPrice={ethPrice}

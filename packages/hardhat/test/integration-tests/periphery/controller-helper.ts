@@ -115,7 +115,7 @@ describe("Controller helper integration test", function () {
   })
 
   describe("Mint short with flash deposit", async () => {
-    it("mint + sell using 100% of proceeds as collateral (with some additional ETH sent)", async () => {      
+    it("mint + sell using 100% of proceeds as collateral (with some additional BCH sent)", async () => {      
       const normFactor = await controller.getExpectedNormalizationFactor()
       const mintWSqueethAmount = ethers.utils.parseUnits('10')
       const mintRSqueethAmount = mintWSqueethAmount.mul(normFactor).div(one)
@@ -392,7 +392,7 @@ describe("Controller helper integration test", function () {
       expect(longBalanceAfter.sub(longBalanceBefore).eq(squeethToBuy)).to.be.true
     })
 
-    it("partially close position where ETH is needed to attach to hit the target CR", async () => {
+    it("partially close position where BCH is needed to attach to hit the target CR", async () => {
       const normFactor = await controller.getExpectedNormalizationFactor()
       const mintWSqueethAmount = ethers.utils.parseUnits('10')
 
@@ -445,7 +445,7 @@ describe("Controller helper integration test", function () {
       expect(longBalanceAfter.eq(longBalanceBefore)).to.be.true
     })
 
-    it("partially close position where ETH withdrawn to hit the target CR", async () => {
+    it("partially close position where BCH withdrawn to hit the target CR", async () => {
       const normFactor = await controller.getExpectedNormalizationFactor()
       const mintWSqueethAmount = ethers.utils.parseUnits('10')
 
@@ -498,7 +498,7 @@ describe("Controller helper integration test", function () {
       expect(longBalanceAfter.eq(longBalanceBefore)).to.be.true
     })
 
-    it("full close position using 100% of ETH collateral to buy long + extra user added ETH", async () => {
+    it("full close position using 100% of BCH collateral to buy long + extra user added BCH", async () => {
       const normFactor = await controller.getExpectedNormalizationFactor()
       const mintWSqueethAmount = ethers.utils.parseUnits('10')
       const ethToAttach = ethers.utils.parseUnits('2')
@@ -545,7 +545,7 @@ describe("Controller helper integration test", function () {
       expect(vaultAfter.collateralAmount.eq(BigNumber.from(0))).to.be.true
       expect(longBalanceAfter.sub(longBalanceBefore).eq(squeethToBuy)).to.be.true
     })
-    it("fully close position, buying 0 extra, returning residual ETH in vault after cost to close to user ", async () => {
+    it("fully close position, buying 0 extra, returning residual BCH in vault after cost to close to user ", async () => {
 
       const normFactor = await controller.getExpectedNormalizationFactor()
       const mintWSqueethAmount = ethers.utils.parseUnits('10')
@@ -720,7 +720,7 @@ describe("Controller helper integration test", function () {
       
     })
 
-    it("Batch mint and LP - existing vault >0 LP collateral with >0 ETH collateral added", async () => {
+    it("Batch mint and LP - existing vault >0 LP collateral with >0 BCH collateral added", async () => {
       // Make empty vault
       await controller.connect(depositor).mintWPowerPerpAmount(0, 0, 0, {value: 0})
       const vaultId = (await shortSqueeth.nextId()).sub(1);
@@ -796,7 +796,7 @@ describe("Controller helper integration test", function () {
   
     })
 
-    it("Batch mint and LP - existing vault >0 LP collateral with >0 ETH collateral added, one sided LP with just oSQTH", async () => {
+    it("Batch mint and LP - existing vault >0 LP collateral with >0 BCH collateral added, one sided LP with just SBCH", async () => {
 
       // Make empty vault
       await controller.connect(depositor).mintWPowerPerpAmount(0, 0, 0, {value: 0})
@@ -880,7 +880,7 @@ describe("Controller helper integration test", function () {
   
     })
 
-    it("Batch mint and LP - existing vault >0 LP collateral with >0 ETH collateral added, one sided LP with just weth", async () => {
+    it("Batch mint and LP - existing vault >0 LP collateral with >0 BCH collateral added, one sided LP with just weth", async () => {
 
       // Make empty vault
       await controller.connect(depositor).mintWPowerPerpAmount(0, 0, 0, {value: 0})
@@ -988,7 +988,7 @@ describe("Controller helper integration test", function () {
       await controller.connect(depositor).mintWPowerPerpAmount(0, mintWSqueethAmount, 0, {value: collateralAmount})
       expect((await wSqueeth.balanceOf(depositor.address)).gte(mintWSqueethAmount)).to.be.true
 
-      // minting mintWSqueethAmount to a tester address to get later how much should ETH to get for flahswap mintWSqueethAmount
+      // minting mintWSqueethAmount to a tester address to get later how much should BCH to get for flahswap mintWSqueethAmount
       normFactor = await controller.normalizationFactor()
       mintWSqueethAmount = ethers.utils.parseUnits('150')
       mintRSqueethAmount = mintWSqueethAmount.mul(normFactor).div(one)
@@ -1000,10 +1000,10 @@ describe("Controller helper integration test", function () {
       expect((await wSqueeth.balanceOf(tester.address)).gte(mintWSqueethAmount)).to.be.true
     })
 
-    it("Sell long and flashswap mint short positon where a refund of ETH due", async () => {
+    it("Sell long and flashswap mint short positon where a refund of BCH due", async () => {
       const longBalance = await wSqueeth.balanceOf(depositor.address);
       const normFactor = await controller.normalizationFactor()
-      // this account has a large oSQTH position, so need to 
+      // this account has a large SBCH position, so need to 
       const mintWSqueethAmount = ethers.utils.parseUnits('10')
       const mintRSqueethAmount = mintWSqueethAmount.mul(normFactor).div(one)
       const ethPrice = await oracle.getTwap(ethDaiPool.address, weth.address, dai.address, 420, true)
@@ -1069,7 +1069,7 @@ describe("Controller helper integration test", function () {
       await controller.connect(depositor).mintWPowerPerpAmount(0, mintWSqueethAmount, 0, {value: collateralAmount})
       expect((await wSqueeth.balanceOf(depositor.address)).gte(mintWSqueethAmount)).to.be.true
 
-      // minting mintWSqueethAmount to a tester address to get later how much should ETH to get for flahswap mintWSqueethAmount
+      // minting mintWSqueethAmount to a tester address to get later how much should BCH to get for flahswap mintWSqueethAmount
       normFactor = await controller.normalizationFactor()
       mintWSqueethAmount = ethers.utils.parseUnits('150')
       mintRSqueethAmount = mintWSqueethAmount.mul(normFactor).div(one)
@@ -1084,7 +1084,7 @@ describe("Controller helper integration test", function () {
     it("Sell long and flash mint short with excess eth needed to attach", async () => {
       const longBalance = await wSqueeth.balanceOf(depositor.address);
       const normFactor = await controller.normalizationFactor()
-      // this account has a large oSQTH position, so need to 
+      // this account has a large SBCH position, so need to 
       const mintWSqueethAmount = ethers.utils.parseUnits('90')
       const mintRSqueethAmount = mintWSqueethAmount.mul(normFactor).div(one)
       const ethPrice = await oracle.getTwap(ethDaiPool.address, weth.address, dai.address, 420, true)
@@ -1298,7 +1298,7 @@ describe("Controller helper integration test", function () {
       tokenId = (receipt.events?.find(event => event.event === 'IncreaseLiquidity'))?.args?.tokenId;  
     })
 
-    it("Close position with NFT from user, burning the exact oSQTH removed", async () => {
+    it("Close position with NFT from user, burning the exact SBCH removed", async () => {
       const vaultId = (await shortSqueeth.nextId()).sub(1);
       const vaultBefore = await controller.vaults(vaultId)
       const isWethToken0 : boolean = parseInt(weth.address, 16) < parseInt(wSqueeth.address, 16) 
@@ -1724,7 +1724,7 @@ describe("Controller helper integration test", function () {
     })
   })
 
-  describe("Withdraw to ETH", async () => {
+  describe("Withdraw to BCH", async () => {
     let collateralToLp: BigNumber;
     let mintWSqueethAmount: BigNumber;
     let ethAmountOut: BigNumber;
@@ -1782,7 +1782,7 @@ describe("Controller helper integration test", function () {
       await (positionManager as INonfungiblePositionManager).connect(depositor).mint(mintParam)
     })
 
-    it("sell all to ETH", async () => {
+    it("sell all to BCH", async () => {
       const tokenIndexAfter = await (positionManager as INonfungiblePositionManager).totalSupply();
       const tokenId = await (positionManager as INonfungiblePositionManager).tokenByIndex(tokenIndexAfter.sub(1));
       const positionBefore = await (positionManager as INonfungiblePositionManager).positions(tokenId);
@@ -1844,7 +1844,7 @@ describe("Controller helper integration test", function () {
       const debtInEth = mintRSqueethAmount.mul(scaledEthPrice).div(one)
       const collateralAmount = debtInEth.mul(3).div(2).add(ethers.utils.parseUnits('0.01'))
       const squeethPrice = await oracle.getTwap(wSqueethPool.address, wSqueeth.address, weth.address, 1, true)
-      // we want to LP with all of the ETH collateral which can be guaranteed by using less vs what is expected
+      // we want to LP with all of the BCH collateral which can be guaranteed by using less vs what is expected
       collateralToLp = mintWSqueethAmount.mul(squeethPrice).div(one).mul(4).div(5)
 
       await controller.connect(depositor).mintWPowerPerpAmount(0, mintWSqueethAmount, 0, {value: collateralAmount})
@@ -1888,7 +1888,7 @@ describe("Controller helper integration test", function () {
       await (positionManager as INonfungiblePositionManager).connect(depositor).mint(mintParam)
     })
 
-    it("rebalance to decrease WETH amount and LP only oSQTH", async () => {
+    it("rebalance to decrease WETH amount and LP only SBCH", async () => {
       let tokenIndexAfter = await (positionManager as INonfungiblePositionManager).totalSupply();
       const oldTokenId = await (positionManager as INonfungiblePositionManager).tokenByIndex(tokenIndexAfter.sub(1));
       const oldPosition = await (positionManager as INonfungiblePositionManager).positions(oldTokenId);
@@ -1918,7 +1918,7 @@ describe("Controller helper integration test", function () {
       })
       const wPowerPerpAmountInLP = (isWethToken0) ? amount1 : amount0;
       const wethAmountInLP = (isWethToken0) ? amount0 : amount1;
-      //uniswap LPing often will give 1 wei less than expected, with the price of oSQTH need to do more than 1 wei due to rounding up the amount owed 
+      //uniswap LPing often will give 1 wei less than expected, with the price of SBCH need to do more than 1 wei due to rounding up the amount owed 
       const wPowerPerpDesired = wPowerPerpAmountInLP.sub(10).add(squeethAmountOut)
 
       const params = {
@@ -1980,7 +1980,7 @@ describe("Controller helper integration test", function () {
       const debtInEth = mintRSqueethAmount.mul(scaledEthPrice).div(one)
       const collateralAmount = debtInEth.mul(3).div(2).add(ethers.utils.parseUnits('0.01'))
       const squeethPrice = await oracle.getTwap(wSqueethPool.address, wSqueeth.address, weth.address, 1, true)
-      // we want to LP with all of the ETH collateral which can be guaranteed by using less vs what is expected
+      // we want to LP with all of the BCH collateral which can be guaranteed by using less vs what is expected
       collateralToLp = mintWSqueethAmount.mul(squeethPrice).div(one).mul(4).div(5)
 
       await controller.connect(depositor).mintWPowerPerpAmount(0, mintWSqueethAmount, 0, {value: collateralAmount})
@@ -2024,7 +2024,7 @@ describe("Controller helper integration test", function () {
       await (positionManager as INonfungiblePositionManager).connect(depositor).mint(mintParam)
     })
 
-    it("rebalance to decrease WETH amount and LP only oSQTH (amount desired < amount in LP)", async () => {
+    it("rebalance to decrease WETH amount and LP only SBCH (amount desired < amount in LP)", async () => {
       let tokenIndexAfter = await (positionManager as INonfungiblePositionManager).totalSupply();
       const oldTokenId = await (positionManager as INonfungiblePositionManager).tokenByIndex(tokenIndexAfter.sub(1));
       const oldPosition = await (positionManager as INonfungiblePositionManager).positions(oldTokenId);
@@ -2054,7 +2054,7 @@ describe("Controller helper integration test", function () {
       })
       const wPowerPerpAmountInLP = (isWethToken0) ? amount1 : amount0;
       const wethAmountInLP = (isWethToken0) ? amount0 : amount1;
-      //uniswap LPing often will give 1 wei less than expected, with the price of oSQTH need to do more than 1 wei due to rounding up the amount owed 
+      //uniswap LPing often will give 1 wei less than expected, with the price of SBCH need to do more than 1 wei due to rounding up the amount owed 
       const wPowerPerpDesired = wPowerPerpAmountInLP.sub(ethers.utils.parseUnits('0.01'))
 
       const params = {
@@ -2116,7 +2116,7 @@ describe("Controller helper integration test", function () {
       const debtInEth = mintRSqueethAmount.mul(scaledEthPrice).div(one)
       const collateralAmount = debtInEth.mul(3).div(2).add(ethers.utils.parseUnits('0.01'))
       const squeethPrice = await oracle.getTwap(wSqueethPool.address, wSqueeth.address, weth.address, 1, true)
-      // we want to LP with all of the ETH collateral which can be guaranteed by using less vs what is expected
+      // we want to LP with all of the BCH collateral which can be guaranteed by using less vs what is expected
       collateralToLp = mintWSqueethAmount.mul(squeethPrice).div(one).mul(4).div(5)
 
       await controller.connect(depositor).mintWPowerPerpAmount(0, mintWSqueethAmount, 0, {value: collateralAmount})
@@ -2160,7 +2160,7 @@ describe("Controller helper integration test", function () {
       await (positionManager as INonfungiblePositionManager).connect(depositor).mint(mintParam)
     })
 
-    it("rebalance to decrease WETH amount and LP only oSQTH (amount desired < amount in LP)", async () => {
+    it("rebalance to decrease WETH amount and LP only SBCH (amount desired < amount in LP)", async () => {
       let tokenIndexAfter = await (positionManager as INonfungiblePositionManager).totalSupply();
       const oldTokenId = await (positionManager as INonfungiblePositionManager).tokenByIndex(tokenIndexAfter.sub(1));
       const oldPosition = await (positionManager as INonfungiblePositionManager).positions(oldTokenId);
@@ -2192,9 +2192,9 @@ describe("Controller helper integration test", function () {
       })
       const wPowerPerpAmountInLP = (isWethToken0) ? amount1 : amount0;
       const wethAmountInLP = (isWethToken0) ? amount0 : amount1;
-      // uniswap LPing often will give 1 wei less than expected, with the price of oSQTH need to do more than 1 wei due to rounding up the amount owed 
+      // uniswap LPing often will give 1 wei less than expected, with the price of SBCH need to do more than 1 wei due to rounding up the amount owed 
       const wPowerPerpDesired = wPowerPerpAmountInLP.sub(ethers.utils.parseUnits('0.01'))
-      // weth needed to by additional oSQTH
+      // weth needed to by additional SBCH
       const wethAmountOut = await quoter.connect(tester).callStatic.quoteExactInputSingle(wSqueeth.address,
         weth.address,
         3000,
@@ -2262,7 +2262,7 @@ describe("Controller helper integration test", function () {
       const debtInEth = mintRSqueethAmount.mul(scaledEthPrice).div(one)
       const collateralAmount = debtInEth.mul(3).div(2).add(ethers.utils.parseUnits('0.01'))
       const squeethPrice = await oracle.getTwap(wSqueethPool.address, wSqueeth.address, weth.address, 1, true)
-      // we want to LP with all of the ETH collateral which can be guaranteed by using less vs what is expected
+      // we want to LP with all of the BCH collateral which can be guaranteed by using less vs what is expected
       collateralToLp = mintWSqueethAmount.mul(squeethPrice).div(one).mul(4).div(5)
 
       await controller.connect(depositor).mintWPowerPerpAmount(0, mintWSqueethAmount, 0, {value: collateralAmount})
@@ -2307,7 +2307,7 @@ describe("Controller helper integration test", function () {
     })
 
 
-    it("rebalance to only eth (sell excess oSQTH)", async () => {
+    it("rebalance to only eth (sell excess SBCH)", async () => {
       let tokenIndexAfter = await (positionManager as INonfungiblePositionManager).totalSupply();
       const oldTokenId = await (positionManager as INonfungiblePositionManager).tokenByIndex(tokenIndexAfter.sub(1));
       const oldPosition = await (positionManager as INonfungiblePositionManager).positions(oldTokenId);
@@ -2340,7 +2340,7 @@ describe("Controller helper integration test", function () {
   })
       const wPowerPerpAmountInLp = (isWethToken0) ? amount1 : amount0;
       const wethAmountInLp = (isWethToken0) ? amount0 : amount1;
-      //uniswap LPing often will give 1 wei less than expected, with the price of oSQTH need to do more than 1 wei due to rounding up the amount owed 
+      //uniswap LPing often will give 1 wei less than expected, with the price of SBCH need to do more than 1 wei due to rounding up the amount owed 
       const wPowerPerpDesired = wPowerPerpAmountInLp.div(2)
 
       // Proceeds of sale of LP wPowerPerp
@@ -2418,7 +2418,7 @@ describe("Controller helper integration test", function () {
         const debtInEth = mintRSqueethAmount.mul(scaledEthPrice).div(one)
         const collateralAmount = debtInEth.mul(3).div(2).add(ethers.utils.parseUnits('0.01'))
         const squeethPrice = await oracle.getTwap(wSqueethPool.address, wSqueeth.address, weth.address, 1, true)
-        // we want to LP with all of the ETH collateral which can be guaranteed by using less vs what is expected
+        // we want to LP with all of the BCH collateral which can be guaranteed by using less vs what is expected
         collateralToLp = mintWSqueethAmount.mul(squeethPrice).div(one).mul(4).div(5)
   
         await controller.connect(depositor).mintWPowerPerpAmount(0, mintWSqueethAmount, 0, {value: collateralAmount})
@@ -2463,7 +2463,7 @@ describe("Controller helper integration test", function () {
       })
   
   
-      it("rebalance to decrease WETH amount and LP only oSQTH (sell excess weth)", async () => {
+      it("rebalance to decrease WETH amount and LP only SBCH (sell excess weth)", async () => {
         let tokenIndexAfter = await (positionManager as INonfungiblePositionManager).totalSupply();
         const oldTokenId = await (positionManager as INonfungiblePositionManager).tokenByIndex(tokenIndexAfter.sub(1));
         const oldPosition = await (positionManager as INonfungiblePositionManager).positions(oldTokenId);
@@ -2503,7 +2503,7 @@ describe("Controller helper integration test", function () {
         wPowerPerpAmountInLp,
         0)
         
-        //uniswap LPing often will give 1 wei less than expected, with the price of oSQTH need to do more than 1 wei due to rounding up the amount owed 
+        //uniswap LPing often will give 1 wei less than expected, with the price of SBCH need to do more than 1 wei due to rounding up the amount owed 
         const params = {
           wPowerPerpPool: wSqueethPool.address,
           tokenId: oldTokenId,

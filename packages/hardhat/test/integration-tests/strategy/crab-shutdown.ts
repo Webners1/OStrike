@@ -10,7 +10,7 @@ import { randomBytes } from "ethers/lib/utils";
 
 BigNumberJs.set({EXPONENTIAL_AT: 30})
 
-describe("Crab integration test: Shutdown of Squeeth Power Perp contracts", function () {
+describe("Crab integration test: Shutdown of Strike Power Perp contracts", function () {
   const startingEthPrice = 3000
   const startingEthPrice1e18 = BigNumber.from(startingEthPrice).mul(one) // 3000 * 1e18
   const scaledStartingSqueethPrice1e18 = startingEthPrice1e18.div(oracleScaleFactor) // 0.3 * 1e18
@@ -200,7 +200,7 @@ describe("Crab integration test: Shutdown of Squeeth Power Perp contracts", func
 
     it("should NOT let user withdrawShutdown pre shutdown, pre redeemShortShutdown", async () => {
         const userCrabBalanceBefore = await crabStrategy.balanceOf(depositor.address);
-        await expect(crabStrategy.connect(depositor).withdrawShutdown(userCrabBalanceBefore)).to.be.revertedWith("Squeeth contracts not shut down")
+        await expect(crabStrategy.connect(depositor).withdrawShutdown(userCrabBalanceBefore)).to.be.revertedWith("Strike contracts not shut down")
       })
 
     it('shutdown contracts', async() => {

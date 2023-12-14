@@ -1,4 +1,4 @@
-### Squeeth User Terms of Service
+### Strike User Terms of Service
 
 ### Last Updated: August 15, 2023
 

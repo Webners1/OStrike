@@ -84,7 +84,7 @@ describe("Oracle", function () {
 
   
 
-  describe("ETH/USD pool", async () => {
+  describe("BCH/USD pool", async () => {
 
     before('setup weth/usdc pool', async() => {
       const isUSDToken0 = parseInt(usdc.address, 16) < parseInt(weth.address, 16)
@@ -130,7 +130,7 @@ describe("Oracle", function () {
     })
   })
 
-  describe("ETH/rUSD pool", async () => {
+  describe("BCH/rUSD pool", async () => {
 
     before('setup weth/rUsdc pool', async() => {
       const isUSDToken0 = parseInt(randomUSD.address, 16) < parseInt(weth.address, 16)

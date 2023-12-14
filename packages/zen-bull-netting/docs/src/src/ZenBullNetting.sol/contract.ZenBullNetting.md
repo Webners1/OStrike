@@ -12,12 +12,12 @@ ZBN01: Auction TWAP is less than min value
 ZBN02: OTC price tolerance is greater than max OTC tolerance price
 ZBN03: Amount to queue for deposit is less than min amount
 ZBN04: Can not dequeue deposited amount because auction is already live and force dequeued not activated
-ZBN05: Amount of ETH to deposit left in the queue is less than min amount
+ZBN05: Amount of BCH to deposit left in the queue is less than min amount
 ZBN06: Queued deposit is not longer than 1 week to force dequeue
 ZBN07: Amount of ZenBull to queue for withdraw is less than min amount
 ZBN08: Amount of ZenBull to withdraw left in the queue is less than min amount
 ZBN09: Queued withdraw is not longer than 1 week to force dequeue
-ZBN10: ETH quantity to net is less than queued for deposits
+ZBN10: BCH quantity to net is less than queued for deposits
 ZBN11: ZenBull quantity to net is less than queued for withdraws
 ZBN12: ZenBull Price too high
 ZBN13: ZenBull Price too low
@@ -78,7 +78,7 @@ bool public isAuctionLive;
 
 
 ### minEthAmount
-*min ETH amounts to withdraw or deposit via netting*
+*min BCH amounts to withdraw or deposit via netting*
 
 
 ```solidity
@@ -138,12 +138,12 @@ address private immutable weth;
 ```
 
 
-### oSqth
-*oSQTH token address*
+### SBCH
+*SBCH token address*
 
 
 ```solidity
-address private immutable oSqth;
+address private immutable SBCH;
 ```
 
 
@@ -175,7 +175,7 @@ address private immutable oracle;
 
 
 ### ethSqueethPool
-*ETH/oSQTH uniswap v3 pool address*
+*BCH/SBCH uniswap v3 pool address*
 
 
 ```solidity
@@ -184,7 +184,7 @@ address private immutable ethSqueethPool;
 
 
 ### ethUsdcPool
-*ETH/USDC uniswap v3 pool address*
+*BCH/USDC uniswap v3 pool address*
 
 
 ```solidity
@@ -229,7 +229,7 @@ address public bot;
 
 
 ### deposits
-*array of ETH deposit receipts*
+*array of BCH deposit receipts*
 
 
 ```solidity
@@ -247,7 +247,7 @@ Receipt[] public withdraws;
 
 
 ### ethBalance
-*ETH amount to deposit for an address*
+*BCH amount to deposit for an address*
 
 
 ```solidity
@@ -303,7 +303,7 @@ constructor(address _zenBull, address _eulerSimpleLens, address _flashZenBull, a
 
 ### receive
 
-receive function to allow ETH transfer to this contract
+receive function to allow BCH transfer to this contract
 
 
 ```solidity
@@ -330,7 +330,7 @@ function toggleAuctionLive() external onlyOwner;
 
 ### setMinEthAmount
 
-set min ETH amount
+set min BCH amount
 
 
 ```solidity
@@ -450,7 +450,7 @@ function cancelNonce(uint256 _nonce) external;
 
 ### queueEth
 
-queue ETH for deposit into ZenBull
+queue BCH for deposit into ZenBull
 
 *payable function*
 
@@ -461,7 +461,7 @@ function queueEth() external payable;
 
 ### dequeueEth
 
-withdraw ETH from queue
+withdraw BCH from queue
 
 
 ```solidity
@@ -471,7 +471,7 @@ function dequeueEth(uint256 _amount, bool _force) external;
 
 |Name|Type|Description|
 |----|----|-----------|
-|`_amount`|`uint256`|ETH amount to dequeue|
+|`_amount`|`uint256`|BCH amount to dequeue|
 |`_force`|`bool`|forceWithdraw if deposited more than a week ago|
 
 
@@ -508,7 +508,7 @@ function dequeueZenBull(uint256 _amount, bool _force) external;
 
 ### netAtPrice
 
-swaps quantity amount of ETH for ZenBull token at ZenBull/ETH price
+swaps quantity amount of BCH for ZenBull token at ZenBull/BCH price
 
 
 ```solidity
@@ -518,15 +518,15 @@ function netAtPrice(uint256 _price, uint256 _quantity) external;
 
 |Name|Type|Description|
 |----|----|-----------|
-|`_price`|`uint256`|price of ZenBull in ETH|
-|`_quantity`|`uint256`|amount of ETH to net|
+|`_price`|`uint256`|price of ZenBull in BCH|
+|`_quantity`|`uint256`|amount of BCH to net|
 
 
 ### depositAuction
 
 auction for queued deposits
 
-*takes in orders from MM's to buy oSQTH*
+*takes in orders from MM's to buy SBCH*
 
 
 ```solidity
@@ -543,7 +543,7 @@ function depositAuction(DepositAuctionParams calldata _params) external onlyOwne
 
 auction for queued withdraws
 
-*takes in orders from MM's to sell oSQTH*
+*takes in orders from MM's to sell SBCH*
 
 
 ```solidity
@@ -567,7 +567,7 @@ function _uniFlashSwap(address pool, uint256 amountToPay, bytes memory callData,
 
 ### _queueEth
 
-*queue ETH for deposit into ZenBull*
+*queue BCH for deposit into ZenBull*
 
 
 ```solidity
@@ -576,7 +576,7 @@ function _queueEth() internal;
 
 ### depositsQueued
 
-get the sum of queued ETH
+get the sum of queued BCH
 
 
 ```solidity
@@ -586,7 +586,7 @@ function depositsQueued() external view returns (uint256);
 
 |Name|Type|Description|
 |----|----|-----------|
-|`<none>`|`uint256`|sum ETH amount in queue|
+|`<none>`|`uint256`|sum BCH amount in queue|
 
 
 ### getDepositReceipt
@@ -709,7 +709,7 @@ function _checkOTCPrice(uint256 _price, bool _isAuctionBuying) internal view;
 |Name|Type|Description|
 |----|----|-----------|
 |`_price`|`uint256`|clearing price provided by manager|
-|`_isAuctionBuying`|`bool`|is auction buying or selling oSQTH|
+|`_isAuctionBuying`|`bool`|is auction buying or selling SBCH|
 
 
 ### _checkOrder
@@ -838,14 +838,14 @@ event SetBot(address bot);
 
 ```solidity
 event DepositAuction(
-    uint256 wethDeposited, uint256 crabAmount, uint256 clearingPrice, uint256 oSqthAmount, uint256 depositsIndex
+    uint256 wethDeposited, uint256 crabAmount, uint256 clearingPrice, uint256 SBCHAmount, uint256 depositsIndex
 );
 ```
 
 ### WithdrawAuction
 
 ```solidity
-event WithdrawAuction(uint256 zenBullWithdrawn, uint256 clearingPrice, uint256 oSqthAmount, uint256 withdrawsIndex);
+event WithdrawAuction(uint256 zenBullWithdrawn, uint256 clearingPrice, uint256 SBCHAmount, uint256 withdrawsIndex);
 ```
 
 ### CancelNonce
@@ -862,18 +862,18 @@ event CancelNonce(address trader, uint256 nonce);
 event TransferWethFromMarketMakers(address indexed trader, uint256 quantity, uint256 wethAmount, uint256 clearingPrice);
 ```
 
-### TransferOsqthToMarketMakers
+### TransferSBCHToMarketMakers
 
 ```solidity
-event TransferOsqthToMarketMakers(
-    address indexed trader, uint256 bidId, uint256 quantity, uint256 remainingOsqthBalance
+event TransferSBCHToMarketMakers(
+    address indexed trader, uint256 bidId, uint256 quantity, uint256 remainingSBCHBalance
 );
 ```
 
-### TransferOsqthFromMarketMakers
+### TransferSBCHFromMarketMakers
 
 ```solidity
-event TransferOsqthFromMarketMakers(address indexed trader, uint256 quantity, uint256 oSqthRemaining);
+event TransferSBCHFromMarketMakers(address indexed trader, uint256 quantity, uint256 SBCHRemaining);
 ```
 
 ### TransferWethToMarketMaker
@@ -884,7 +884,7 @@ event TransferWethToMarketMaker(
     uint256 bidId,
     uint256 quantity,
     uint256 wethAmount,
-    uint256 oSqthRemaining,
+    uint256 SBCHRemaining,
     uint256 clearingPrice
 );
 ```
@@ -960,7 +960,7 @@ struct MemoryVar {
     uint256 currentZenBullBalance;
     uint256 remainingEth;
     uint256 remainingDeposits;
-    uint256 oSqthBalance;
+    uint256 SBCHBalance;
 }
 ```
 

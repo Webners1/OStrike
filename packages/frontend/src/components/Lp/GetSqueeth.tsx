@@ -29,7 +29,7 @@ const GetSqueeth: React.FC = () => {
   return (
     <>
       <Typography className={classes.title}>
-        {lpState.obtainMethod === OBTAIN_METHOD.BUY ? 'Buy Squeeth to LP' : 'Mint Squeeth to LP'}
+        {lpState.obtainMethod === OBTAIN_METHOD.BUY ? 'Buy Strike to LP' : 'Mint Strike to LP'}
       </Typography>
       <motion.div initial={{ x: '-5%', opacity: 0.8 }} animate={{ x: 0, opacity: 1 }}>
         {lpState.obtainMethod === OBTAIN_METHOD.BUY ? (

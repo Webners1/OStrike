@@ -15,7 +15,7 @@ import useAppCallback from '@hooks/useAppCallback'
 import useAppEffect from '@hooks/useAppEffect'
 import useAppMemo from '@hooks/useAppMemo'
 import { useETHPrice } from '@hooks/useETHPrice'
-import { useOSQTHPrice } from '@hooks/useOSQTHPrice'
+import { useSBCHPrice } from '@hooks/useOSQTHPrice'
 import { toTokenAmount } from '@utils/calculations'
 import { currentImpliedFundingAtom, dailyHistoricalFundingAtom } from '@state/controller/atoms'
 import { addressesAtom, isShortAtom } from '@state/positions/atoms'
@@ -43,7 +43,7 @@ import { useSelectWallet, useTransactionStatus, useWalletBalance } from '@state/
 import { BIG_ZERO } from '@constants/index'
 import { formatCurrency, formatNumber } from '@utils/formatter'
 import ethLogo from 'public/images/eth-logo.svg'
-import osqthLogo from 'public/images/osqth-logo.svg'
+import SBCHLogo from 'public/images/OSQTH-logo.svg'
 import Cancelled from '../Cancelled'
 import Confirmed, { ConfirmType } from '../Confirmed'
 import Metric from '@components/Metric'
@@ -317,7 +317,7 @@ const OpenLong: React.FC<BuyProps> = ({ activeStep = 0, showTitle }) => {
   const setTradeSuccess = useUpdateAtom(tradeSuccessAtom)
   const [slippageAmount, setSlippage] = useAtom(slippageAmountAtom)
   const ethPrice = useETHPrice()
-  const { loading: loadingOSQTHPrice, data: osqthPrice } = useOSQTHPrice()
+  const { loading: loadingSBCHPrice, data: SBCHPrice } = useSBCHPrice()
   const { isRestricted, isWithdrawAllowed } = useRestrictUser()
 
   const { squeethAmount } = useComputeSwaps()
@@ -412,7 +412,7 @@ const OpenLong: React.FC<BuyProps> = ({ activeStep = 0, showTitle }) => {
 
   if (connected) {
     if (new BigNumber(ethTradeAmount).gt(balance)) {
-      openError = 'Insufficient ETH balance'
+      openError = 'Insufficient BCH balance'
     }
     if (isShort) {
       existingShortError = 'Close your short position to open a long'
@@ -462,7 +462,7 @@ const OpenLong: React.FC<BuyProps> = ({ activeStep = 0, showTitle }) => {
     }
   }, [buyAndRefund, ethTradeAmount, resetEthTradeAmount, resetSqthTradeAmount, setTradeCompleted, setTradeSuccess])
 
-  const squeethExposure = osqthPrice.times(sqthTradeAmount).toNumber()
+  const squeethExposure = SBCHPrice.times(sqthTradeAmount).toNumber()
   const slippageAmountValue = isNaN(slippageAmount.toNumber()) ? 0 : slippageAmount.toNumber()
   const priceImpact = isNaN(Number(quote.priceImpact)) ? 0 : Number(quote.priceImpact)
   const priceImpactColor = priceImpact > 3 ? 'error' : undefined
@@ -472,7 +472,7 @@ const OpenLong: React.FC<BuyProps> = ({ activeStep = 0, showTitle }) => {
       {confirmed ? (
         <div className={classes.txStatus}>
           <Confirmed
-            confirmationMessage={`Bought ${confirmedAmount} Squeeth`}
+            confirmationMessage={`Bought ${confirmedAmount} Strike`}
             txnHash={transactionData?.hash ?? ''}
             confirmType={ConfirmType.TRADE}
           />
@@ -511,7 +511,7 @@ const OpenLong: React.FC<BuyProps> = ({ activeStep = 0, showTitle }) => {
             <>
               {showTitle && (
                 <Typography variant="h4" className={classes.title}>
-                  Pay ETH to buy oSQTH
+                  Pay BCH to buy SBCH
                 </Typography>
               )}
 
@@ -522,20 +522,20 @@ const OpenLong: React.FC<BuyProps> = ({ activeStep = 0, showTitle }) => {
                   onInputChange={handleEthChange}
                   balance={new BigNumber(balance)}
                   logo={ethLogo}
-                  symbol="ETH"
+                  symbol="BCH"
                   usdPrice={ethPrice}
                   onBalanceClick={() => handleEthChange(balance.toString())}
                   error={!!openError}
                   helperText={openError}
                 />
                 <InputToken
-                  id="open-long-osqth-input"
+                  id="open-long-SBCH-input"
                   value={sqthTradeAmount}
                   onInputChange={handleSqthChange}
                   balance={squeethAmount}
-                  logo={osqthLogo}
-                  symbol="oSQTH"
-                  usdPrice={osqthPrice}
+                  logo={SBCHLogo}
+                  symbol="SBCH"
+                  usdPrice={SBCHPrice}
                   showMaxAction={false}
                 />
               </Box>
@@ -585,13 +585,13 @@ const OpenLong: React.FC<BuyProps> = ({ activeStep = 0, showTitle }) => {
 
                 <Box display="flex" alignItems="center" flexWrap="wrap" gridGap="12px">
                   <Metric
-                    label={<Label label="Value if ETH -50%" tooltipTitle={Tooltips.ETHDown50} />}
-                    value={loadingOSQTHPrice ? 'loading...' : formatCurrency(Number(squeethExposure * 0.25))}
+                    label={<Label label="Value if BCH -50%" tooltipTitle={Tooltips.ETHDown50} />}
+                    value={loadingSBCHPrice ? 'loading...' : formatCurrency(Number(squeethExposure * 0.25))}
                     isSmall
                   />
                   <Metric
-                    label={<Label label="Value if ETH 2x" tooltipTitle={Tooltips.ETHUp2x} />}
-                    value={loadingOSQTHPrice ? 'loading...' : formatCurrency(Number(squeethExposure * 4))}
+                    label={<Label label="Value if BCH 2x" tooltipTitle={Tooltips.ETHUp2x} />}
+                    value={loadingSBCHPrice ? 'loading...' : formatCurrency(Number(squeethExposure * 4))}
                     isSmall
                   />
                 </Box>
@@ -646,9 +646,9 @@ const OpenLong: React.FC<BuyProps> = ({ activeStep = 0, showTitle }) => {
                     ) : buyLoading || transactionInProgress || inputQuoteLoading ? (
                       <CircularProgress color="primary" size="1.5rem" />
                     ) : longOpenPriceImpactErrorState ? (
-                      'Buy oSQTH Anyway'
+                      'Buy SBCH Anyway'
                     ) : (
-                      'Buy oSQTH'
+                      'Buy SBCH'
                     )}
                   </PrimaryButtonNew>
                 )}
@@ -694,7 +694,7 @@ const CloseLong: React.FC<BuyProps> = () => {
   const setTradeCompleted = useUpdateAtom(tradeCompletedAtom)
   const [slippageAmount, setSlippage] = useAtom(slippageAmountAtom)
   const ethPrice = useETHPrice()
-  const { data: osqthPrice } = useOSQTHPrice()
+  const { data: SBCHPrice } = useSBCHPrice()
   const amount = useAppMemo(() => new BigNumber(sqthTradeAmount), [sqthTradeAmount])
   const { allowance: squeethAllowance, approve: squeethApprove } = useUserAllowance(oSqueeth, swapRouter2)
   const [isTxFirstStep, setIsTxFirstStep] = useAtom(isTransactionFirstStepAtom)
@@ -719,10 +719,10 @@ const CloseLong: React.FC<BuyProps> = () => {
 
   if (connected) {
     if (squeethAmount.lt(amount)) {
-      closeError = 'Insufficient oSQTH balance'
+      closeError = 'Insufficient SBCH balance'
     }
     // if (amount.gt(balance)) {
-    //   openError = 'Insufficient ETH balance'
+    //   openError = 'Insufficient BCH balance'
     // }
     if (isShort) {
       existingShortError = 'Close your short position to open a long'
@@ -851,7 +851,7 @@ const CloseLong: React.FC<BuyProps> = () => {
       {confirmed && !isTxFirstStep ? (
         <>
           <Confirmed
-            confirmationMessage={`Sold ${confirmedAmount} Squeeth`}
+            confirmationMessage={`Sold ${confirmedAmount} Strike`}
             txnHash={transactionData?.hash ?? ''}
             confirmType={ConfirmType.TRADE}
           />
@@ -887,18 +887,18 @@ const CloseLong: React.FC<BuyProps> = () => {
       ) : (
         <>
           <Typography variant="h4" className={classes.title}>
-            Sell oSQTH to get ETH back
+            Sell SBCH to get BCH back
           </Typography>
 
           <Box display="flex" flexDirection="column" gridGap="16px">
             <InputToken
-              id="close-long-osqth-input"
+              id="close-long-SBCH-input"
               value={sqthTradeAmount}
               onInputChange={handleSqthChange}
               balance={squeethAmount}
-              logo={osqthLogo}
-              symbol="oSQTH"
-              usdPrice={osqthPrice}
+              logo={SBCHLogo}
+              symbol="SBCH"
+              usdPrice={SBCHPrice}
               onBalanceClick={() => handleSqthChange(squeethAmount.toString())}
               error={!!closeError}
               helperText={closeError}
@@ -910,7 +910,7 @@ const CloseLong: React.FC<BuyProps> = () => {
               onInputChange={handleEthChange}
               balance={new BigNumber(balance)}
               logo={ethLogo}
-              symbol="ETH"
+              symbol="BCH"
               usdPrice={ethPrice}
               showMaxAction={false}
             />
@@ -1003,7 +1003,7 @@ const CloseLong: React.FC<BuyProps> = () => {
                 ) : sellLoading || transactionInProgress || inputQuoteLoading ? (
                   <CircularProgress color="primary" size="1.5rem" />
                 ) : squeethAllowance.lt(amount) && !hasJustApprovedSqueeth ? (
-                  'Approve oSQTH (1/2)'
+                  'Approve SBCH (1/2)'
                 ) : longClosePriceImpactErrorState ? (
                   'Sell Anyway'
                 ) : hasJustApprovedSqueeth ? (

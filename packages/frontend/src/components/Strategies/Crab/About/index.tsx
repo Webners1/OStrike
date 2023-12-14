@@ -40,12 +40,12 @@ const About: React.FC = () => {
           About Crab
         </Typography>
         <Typography variant="h2" className={classes.heading}>
-          Stack USDC when ETH is calm
+          Stack BCH when BCH is calm
         </Typography>
 
         <Typography className={clsx(classes.text, classes.textMargin)}>
-          In general, Crab earns USDC returns except when there is high ETH volatility in the market, when it may draw
-          down. Most often, the strategy stacks USDC if ETH is within the below bands at the next hedge.{' '}
+          In general, Crab earns USDC returns except when there is high BCH volatility in the market, when it may draw
+          down. Most often, the strategy stacks USDC if BCH is within the below bands at the next hedge.{' '}
           <LinkWrapper
             href={gitBookLink}
             onClick={() => track(SITE_EVENTS.CLICK_LEARN_MORE_CRAB, { link: gitBookLink })}

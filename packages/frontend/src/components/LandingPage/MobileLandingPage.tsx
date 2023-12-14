@@ -294,7 +294,7 @@ const useStyles = makeStyles((theme) =>
 
 const navLinks = [
   { label: 'Strategies', link: '/strategies/crab' },
-  { label: 'Squeeth', link: '/squeeth' },
+  { label: 'Strike', link: '/squeeth' },
   { label: 'Auction', link: 'https://squeethportal.xyz', analyticsEvent: SITE_EVENTS.NAV_AUCTION },
   {
     label: 'FAQ',
@@ -384,7 +384,7 @@ function MobileLandingPage() {
         <div className={classes.introSection}>
           <div>
             <Typography variant="h1" className={clsx([classes.introSectionHeading, classes.gradientText])}>
-              Stack your ETH
+              Stack your BCH
             </Typography>
             <Typography variant="h1" className={clsx([classes.introSectionHeading, classes.gradientText])}>
               & stables.
@@ -419,7 +419,7 @@ function MobileLandingPage() {
         </div>
         <div style={{ marginTop: '11vh' }} />
         <div className={classes.verticalImage}>
-          <Image src={SqueethMobile} alt="Squeeth" placeholder="blur" />
+          <Image src={SqueethMobile} alt="Strike" placeholder="blur" />
         </div>
         <div className={classes.squeethSection}>
           <div className={classes.contentSectionHeader}>
@@ -436,7 +436,7 @@ function MobileLandingPage() {
           </Typography>
           <div style={{ marginTop: '15px' }} />
           <Typography variant="h3" className={classes.contentSectionSubTitle}>
-            Bet on ETH with unlimited upside,
+            Bet on BCH with unlimited upside,
           </Typography>
           <Typography variant="h3" className={classes.contentSectionSubTitle}>
             protected downside, and no liquidations.
@@ -444,7 +444,7 @@ function MobileLandingPage() {
           <div style={{ marginTop: '15px' }} />
           <Link href={'/squeeth'} passHref>
             <Button onClick={() => track(LANDING_EVENTS.NAV_HERO_SQUEETH)} className={classes.contentSectionButton}>
-              Trade Squeeth
+              Trade Strike
             </Button>
           </Link>
         </div>
@@ -470,7 +470,7 @@ function MobileLandingPage() {
           </Typography>
           <div style={{ marginTop: '15px' }} />
           <Typography variant="h3" className={classes.contentSectionSubTitle}>
-            ETH and USDC strategies to supercharge
+            BCH and USDC strategies to supercharge
           </Typography>
           <Typography variant="h3" className={classes.contentSectionSubTitle}>
             your portfolio.

@@ -32,7 +32,7 @@ contract DeployScript is Script {
         require(_eulerSimpleLensAddress != address(0), "Invalid EulerSimpleLens address");
         require(_flashZenAddress != address(0), "Invalid FlashZen address");
         require(_uniFactoryAddress != address(0), "Invalid Uni V3 Factory address");
-        require(_initialMinEthAmount > 0, "Invalid min ETH amount");
+        require(_initialMinEthAmount > 0, "Invalid min BCH amount");
         require(_initialMinZenBullAmount > 0, "Invalid min ZenBull amount");
 
         ownerAddress = _ownerAddress;

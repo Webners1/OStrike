@@ -23,7 +23,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAtom, useAtomValue } from 'jotai'
 
 import ethLogo from '../../public/images/ethereum-eth.svg'
-import squeethLogo from '../../public/images/Squeeth.svg'
+import squeethLogo from '../../public/images/Strike.svg'
 import { AddButton, RemoveButton } from '@components/Button'
 import CollatRange from '@components/CollatRange'
 import NumberInput from '@components/Input/NumberInput'
@@ -251,10 +251,10 @@ enum VaultAction {
 }
 
 enum VaultError {
-  MIN_COLLATERAL = 'Minimum vault collateral is 6.9 ETH',
+  MIN_COLLATERAL = 'Minimum vault collateral is 6.9 BCH',
   MIN_COLLAT_PERCENT = 'Minimum collateral ratio is 150%',
-  INSUFFICIENT_ETH_BALANCE = 'Insufficient ETH Balance',
-  INSUFFICIENT_OSQTH_BALANCE = 'Insufficient oSQTH Balance',
+  INSUFFICIENT_ETH_BALANCE = 'Insufficient BCH Balance',
+  INSUFFICIENT_SBCH_BALANCE = 'Insufficient SBCH Balance',
 }
 
 const SelectLP: React.FC<{ lpToken: number; setLpToken: (t: number) => void; disabled?: boolean }> = ({
@@ -621,7 +621,7 @@ const Component: React.FC = () => {
         adjustCollatError = VaultError.MIN_COLLATERAL
     } else {
       if (action === VaultAction.BURN_SQUEETH && shortAmountBN.abs().gt(oSqueethBal))
-        adjustAmountError = VaultError.INSUFFICIENT_OSQTH_BALANCE
+        adjustAmountError = VaultError.INSUFFICIENT_SBCH_BALANCE
       else if (collatPercent < 150 && !shortAmountBN.abs().isEqualTo(vault.shortAmount))
         adjustAmountError = VaultError.MIN_COLLAT_PERCENT
     }
@@ -678,7 +678,7 @@ const Component: React.FC = () => {
             </Typography>
             <div className={classes.liqItem}>
               <Typography color="textSecondary" variant="body2">
-                ETH Price:
+                BCH Price:
               </Typography>
               <Typography variant="body2" color="textPrimary" style={{ marginLeft: '8px' }}>
                 $ {twapEthPrice.toFixed(2)}
@@ -701,7 +701,7 @@ const Component: React.FC = () => {
                   Total squeeth liquidated:
                 </Typography>
                 <Typography variant="body2" color="textPrimary" style={{ marginLeft: '8px' }}>
-                  {totalLiquidated.toFixed(6)} oSQTH
+                  {totalLiquidated.toFixed(6)} SBCH
                 </Typography>
               </div>
               <div className={classes.liqItem}>
@@ -709,7 +709,7 @@ const Component: React.FC = () => {
                   Total collateral paid:
                 </Typography>
                 <Typography variant="body2" color="textPrimary" style={{ marginLeft: '8px' }}>
-                  {totalCollatPaid.toFixed(6)} ETH
+                  {totalCollatPaid.toFixed(6)} BCH
                 </Typography>
               </div>
             </div>
@@ -719,7 +719,7 @@ const Component: React.FC = () => {
             <div className={classes.overview}>
               <div className={classes.debtItem}>
                 <Typography className={classes.overviewTitle}>
-                  <span>Total Debt (oSQTH)</span>
+                  <span>Total Debt (SBCH)</span>
                   <Tooltip title={Tooltips.TotalDebt}>
                     <InfoIcon className={classes.infoIcon} />
                   </Tooltip>
@@ -730,7 +730,7 @@ const Component: React.FC = () => {
               </div>
               <div className={classes.debtItem}>
                 <Typography className={classes.overviewTitle}>
-                  <span>Short Debt (oSQTH)</span>
+                  <span>Short Debt (SBCH)</span>
                   <Tooltip title={Tooltips.ShortDebt}>
                     <InfoIcon className={classes.infoIcon} />
                   </Tooltip>
@@ -741,7 +741,7 @@ const Component: React.FC = () => {
               </div>
               <div className={classes.debtItem}>
                 <Typography className={classes.overviewTitle}>
-                  <span>Minted Debt (oSQTH)</span>
+                  <span>Minted Debt (SBCH)</span>
                   <Tooltip title={Tooltips.MintedDebt}>
                     <InfoIcon className={classes.infoIcon} />
                   </Tooltip>
@@ -753,7 +753,7 @@ const Component: React.FC = () => {
               </div>
               <div className={classes.debtItem}>
                 <Typography className={classes.overviewTitle}>
-                  <span>LPed Debt (oSQTH)</span>
+                  <span>LPed Debt (SBCH)</span>
                   <Tooltip title={Tooltips.LPDebt}>
                     <InfoIcon className={classes.infoIcon} />
                   </Tooltip>
@@ -768,7 +768,7 @@ const Component: React.FC = () => {
           <div className={classes.overview}>
             {/* <div className={classes.overviewItem}>
               <Typography className={classes.overviewValue}>{vault?.shortAmount.toFixed(6)}</Typography>
-              <Typography className={classes.overviewTitle}>Total Debt (oSQTH)</Typography>
+              <Typography className={classes.overviewTitle}>Total Debt (SBCH)</Typography>
             </div> */}
             <div className={classes.overviewItem}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -792,7 +792,7 @@ const Component: React.FC = () => {
                   </>
                 ) : null}
               </div>
-              <Typography className={classes.overviewTitle}>Collateral (ETH)</Typography>
+              <Typography className={classes.overviewTitle}>Collateral (BCH)</Typography>
             </div>
             <div className={classes.overviewItem}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -855,7 +855,7 @@ const Component: React.FC = () => {
                       placeholder="Collateral"
                       onChange={(v) => updateCollateral(v)}
                       value={collateral}
-                      unit="ETH"
+                      unit="BCH"
                       hint={
                         !!adjustCollatError ? (
                           adjustCollatError
@@ -865,7 +865,7 @@ const Component: React.FC = () => {
                             <span id="vault-collat-input-eth-balance">
                               {toTokenAmount(balance ?? BIG_ZERO, 18).toFixed(4)}
                             </span>{' '}
-                            ETH
+                            BCH
                           </span>
                         )
                       }
@@ -883,7 +883,7 @@ const Component: React.FC = () => {
                       label="Collateral Ratio"
                       variant="outlined"
                       // error={collatPercent < 150}
-                      // helperText={`Balance ${toTokenAmount(balance, 18).toFixed(4)} ETH`}
+                      // helperText={`Balance ${toTokenAmount(balance, 18).toFixed(4)} BCH`}
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
@@ -976,21 +976,21 @@ const Component: React.FC = () => {
                       placeholder="Amount"
                       onChange={(v) => updateShort(v)}
                       value={shortAmount}
-                      unit="oSQTH"
+                      unit="SBCH"
                       hint={
                         !!adjustAmountError ? (
                           adjustAmountError
                         ) : (
                           <span>
                             Balance{' '}
-                            <span id="vault-debt-input-osqth-balance">
+                            <span id="vault-debt-input-SBCH-balance">
                               {oSqueethBal?.isGreaterThan(0) &&
                                 positionType === PositionType.LONG &&
                                 oSqueethBal.minus(squeethAmount).isGreaterThan(0)
                                 ? oSqueethBal.minus(squeethAmount).toFixed(6)
                                 : oSqueethBal.toFixed(6)}
                             </span>{' '}
-                            oSQTH
+                            SBCH
                           </span>
                         )
                       }

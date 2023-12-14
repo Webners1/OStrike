@@ -154,22 +154,22 @@ const StrategyLayout: React.FC<{ children: any }> = ({ children }) => {
         }}
         aria-label="strategy tabs"
       >
-        <Tab
+        {/* <Tab
           classes={{ root: tabClasses.tabRoot }}
           label={<StrategyLabel title={Vaults.ETHBear} subtitle={VaultSubtitle.ETHBear} />}
           icon={<StrategyImage img={bearStrategyImg} imgAlt="Bear strategy" />}
           disabled
-        />
+        /> */}
         <Tab
           classes={{ root: tabClasses.tabRoot }}
           label={<StrategyLabel title={Vaults.CrabVault} subtitle={VaultSubtitle.CrabVault} />}
-          icon={<StrategyImage img={crabStrategyImg} imgAlt="Crab USDC strategy" />}
+          icon={<StrategyImage img={crabStrategyImg} imgAlt="Crab BCH strategy" />}
         />
-        <Tab
+        {/* <Tab
           classes={{ root: tabClasses.tabRoot }}
           label={<StrategyLabel title={Vaults.ETHZenBull} subtitle={VaultSubtitle.ETHZenBull} />}
-          icon={<StrategyImage img={bullStrategyImg} imgAlt="Zen Bull ETH strategy" />}
-        />
+          icon={<StrategyImage img={bullStrategyImg} imgAlt="Zen Bull BCH strategy" />}
+        /> */}
       </Tabs>
 
       <div className={classes.container}>{children}</div>

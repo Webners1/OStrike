@@ -9,20 +9,20 @@ import {
   impliedVolAtom,
   indexAtom,
   markAtom,
-  osqthRefVolAtom,
+  SBCHRefVolAtom,
   currentImpliedFundingAtom,
 } from '@state/controller/atoms'
 import Metric, { MetricLabel } from '@components/Metric'
 import { formatCurrency, formatNumber } from '@utils/formatter'
-import { useOSQTHPrice } from '@hooks/useOSQTHPrice'
+import { useSBCHPrice } from '@hooks/useOSQTHPrice'
 
 const SqueethInfo: React.FC<BoxProps> = (props) => {
   const mark = useAtomValue(markAtom)
   const index = useAtomValue(indexAtom)
   const impliedVol = useAtomValue(impliedVolAtom)
-  const osqthRefVol = useAtomValue(osqthRefVolAtom)
+  const SBCHRefVol = useAtomValue(SBCHRefVolAtom)
   const currentImpliedFunding = useAtomValue(currentImpliedFundingAtom)
-  const { data: osqthPrice } = useOSQTHPrice()
+  const { data: SBCHPrice } = useSBCHPrice()
 
   const eth2Price = toTokenAmount(index, 18)
   const ethPrice = eth2Price.sqrt()
@@ -31,17 +31,17 @@ const SqueethInfo: React.FC<BoxProps> = (props) => {
   const currentImpliedPremium =
     currentImpliedFunding === 0 ? 'loading' : formatNumber(currentImpliedFunding * 100) + '%'
 
-  const osqthPriceInETH = ethPrice.isZero() ? BIG_ZERO : osqthPrice.div(ethPrice)
+  const SBCHPriceInETH = ethPrice.isZero() ? BIG_ZERO : SBCHPrice.div(ethPrice)
 
   return (
     <Box display="flex" alignItems="center" flexWrap="wrap" gridGap="12px" {...props}>
       <Metric
-        label={<MetricLabel label="ETH Price" tooltipTitle={Tooltips.SpotPrice} />}
+        label={<MetricLabel label="BCH Price" tooltipTitle={Tooltips.SpotPrice} />}
         value={formatCurrency(ethPrice.toNumber())}
       />
 
       <Metric
-        label={<MetricLabel label="ETH&sup2; Price" tooltipTitle={Tooltips.SpotPrice} />}
+        label={<MetricLabel label="BCH&sup2; Price" tooltipTitle={Tooltips.SpotPrice} />}
         value={formatCurrency(eth2Price.toNumber())}
       />
 
@@ -51,8 +51,8 @@ const SqueethInfo: React.FC<BoxProps> = (props) => {
       />
 
       <Metric
-        label={<MetricLabel label="oSQTH Price" tooltipTitle={`${Tooltips.oSQTHPrice}. ${Tooltips.SpotPrice}`} />}
-        value={`${formatCurrency(osqthPrice.toNumber())}  (${formatNumber(osqthPriceInETH.toNumber(), 4)} ETH)`}
+        label={<MetricLabel label="SBCH Price" tooltipTitle={`${Tooltips.SBCHPrice}. ${Tooltips.SpotPrice}`} />}
+        value={`${formatCurrency(SBCHPrice.toNumber())}  (${formatNumber(SBCHPriceInETH.toNumber(), 4)} BCH)`}
       />
 
       <Metric
@@ -61,8 +61,8 @@ const SqueethInfo: React.FC<BoxProps> = (props) => {
       />
 
       <Metric
-        label={<MetricLabel label="Reference Volatility" tooltipTitle={Tooltips.osqthRefVol} />}
-        value={`${formatNumber(osqthRefVol)}%`}
+        label={<MetricLabel label="Reference Volatility" tooltipTitle={Tooltips.SBCHRefVol} />}
+        value={`${formatNumber(SBCHRefVol)}%`}
       />
 
       <Metric

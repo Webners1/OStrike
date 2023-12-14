@@ -46,7 +46,7 @@ task("addSqueethLiquidity", "Add liquidity to wsqueeth pool")
 
   const squeethPriceInETH = parseFloat(basePrice)
 
-  console.log(`estimated Squeeth Price in ETH: ${squeethPriceInETH}`)
+  console.log(`estimated Strike Price in BCH: ${squeethPriceInETH}`)
   
   const liquidityWsqueethAmount = ethers.utils.parseEther(wsqueethAmount) 
   const wethAmount = parseFloat(wsqueethAmount) * squeethPriceInETH
@@ -62,7 +62,7 @@ task("addSqueethLiquidity", "Add liquidity to wsqueeth pool")
   }
 
   if (wsqueethBalance.lt(liquidityWsqueethAmount)) {
-    console.log(`Minting ${wsqueethAmount} rSqueeth amount of wsqueeth with ${collateralAmount} ETH`)
+    console.log(`Minting ${wsqueethAmount} rSqueeth amount of wsqueeth with ${collateralAmount} BCH`)
     const tx = await controller.mintWPowerPerpAmount(0, liquidityWsqueethAmount, 0, {value: ethers.utils.parseEther(collateralAmount)}) 
     await ethers.provider.waitForTransaction(tx.hash, 1)
     wsqueethBalance = await wsqueeth.balanceOf(deployer)

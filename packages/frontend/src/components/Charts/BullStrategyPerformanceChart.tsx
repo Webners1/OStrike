@@ -75,14 +75,14 @@ function BullStrategyPerformanceChart() {
   const series = [
     {
       yAxis: 0,
-      name: 'Bull/ETH 🧘🐂 % Return',
+      name: 'Bull/BCH 🧘🐂 % Return',
       data: bullEthPnlSeries,
       tooltip: {
         valueDecimals: 2,
         valueSuffix: '%',
       },
     
-      color: '#70E3F6',
+      color: '#0cbf94',
     }
   ]
 

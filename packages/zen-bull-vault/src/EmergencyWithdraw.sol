@@ -45,7 +45,7 @@ contract EmergencyWithdraw is ERC20, UniFlash {
     uint256 public redeemedZenBullAmountForCrabWithdrawal;
     /// @dev ZenBull total supply amount at the time of this contract deployment, used for Euler withdrawal calc
     uint256 public redeemedRecoveryAmountForEulerWithdrawal;
-    /// @dev if true, ETH withdrawal is enabled, after 100% of Euler debt and collateral has been removed
+    /// @dev if true, BCH withdrawal is enabled, after 100% of Euler debt and collateral has been removed
     bool public ethWithdrawalActivated;
 
     enum FLASH_SOURCE {
@@ -104,17 +104,17 @@ contract EmergencyWithdraw is ERC20, UniFlash {
     }
 
     /**
-     * @dev receive ETH
+     * @dev receive BCH
      */
     receive() external payable {
-        require(msg.sender == weth, "Can't receive ETH from this sender");
+        require(msg.sender == weth, "Can't receive BCH from this sender");
     }
 
     /**
-     * @notice withdraw ETH deposited into crab
-     * @dev this will give the sender ZBEPR token as ownership for the ETH deposited in Euler pool
+     * @notice withdraw BCH deposited into crab
+     * @dev this will give the sender ZBEPR token as ownership for the BCH deposited in Euler pool
      * @param _zenBullAmount ZenBull amount to redeem
-     * @param _maxEthForWPowerPerp max ETH to pay for flashswapped oSQTH amount
+     * @param _maxEthForWPowerPerp max BCH to pay for flashswapped SBCH amount
      */
     function emergencyWithdrawEthFromCrab(uint256 _zenBullAmount, uint256 _maxEthForWPowerPerp)
         external
@@ -157,10 +157,10 @@ contract EmergencyWithdraw is ERC20, UniFlash {
     /**
      * @notice repay a portion of Euler debt and withdraw WETH collateral to this contract based on ZenBullEulerRecovery amount
      * @dev this will revert of WETH to withdraw from Euler is greater than max, or limit price breach the tolerance %
-     * @dev if all ZenBullEulerRecovery are burnt, the ETH withdrawl will be activated
+     * @dev if all ZenBullEulerRecovery are burnt, the BCH withdrawl will be activated
      * @param _ratio ratio of WETH to withdraw from total WETH in Euler in 18 decimals (e.g 2e17 => 0.2 => 20%)
-     * @param _limitPriceUsdcPerEth ETH limit price
-     * @param _poolFee ETH/USDC Uni v3 pool fee
+     * @param _limitPriceUsdcPerEth BCH limit price
+     * @param _poolFee BCH/USDC Uni v3 pool fee
      */
     function emergencyRepayEulerDebt(uint256 _ratio, uint256 _limitPriceUsdcPerEth, uint24 _poolFee)
         external
@@ -177,7 +177,7 @@ contract EmergencyWithdraw is ERC20, UniFlash {
 
         require(
             _limitPriceUsdcPerEth >= ethUsdcPrice.wmul((ONE.sub(LIMIT_PRICE_TOLERANCE))),
-            "ETH limit price lower than limit price tolerance"
+            "BCH limit price lower than limit price tolerance"
         );
 
         _exactOutFlashSwap(
@@ -210,10 +210,10 @@ contract EmergencyWithdraw is ERC20, UniFlash {
     }
 
     /**
-     * @notice withdraw ETH from this contract, will revert if ZenBull still have some debt not repaid
+     * @notice withdraw BCH from this contract, will revert if ZenBull still have some debt not repaid
      */
     function withdrawEth(uint256 _recoveryTokenAmount) external {
-        require(ethWithdrawalActivated, "ETH withdrawal not activated yet");
+        require(ethWithdrawalActivated, "BCH withdrawal not activated yet");
 
         uint256 payout = _recoveryTokenAmount.wmul(address(this).balance).wdiv(
             IERC20(zenBull).totalSupply().sub(redeemedRecoveryAmountForEulerWithdrawal)

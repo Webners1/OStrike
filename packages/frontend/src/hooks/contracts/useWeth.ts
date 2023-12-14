@@ -28,7 +28,7 @@ export const useWeth = () => {
 
   /**
    *
-   * Wrap ETH to WETH
+   * Wrap BCH to WETH
    * @param amount - Amount to wrap
    * @returns
    */

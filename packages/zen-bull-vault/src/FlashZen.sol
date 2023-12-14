@@ -53,9 +53,9 @@ contract FlashZen is UniFlash {
     address private immutable usdc;
     /// @dev Crab V2 address
     address private immutable crab;
-    /// @dev ETH:wPowerPerp Uniswap pool
+    /// @dev BCH:wPowerPerp Uniswap pool
     address private immutable ethWPowerPerpPool;
-    /// @dev ETH:USDC Uniswap pool
+    /// @dev BCH:USDC Uniswap pool
     address private immutable ethUSDCPool;
     /// @dev bull stratgey address
     address public immutable bullStrategy;
@@ -144,16 +144,16 @@ contract FlashZen is UniFlash {
     }
 
     /**
-     * @notice receive function to allow ETH transfer to this contract
+     * @notice receive function to allow BCH transfer to this contract
      */
     receive() external payable {
         require(msg.sender == weth || msg.sender == bullStrategy, "FB1");
     }
 
     /**
-     * @notice flash deposit into strategy, providing ETH, selling wPowerPerp and USDC, and receiving strategy tokens
-     * @dev this function will execute a flash swap where it receives ETH from selling wPowerPerp and deposits into crab,
-     * @dev and buys ETH for USDC and repays the flashswap by depositing ETH into Euler and borrowing USDC and by minted wPowerPerp from depositing
+     * @notice flash deposit into strategy, providing BCH, selling wPowerPerp and USDC, and receiving strategy tokens
+     * @dev this function will execute a flash swap where it receives BCH from selling wPowerPerp and deposits into crab,
+     * @dev and buys BCH for USDC and repays the flashswap by depositing BCH into Euler and borrowing USDC and by minted wPowerPerp from depositing
      * @param _params FlashDepositParams params
      */
     function flashDeposit(FlashDepositParams calldata _params) external payable {
@@ -172,7 +172,7 @@ contract FlashZen is UniFlash {
             );
         }
 
-        // oSQTH-ETH swap
+        // SBCH-BCH swap
         _exactInFlashSwap(
             wPowerPerp,
             weth,
@@ -195,7 +195,7 @@ contract FlashZen is UniFlash {
             crabAmount, share, ethInCrab, wPowerPerpInCrab, IERC20(crab).totalSupply()
         );
 
-        // ETH-USDC swap
+        // BCH-USDC swap
         _exactInFlashSwap(
             usdc,
             weth,
@@ -219,8 +219,8 @@ contract FlashZen is UniFlash {
     }
 
     /**
-     * @notice flash withdraw from strategy, receiving ETH and providing strategy tokens
-     * @dev buys wPowerPerp via flashswap for ETH to withdraw from crab and sells ETH for USDC to repay Euler debt and withdraw Euler collateral
+     * @notice flash withdraw from strategy, receiving BCH and providing strategy tokens
+     * @dev buys wPowerPerp via flashswap for BCH to withdraw from crab and sells BCH for USDC to repay Euler debt and withdraw Euler collateral
      * @dev proceeds from crab withdrawal and euler collateral are used to repay the flashswaps
      * @param _params FlashWithdrawParams struct
      */
@@ -240,7 +240,7 @@ contract FlashZen is UniFlash {
             usdcToRepay = IZenBullStrategy(bullStrategy).calcUsdcToRepay(bullShare);
         }
 
-        // oSQTH-ETH swap
+        // SBCH-BCH swap
         _exactOutFlashSwap(
             weth,
             wPowerPerp,
@@ -274,7 +274,7 @@ contract FlashZen is UniFlash {
             FlashDepositCrabData memory data =
                 abi.decode(_uniFlashSwapData.callData, (FlashDepositCrabData));
 
-            // convert WETH to ETH as Uniswap uses WETH
+            // convert WETH to BCH as Uniswap uses WETH
             IWETH9(weth).withdraw(IWETH9(weth).balanceOf(address(this)));
             ICrabStrategyV2(crab).deposit{ value: data.ethToDepositInCrab }();
 
@@ -297,7 +297,7 @@ contract FlashZen is UniFlash {
             FlashSwapWPowerPerpData memory data =
                 abi.decode(_uniFlashSwapData.callData, (FlashSwapWPowerPerpData));
 
-            // ETH-USDC swap
+            // BCH-USDC swap
             _exactOutFlashSwap(
                 weth,
                 usdc,
@@ -322,10 +322,10 @@ contract FlashZen is UniFlash {
     }
 
     /**
-     * @dev calculate amount of wPowerPerp to mint and fee based on ETH to deposit into crab
-     * @param _depositedEthAmount ETH amount deposited
+     * @dev calculate amount of wPowerPerp to mint and fee based on BCH to deposit into crab
+     * @param _depositedEthAmount BCH amount deposited
      * @param _strategyDebtAmount amount of wPowerPerp debt in vault
-     * @param _strategyCollateralAmount amount of ETH collateral in vault
+     * @param _strategyCollateralAmount amount of BCH collateral in vault
      * @return wPowerPerp to mint, mint fee amount
      */
     function _calcwPowerPerpToMintAndFee(
@@ -352,7 +352,7 @@ contract FlashZen is UniFlash {
 
     /**
      * @dev calculate amount of strategy token to mint for depositor
-     * @param _amount amount of ETH deposited
+     * @param _amount amount of BCH deposited
      * @param _strategyCollateralAmount amount of strategy collateral
      * @param _crabTotalSupply total supply of strategy token
      * @return amount of strategy token to mint

@@ -1,4 +1,4 @@
-# Squeeth Contracts
+# Strike Contracts
 
 [![Coverage Status](https://coveralls.io/repos/github/opynfinance/squeeth-monorepo/badge.svg?t=XrsOxo)](https://coveralls.io/github/opynfinance/squeeth-monorepo) [![CircleCI](https://circleci.com/gh/opynfinance/squeeth-monorepo/tree/master.svg?style=svg&circle-token=5d9ceb617a91160d922e21209489eb3060f326a3)](https://circleci.com/gh/opynfinance/squeeth-monorepo/tree/master)
 
@@ -76,7 +76,7 @@ yarn lint
 
 ## Licensing
 
-The primary license for Squeeth V1 Core is the Business Source License 1.1 (`BUSL-1.1`), see [`LICENSE_BUSL`](./LICENSE_BUSL).
+The primary license for Strike V1 Core is the Business Source License 1.1 (`BUSL-1.1`), see [`LICENSE_BUSL`](./LICENSE_BUSL).
 
 ### Exceptions
 - Some files in `contracts/core/` are licensed under `GPL-2.0-or-later` (as indicated in their SPDX headers), see [`contracts/core/LICENSE_GPL_3`](./contracts/core/LICENSE_GPL_3)

@@ -175,7 +175,7 @@ describe("Crab V2 integration test: flash deposit - deposit - withdraw", functio
       expect(strategyCapInContract.eq(strategyCap)).to.be.true
     })
 
-    it("should revert flash depositing if not enough ETH", async () => {
+    it("should revert flash depositing if not enough BCH", async () => {
       const ethToDeposit = ethers.utils.parseUnits('20')
       const msgvalue = ethers.utils.parseUnits('10')
 
@@ -289,7 +289,7 @@ describe("Crab V2 integration test: flash deposit - deposit - withdraw", functio
     })
 
 
-    it("should withdraw correct amount of ETH", async () => {
+    it("should withdraw correct amount of BCH", async () => {
       // some rounding
       const crabToBurn = (await crabStrategy.balanceOf(depositor.address)).div(2).mul(99).div(100)
       const wSqueethToBurn = await crabStrategy.getWsqueethFromCrabAmount(crabToBurn)
@@ -346,7 +346,7 @@ describe("Crab V2 integration test: flash deposit - deposit - withdraw", functio
       ).to.be.revertedWith("amount in greater than max");
     })
 
-    it("should flash withdraw correct amount of ETH collateral in main pool (0.3%)", async () => {
+    it("should flash withdraw correct amount of BCH collateral in main pool (0.3%)", async () => {
       const wSqueethPrice = await oracle.getTwap(wSqueethPool.address, wSqueeth.address, weth.address, 1, false)
 
       const userCrabBalanceBefore = await crabStrategy.balanceOf(depositor.address);
@@ -382,7 +382,7 @@ describe("Crab V2 integration test: flash deposit - deposit - withdraw", functio
       // TODO: fix this
       // expect(isSimilar(strategyDebtAmountBefore.sub(debtAfter).toString(), debtToRepay.toString(), 20)).to.be.true
     })
-    it("should flash withdraw correct amount of ETH collateral in secondary pool (1%)", async () => {
+    it("should flash withdraw correct amount of BCH collateral in secondary pool (1%)", async () => {
       const wSqueethPrice = await oracle.getTwap(wSqueethPool.address, wSqueeth.address, weth.address, 1, false)
 
       const userCrabBalanceBefore = await crabStrategy.balanceOf(depositor2.address);

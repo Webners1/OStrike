@@ -153,7 +153,7 @@ const WalletButton: React.FC = () => {
           <Hidden smDown>
             <div className={classes.balance}>
               <span id="user-eth-wallet-balance">{toTokenAmount(balance ?? BIG_ZERO, 18).toFixed(4)}</span>
-              ETH
+              BCH
             </div>
           </Hidden>
           <Button variant="outlined" color="primary" onClick={disconnectWallet} className={classes.walletBtn}>

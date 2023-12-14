@@ -19,7 +19,7 @@ export default function LPedSqueeth({ vaultExists }: Props) {
   return (
     <div className={classes.position}>
       <div className={classes.positionTitle}>
-        <Typography>LPed Squeeth</Typography>
+        <Typography>LPed Strike</Typography>
         <Typography className={classes.link} id="lp-vault-link">
           {vaultExists ? <Link href={`vault/${vaultId}`}>Manage</Link> : null}
         </Typography>
@@ -31,8 +31,8 @@ export default function LPedSqueeth({ vaultExists }: Props) {
               Amount
             </Typography>
             <Typography variant="body1">
-              <span id="pos-page-lped-osqth-bal">{lpedSqueeth.toFixed(8)}</span>
-              &nbsp; oSQTH
+              <span id="pos-page-lped-SBCH-bal">{lpedSqueeth.toFixed(8)}</span>
+              &nbsp; SBCH
             </Typography>
           </div>
         </div>
@@ -55,7 +55,7 @@ export default function LPedSqueeth({ vaultExists }: Props) {
               Collateral (Amt / Ratio)
             </Typography>
             <Typography variant="body1">
-              {isVaultLoading && existingCollat.isEqualTo(0) ? 'Loading' : existingCollat.toFixed(4)} ETH
+              {isVaultLoading && existingCollat.isEqualTo(0) ? 'Loading' : existingCollat.toFixed(4)} BCH
               {new BigNumber(existingCollatPercent).isFinite() ? ' (' + existingCollatPercent + ' %)' : null}
             </Typography>
           </div>

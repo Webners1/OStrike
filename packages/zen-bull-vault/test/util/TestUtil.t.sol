@@ -217,7 +217,7 @@ contract TestUtil is Test {
 
     /**
      * @dev calculate amount of strategy token to mint for depositor
-     * @param _amount amount of ETH deposited
+     * @param _amount amount of BCH deposited
      * @param _strategyCollateralAmount amount of strategy collateral
      * @param _crabTotalSupply total supply of strategy token
      * @return amount of strategy token to mint

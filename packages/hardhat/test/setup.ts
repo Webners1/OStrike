@@ -168,10 +168,10 @@ export const getPoolAddress = async (
   const oracle = (await OracleContract.deploy()) as Oracle;
 
   const NFTContract = await ethers.getContractFactory("ShortPowerPerp");
-  const shortSqueeth = (await NFTContract.deploy('short Squeeth', 'sSQU')) as ShortPowerPerp;
+  const shortSqueeth = (await NFTContract.deploy('short Strike', 'sSQU')) as ShortPowerPerp;
 
   const WPowerPerpContract = await ethers.getContractFactory("WPowerPerp");
-  const wsqueeth = (await WPowerPerpContract.deploy('Wrapped Squeeth', 'wSQU')) as WPowerPerp;
+  const wsqueeth = (await WPowerPerpContract.deploy('Wrapped Strike', 'wSQU')) as WPowerPerp;
 
   // 1 squeeth is 3000 eth
   const squeethPriceInEth = wsqueethEthPrice || 0.3

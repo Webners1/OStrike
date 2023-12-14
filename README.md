@@ -1,4 +1,4 @@
-# Squeeth Monorepo
+# Strike Monorepo
 
 <p align="center">
 <img src="https://i.imgur.com/Iyulvqq.png" width=400>
@@ -9,7 +9,7 @@
   <a href="https://twitter.com/opyn_"><img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/opyn_?style=for-the-badge" height=20></a>
 </p>
 
-## 🤔 What is Squeeth
+## 🤔 What is Strike
 
 The squeeth contract is designed for users to long or short a special index: Eth², as an implementation of a Power Perpetual.
 

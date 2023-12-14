@@ -8,16 +8,16 @@ import { oracleScaleFactor } from '../test/utils';
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { getNamedAccounts, ethers, network } = hre;
   const { deployer } = await getNamedAccounts();
+  console.log('this',network.name)
   const { positionManager, uniswapFactory } = await getUniswapDeployments(ethers, deployer, network.name)
   if (network.name === "goerli" || network.name === "mainnet") {
     return
   }
-    
   // Get Tokens
   const weth9 = await getWETH(ethers, deployer, network.name)
   const usdc = await getUSDC(ethers, deployer, network.name);  
 
-  // Create ETH/SQUEETH Pool with positionManager
+  // Create BCH/SQUEETH Pool with positionManager
   const squeeth = await ethers.getContract("WPowerPerp", deployer);
 
   // update this number to initial price we want to start the pool with.
@@ -27,7 +27,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const tx1 = await squeethWethPool.increaseObservationCardinalityNext(128)
   await ethers.provider.waitForTransaction(tx1.hash, 1)
 
-  console.log(`SQU/ETH Pool created 🐑. Address: ${squeethWethPool.address}`)
+  console.log(`SQU/BCH Pool created 🐑. Address: ${squeethWethPool.address}`)
 
   if (network.name === "mainnet") {
     return
@@ -37,7 +37,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const tx2 = await ethUSDPool.increaseObservationCardinalityNext(128)
   await ethers.provider.waitForTransaction(tx2.hash, 1)
 
-  console.log(`ETH/USD Pool created 🐑. Address: ${ethUSDPool.address}`)
+  console.log(`BCH/USD Pool created 🐑. Address: ${ethUSDPool.address}`)
 }
 
 export default func;

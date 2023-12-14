@@ -4,10 +4,10 @@ import { Redis } from '@upstash/redis'
 import { isVPN } from 'src/server/ipqs'
 import { BLOCKED_IP_VALUE } from 'src/constants'
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-})
+// const redis = new Redis({
+//   url: process.env.UPSTASH_REDIS_REST_URL!,
+//   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+// })
 
 const THIRTY_DAYS_IN_MS = 30 * 24 * 60 * 60 * 1000
 

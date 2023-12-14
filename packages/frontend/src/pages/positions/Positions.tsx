@@ -129,7 +129,7 @@ export default function Positions() {
           </Typography>
           <div style={{ display: 'flex' }}>
             <Typography component="span" color="textSecondary">
-              ETH Price:{' '}
+              BCH Price:{' '}
             </Typography>
 
             <div className={classes.tooltipContainer}>

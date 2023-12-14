@@ -7,8 +7,8 @@ import {
   OSQUEETH_DECIMALS,
   V2_MIGRATION_ETH_AMOUNT,
   V2_MIGRATION_SUPPLY,
-  V2_MIGRATION_OSQTH_AMOUNT,
-  V2_MIGRATION_OSQTH_PRICE,
+  V2_MIGRATION_SBCH_AMOUNT,
+  V2_MIGRATION_SBCH_PRICE,
   V2_MIGRATION_ETH_PRICE,
   USDC_DECIMALS,
   BIG_ONE,
@@ -82,10 +82,10 @@ export const useUserCrabV2TxHistory = (user: string, isDescending?: boolean) => 
 
       if (tx.type === CrabStrategyV2TxType.DEPOSIT_V1) {
         const ethMigrated = new BigNumber(V2_MIGRATION_ETH_AMOUNT)
-        const oSqthMigrated = new BigNumber(V2_MIGRATION_OSQTH_AMOUNT)
+        const SBCHMigrated = new BigNumber(V2_MIGRATION_SBCH_AMOUNT)
 
         ethAmount = ethMigrated
-          .minus(oSqthMigrated.times(V2_MIGRATION_OSQTH_PRICE))
+          .minus(SBCHMigrated.times(V2_MIGRATION_SBCH_PRICE))
           .times(toTokenAmount(tx.lpAmount, WETH_DECIMALS))
           .div(V2_MIGRATION_SUPPLY)
 

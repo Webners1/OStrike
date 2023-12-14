@@ -127,7 +127,7 @@ describe("Crab integration test: flash deposit - deposit - withdraw", function (
       expect(strategyCapInContract.eq(strategyCap)).to.be.true
     })
 
-    it("should revert flash depositing if not enough ETH", async () => {      
+    it("should revert flash depositing if not enough BCH", async () => {      
       const ethToDeposit = ethers.utils.parseUnits('20')
       const msgvalue = ethers.utils.parseUnits('10')
 
@@ -209,7 +209,7 @@ describe("Crab integration test: flash deposit - deposit - withdraw", function (
       expect(depositorWSqueethDebt.eq(depositorSqueethBalance))    
     })
 
-    it("should withdraw correct amount of ETH", async () => {
+    it("should withdraw correct amount of BCH", async () => {
       // some rounding
       const crabToBurn = (await crabStrategy.balanceOf(depositor.address)).div(2).mul(99).div(100)
       const wSqueethToBurn = await crabStrategy.getWsqueethFromCrabAmount(crabToBurn)
@@ -266,7 +266,7 @@ describe("Crab integration test: flash deposit - deposit - withdraw", function (
       ).to.be.revertedWith("amount in greater than max");
     })
 
-    it("should flash withdraw correct amount of ETH collateral", async () => {
+    it("should flash withdraw correct amount of BCH collateral", async () => {
       const wSqueethPrice = await oracle.getTwap(wSqueethPool.address, wSqueeth.address, weth.address, 1, false)
 
       const userCrabBalanceBefore = await crabStrategy.balanceOf(depositor.address);

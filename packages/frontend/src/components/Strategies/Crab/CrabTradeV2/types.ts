@@ -15,13 +15,13 @@ export interface CrabTransactionConfirmation {
   amount: BigNumber
   tradeType: CrabTradeType
   transactionType: CrabTradeTransactionType
-  token: 'USDC' | 'ETH'
+  token: 'USDC' | 'BCH'
   id?: string
 }
 
 export interface OngoingTransaction {
   amount: BigNumber
   queuedTransaction: boolean
-  token: 'ETH' | 'USDC'
+  token: 'BCH' | 'USDC'
   analytics?: string[]
 }

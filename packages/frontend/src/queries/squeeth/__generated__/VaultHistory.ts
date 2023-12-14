@@ -14,7 +14,7 @@ export interface VaultHistory_vaultHistories {
   id: string;
   timestamp: any;
   totalEthCollateralAmount: any;
-  oSqthAmount: any;
+  SBCHAmount: any;
   ethCollateralAmount: any;
   action: Action;
   vaultId: any;

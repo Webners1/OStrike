@@ -10,7 +10,7 @@ import {
   impliedVolAtom,
   indexAtom,
   normFactorAtom,
-  osqthRefVolAtom,
+  SBCHRefVolAtom,
   ethPriceAtom,
 } from './atoms'
 import { fromTokenAmount, toTokenAmount } from '@utils/calculations'
@@ -25,9 +25,9 @@ import {
   getDailyHistoricalFunding,
   getIndex,
   getMark,
-  getOsqthRefVol,
+  getSBCHRefVol,
 } from './utils'
-import { useGetETHandOSQTHAmount } from '../nftmanager/hooks'
+import { useGetETHandSBCHAmount } from '../nftmanager/hooks'
 import { controllerContractAtom } from '../contracts/atoms'
 import { SQUEETH_UNI_POOL, ETH_USDC_POOL } from '@constants/address'
 import useAppEffect from '@hooks/useAppEffect'
@@ -233,13 +233,13 @@ export const useGetShortAmountFromDebt = () => {
 
 export const useGetUniNFTCollatDetail = () => {
   const normFactor = useAtomValue(normFactorAtom)
-  const getETHandOSQTHAmount = useGetETHandOSQTHAmount()
+  const getETHandSBCHAmount = useGetETHandSBCHAmount()
   const getTwapEthPrice = useGetTwapEthPrice()
 
   const getUniNFTCollatDetail = async (uniId: number) => {
     const ethPrice = await getTwapEthPrice()
-    const { wethAmount, oSqthAmount, position } = await getETHandOSQTHAmount(uniId)
-    const sqthValueInEth = oSqthAmount.multipliedBy(normFactor).multipliedBy(ethPrice).div(INDEX_SCALE)
+    const { wethAmount, SBCHAmount, position } = await getETHandSBCHAmount(uniId)
+    const sqthValueInEth = SBCHAmount.multipliedBy(normFactor).multipliedBy(ethPrice).div(INDEX_SCALE)
 
     return { collateral: sqthValueInEth.plus(wethAmount), position }
   }
@@ -254,7 +254,7 @@ export const useGetCollatRatioAndLiqPrice = () => {
   const contract = useAtomValue(controllerContractAtom)
   const getTwapEthPrice = useGetTwapEthPrice()
   const getDebtAmount = useGetDebtAmount()
-  const getETHandOSQTHAmount = useGetETHandOSQTHAmount()
+  const getETHandSBCHAmount = useGetETHandSBCHAmount()
   const getUniNFTCollatDetail = useGetUniNFTCollatDetail()
   const getCollatRatioAndLiqPrice = useCallback(
     async (collateralAmount: BigNumber, shortAmount: BigNumber, uniId?: number) => {
@@ -297,7 +297,7 @@ export const useGetCollatRatioAndLiqPrice = () => {
 
       return emptyState
     },
-    [contract, getDebtAmount, getETHandOSQTHAmount, getTwapEthPrice, impliedVol, isWethToken0, normFactor.toString()],
+    [contract, getDebtAmount, getETHandSBCHAmount, getTwapEthPrice, impliedVol, isWethToken0, normFactor.toString()],
   )
 
   return getCollatRatioAndLiqPrice
@@ -480,14 +480,14 @@ const useMark = () => {
   return mark
 }
 
-const useOsqthRefVol = async (): Promise<number> => {
+const useSBCHRefVol = async (): Promise<number> => {
   const address = useAtomValue(addressAtom)
   const networkId = useAtomValue(networkIdAtom)
-  const [OsqthRefVol, setOsqthRefVol] = useAtom(osqthRefVolAtom)
+  const [SBCHRefVol, setSBCHRefVol] = useAtom(SBCHRefVolAtom)
   useEffect(() => {
-    getOsqthRefVol().then(setOsqthRefVol)
+    getSBCHRefVol().then(setSBCHRefVol)
   }, [address, networkId])
-  return OsqthRefVol
+  return SBCHRefVol
 }
 
 export const useInitController = () => {
@@ -497,5 +497,5 @@ export const useInitController = () => {
   useCurrentImpliedFunding()
   useDailyHistoricalFunding()
   useNormFactor()
-  useOsqthRefVol()
+  useSBCHRefVol()
 }

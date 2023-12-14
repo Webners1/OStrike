@@ -51,7 +51,7 @@ contract DepositAuctionFuzzing is ZenBullNettingBaseSetup {
         vm.prank(mm2);
         IWETH(WETH).deposit{ value: 5000e18 }();
 
-        // update ZenBull cap to 100000 ETH
+        // update ZenBull cap to 100000 BCH
         vm.store(ZEN_BULL, bytes32(uint256(9)), bytes32(uint256(100000e18)));
     }
 
@@ -85,7 +85,7 @@ contract DepositAuctionFuzzing is ZenBullNettingBaseSetup {
         uint256 crabAmount = _calAuctionCrabAmount(_amount);
         uint256 crabTotalSupply = IERC20(CRAB).totalSupply();
         (, uint256 crabDebt) = IZenBullStrategy(ZEN_BULL).getCrabVaultDetails();
-        uint256 oSqthAmount = crabAmount * crabDebt / crabTotalSupply;
+        uint256 SBCHAmount = crabAmount * crabDebt / crabTotalSupply;
 
         uint256 squeethEthPrice =
             IOracle(ORACLE).getTwap(ethSqueethPool, WPOWERPERP, WETH, 420, false);
@@ -99,7 +99,7 @@ contract DepositAuctionFuzzing is ZenBullNettingBaseSetup {
             SigUtil.Order memory orderSig = SigUtil.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: true,
                 expiry: block.timestamp + 1000,
@@ -110,7 +110,7 @@ contract DepositAuctionFuzzing is ZenBullNettingBaseSetup {
             ZenBullNetting.Order memory orderData = ZenBullNetting.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: true,
                 expiry: block.timestamp + 1000,
@@ -135,7 +135,7 @@ contract DepositAuctionFuzzing is ZenBullNettingBaseSetup {
         });
 
         vm.prank(mm1);
-        IERC20(WETH).approve(address(zenBullNetting), oSqthAmount * params.clearingPrice / 1e18);
+        IERC20(WETH).approve(address(zenBullNetting), SBCHAmount * params.clearingPrice / 1e18);
 
         vm.startPrank(owner);
         zenBullNetting.depositAuction(params);

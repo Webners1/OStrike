@@ -50,7 +50,7 @@ const LPPosition: React.FC = () => {
       </Box>
 
       <Box display="flex" gridGap="12px" marginTop="16px" flexWrap="wrap">
-        <Metric gridGap="6px" label="oSQTH Liquidity" value={formatNumber(squeethLiquidity.toNumber(), 4) + ' oSQTH'} />
+        <Metric gridGap="6px" label="SBCH Liquidity" value={formatNumber(squeethLiquidity.toNumber(), 4) + ' SBCH'} />
         <Metric gridGap="6px" label="WETH Liquidity" value={formatNumber(wethLiquidity.toNumber(), 4) + ' WETH'} />
       </Box>
     </>

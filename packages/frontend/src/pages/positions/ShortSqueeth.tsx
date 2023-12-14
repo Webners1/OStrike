@@ -34,7 +34,7 @@ export default function ShortSqueeth() {
   return (
     <div className={classes.position}>
       <div className={classes.positionTitle}>
-        <Typography>Short Squeeth</Typography>
+        <Typography>Short Strike</Typography>
         <Typography className={classes.link}>
           <Link href={`vault/${vaultId}`}>Manage</Link>
         </Typography>
@@ -43,13 +43,13 @@ export default function ShortSqueeth() {
         <div className={classes.innerPositionData}>
           <div style={{ width: '50%' }}>
             <Typography variant="caption" component="span" color="textSecondary">
-              oSQTH Amount
+              SBCH Amount
             </Typography>
             {isPositionLoading ? (
               <Typography variant="body1">Loading</Typography>
             ) : (
-              <Typography variant="body1" id="pos-page-short-osqth-bal">
-                {squeethAmount.toFixed(8) + ' oSQTH'}
+              <Typography variant="body1" id="pos-page-short-SBCH-bal">
+                {squeethAmount.toFixed(8) + ' SBCH'}
               </Typography>
             )}
           </div>
@@ -83,7 +83,7 @@ export default function ShortSqueeth() {
               Collateral (Amt / Ratio)
             </Typography>
             <Typography variant="body1">
-              {isVaultLoading && existingCollat.isEqualTo(0) ? 'Loading' : existingCollat.toFixed(4)} ETH (
+              {isVaultLoading && existingCollat.isEqualTo(0) ? 'Loading' : existingCollat.toFixed(4)} BCH (
               {existingCollatPercent}%)
             </Typography>
           </div>
@@ -104,7 +104,7 @@ export default function ShortSqueeth() {
               ) : (
                 <>
                   <Typography variant="body1" className={shortGain.isLessThan(0) ? classes.red : classes.green}>
-                    $ {shortUnrealizedPNL.usd.toFixed(2)} ({shortUnrealizedPNL.eth.toFixed(5)} ETH)
+                    $ {shortUnrealizedPNL.usd.toFixed(2)} ({shortUnrealizedPNL.eth.toFixed(5)} BCH)
                   </Typography>
                   <Typography variant="caption" className={shortGain.isLessThan(0) ? classes.red : classes.green}>
                     {(shortGain || 0).toFixed(2)}%

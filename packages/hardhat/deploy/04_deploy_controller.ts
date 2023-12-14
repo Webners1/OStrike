@@ -42,9 +42,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   try {
     const tx = await wsqueeth.init(controller.address, { from: deployer });
     await ethers.provider.waitForTransaction(tx.hash, 1)
-    console.log(`Squeeth init done 🍋`);
+    console.log(`Strike init done 🍋`);
   } catch (error) {
-    console.log(`Squeeth already init or wrong deployer address.`)
+    console.log(`Strike already init or wrong deployer address.`)
   }
 
   try {

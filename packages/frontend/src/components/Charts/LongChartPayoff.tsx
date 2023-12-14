@@ -141,23 +141,23 @@ function LongChartPayoff() {
     return [
       {
         data: longEthPNL,
-        legend: 'Long ETH PNL (%)',
+        legend: 'Long BCH PNL (%)',
         options: {
           color: '#CDAEFB',
         },
       },
       {
         data: longSeries.slice(0, liveIndex),
-        legend: `Long Squeeth PNL (%) Simulated incl. premiums`,
+        legend: `Long Strike PNL (%) Simulated incl. premiums`,
         options: {
           color: '#00E396',
         },
       },
       {
         data: longSeries.slice(liveIndex),
-        legend: `Long Squeeth PNL (%) LIVE (incl. premiums)`,
+        legend: `Long Strike PNL (%) LIVE (incl. premiums)`,
         options: {
-          color: '#70E3F6',
+          color: '#0cbf94',
         },
       },
     ]
@@ -233,15 +233,15 @@ function LongChartPayoff() {
           )}
 
           <div className={classes.legendBox}>
-            {lineSeries && lineSeries[0].data.length > 0 && <LegendBox bgColor="#CDAEFB" text="ETH PNL" />}
+            {lineSeries && lineSeries[0].data.length > 0 && <LegendBox bgColor="#CDAEFB" text="BCH PNL" />}
             {lineSeries && lineSeries[1].data.length > 0 && (
               <LegendBox
                 bgColor="#00E396"
-                text="Squeeth Simulated PnL"
-                tooltip="The Squeeth Simulated PnL comes from using at the money implied vol from Deribit"
+                text="Strike Simulated PnL"
+                tooltip="The Strike Simulated PnL comes from using at the money implied vol from Deribit"
               />
             )}
-            {lineSeries && lineSeries[2].data.length > 0 && <LegendBox bgColor="#70E3F6" text="Squeeth PNL" />}
+            {lineSeries && lineSeries[2].data.length > 0 && <LegendBox bgColor="#0cbf94" text="Strike PNL" />}
           </div>
         </div>
       </div>

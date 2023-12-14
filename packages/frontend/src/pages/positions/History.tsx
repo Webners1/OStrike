@@ -104,7 +104,7 @@ const History: React.FC = () => {
                           : classes.red
                       }
                     >
-                      {tx.squeethAmount.toFixed(8)}&nbsp; oSQTH
+                      {tx.squeethAmount.toFixed(8)}&nbsp; SBCH
                     </Typography>
                     <Typography variant="caption" color="textSecondary">
                       $

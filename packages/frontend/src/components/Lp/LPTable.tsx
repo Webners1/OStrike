@@ -267,7 +267,7 @@ export const LPTable: React.FC<LPTableProps> = ({ isLPage, pool }) => {
                         style={{ textDecoration: 'underline' }}
                       >
                         {' '}
-                        <p>2. Deposit Squeeth and ETH into Uniswap V3 Pool 🦄</p>{' '}
+                        <p>2. Deposit Strike and BCH into Uniswap V3 Pool 🦄</p>{' '}
                       </a>
                     </div>
                   </TableCell>
@@ -351,7 +351,7 @@ export const LPTable: React.FC<LPTableProps> = ({ isLPage, pool }) => {
               <TableRow>
                 <TableCell colSpan={7}>
                   <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <UniswapIframe text={'Deposit Squeeth and ETH into Uniswap V3 Pool 🦄'} />
+                    <UniswapIframe text={'Deposit Strike and BCH into Uniswap V3 Pool 🦄'} />
                   </div>
                 </TableCell>
               </TableRow>

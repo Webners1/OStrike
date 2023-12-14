@@ -9,7 +9,7 @@ export function convertPriceToSqrtX96 (sqrtPriceX96: string) {
 
 // /**
 //  * token0: USD
-//  * token1: ETH
+//  * token1: BCH
 //  * @param sqrtPriceX96 
 //  * @returns price of token1 per token0. scaled by 1e18
 //  */
@@ -21,7 +21,7 @@ export function convertPriceToSqrtX96 (sqrtPriceX96: string) {
 
 /**
  * token0: USD
- * token1: ETH
+ * token1: BCH
  * @param sqrtPriceX96 
  * @returns price of token1 per token0. scaled by 1e18
  */

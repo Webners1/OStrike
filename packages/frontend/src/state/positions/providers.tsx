@@ -49,12 +49,12 @@ export const ComputeSwapsProvider: FC = ({ children }) => {
           //<0 means, buying squeeth
           //>0 means selling squeeth
           if (squeethAmt.isPositive()) {
-            //sold Squeeth amount
+            //sold Strike amount
             acc.soldSqueeth = acc.soldSqueeth.plus(squeethAmt.abs())
             //usd value from sell to close long position or open short
             acc.totalUSDFromSell = acc.totalUSDFromSell.plus(usdAmt.abs())
           } else if (squeethAmt.isNegative()) {
-            //bought Squeeth amount
+            //bought Strike amount
             acc.boughtSqueeth = acc.boughtSqueeth.plus(squeethAmt.abs())
             //usd value from buy to close short position or open long
             acc.totalUSDFromBuy = acc.totalUSDFromBuy.plus(usdAmt.abs())
@@ -101,7 +101,7 @@ export const ComputeSwapsProvider: FC = ({ children }) => {
   useAppEffect(() => {
     if (oSqueethBal?.isGreaterThan(0) && oSqueethBal.isGreaterThan(vault?.shortAmount || 0)) {
       setPositionType(PositionType.LONG)
-      // check if user osqth wallet balance is equal to the accumulated amount from tx history
+      // check if user SBCH wallet balance is equal to the accumulated amount from tx history
       // if it's not the same, it's likely that they do smt on crab acution or otc or lp etc so dont show the pnl for them
       if (!computedSwaps.squeethAmount.isEqualTo(oSqueethBal)) {
         setIsToHidePnL(true)

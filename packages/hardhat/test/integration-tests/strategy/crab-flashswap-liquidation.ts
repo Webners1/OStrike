@@ -304,7 +304,7 @@ describe("Crab flashswap integration test: crab vault liquidation", function () 
       expect(isSimilar((depositorCrabAfter.sub(depositorCrabBefore)).toString(),(crabMintAmount).toString())).to.be.true
     })
 
-    it("depositor should withdraw correct amount of ETH collateral", async () => {
+    it("depositor should withdraw correct amount of BCH collateral", async () => {
       const wSqueethPrice = await oracle.getTwap(wSqueethPool.address, wSqueeth.address, weth.address, 1, false)
 
       const userCrabBalanceBefore = await crabStrategy.balanceOf(depositor.address);
@@ -340,7 +340,7 @@ describe("Crab flashswap integration test: crab vault liquidation", function () 
       expect(isSimilar(strategyDebtAmountBefore.sub(debtAfter).toString(), debtToRepay.toString(), 10)).to.be.true
     })
 
-    it("depositor2 should withdraw correct amount of ETH collateral", async () => {
+    it("depositor2 should withdraw correct amount of BCH collateral", async () => {
       
       
       const wSqueethPrice = await oracle.getTwap(wSqueethPool.address, wSqueeth.address, weth.address, 1, false)

@@ -20,7 +20,7 @@ describe("ShortPowerPerp", function () {
   describe("Deployment", async () => {
     it("Deployment", async function () {
       const ShortPowerPerpContract = await ethers.getContractFactory("ShortPowerPerp");
-      shortSqueeth = (await ShortPowerPerpContract.deploy('Short Squeeth', 'sSQU')) as ShortPowerPerp;
+      shortSqueeth = (await ShortPowerPerpContract.deploy('Short Strike', 'sSQU')) as ShortPowerPerp;
       const ControllerContract = await ethers.getContractFactory("ControllerAccessTester");
       controller = (await ControllerContract.deploy(shortSqueeth.address)) as ControllerAccessTester;
     });

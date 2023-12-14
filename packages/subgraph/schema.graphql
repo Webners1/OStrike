@@ -59,7 +59,7 @@ type VaultHistory @entity {
   txid: String!
   timestamp: BigInt!
   totalEthCollateralAmount: BigInt!
-  oSqthAmount: BigInt!
+  SBCHAmount: BigInt!
   ethCollateralAmount: BigInt!
   action: Action!
   vaultId: BigInt!

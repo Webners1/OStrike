@@ -50,7 +50,7 @@ const CustomTooltip: React.FC<TooltipProps<any, any>> = ({ active, payload }) =>
     return (
       <div className={classes.root}>
         <Typography className={classes.label}>
-          <b>{formatCurrency(ethPrice)}</b> {`ETH/USDC`}
+          <b>{formatCurrency(ethPrice)}</b> {`BCH/USDC`}
         </Typography>
         <Typography className={classes.value}>
           {`Crab return: `}
@@ -185,7 +185,7 @@ const Chart: React.FC<{ currentImpliedFunding: number }> = ({ currentImpliedFund
               markerStart="url(#dot)"
             >
               <Label
-                value="ETH Price"
+                value="BCH Price"
                 position="insideBottomRight"
                 offset={14}
                 fill="#ffffff80"

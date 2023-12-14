@@ -257,7 +257,7 @@ describe("Crab integration test: crab vault dust liquidation with excess collate
         await expect(crabStrategy.connect(depositor2).flashDeposit(ethToDeposit, {value: msgvalue})).to.be.revertedWith("AS")
     })
 
-    it("should let user deposit post liquidation, with only ETH, and mint no squeeth for them", async () => {
+    it("should let user deposit post liquidation, with only BCH, and mint no squeeth for them", async () => {
         const vaultId = await crabStrategy.vaultId();
         const isVaultSafe = await controller.isVaultSafe((await crabStrategy.vaultId()))
         expect(isVaultSafe).to.be.true
@@ -312,7 +312,7 @@ describe("Crab integration test: crab vault dust liquidation with excess collate
 
     })
 
-    it("depositor should be able to withdraw and get some ETH, without any wSqueeth", async () => {
+    it("depositor should be able to withdraw and get some BCH, without any wSqueeth", async () => {
       const vaultId = await crabStrategy.vaultId();
       const isVaultSafe = await controller.isVaultSafe((await crabStrategy.vaultId()))
       expect(isVaultSafe).to.be.true

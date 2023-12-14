@@ -34,25 +34,25 @@ export const useGetPosition = () => {
   return getPosition
 }
 
-export const useGetETHandOSQTHAmount = () => {
+export const useGetETHandSBCHAmount = () => {
   const isWethToken0 = useAtomValue(isWethToken0Atom)
   const getPosition = useGetPosition()
-  const getETHandOSQTHAmount = useCallback(
+  const getETHandSBCHAmount = useCallback(
     async (posId: number) => {
       const result = await getPosition(posId)
-      if (!result) return { wethAmount: BIG_ZERO, oSqthAmount: BIG_ZERO }
+      if (!result) return { wethAmount: BIG_ZERO, SBCHAmount: BIG_ZERO }
 
       const { uniPosition, tokensOwed0, tokensOwed1 } = result
       const amt0 = new BigNumber(uniPosition.amount0.toSignificant(18))
       const amt1 = new BigNumber(uniPosition.amount1.toSignificant(18))
 
       const wethAmount = isWethToken0 ? amt0.plus(tokensOwed0) : amt1.plus(tokensOwed1)
-      const oSqthAmount = !isWethToken0 ? amt0.plus(tokensOwed0) : amt1.plus(tokensOwed1)
+      const SBCHAmount = !isWethToken0 ? amt0.plus(tokensOwed0) : amt1.plus(tokensOwed1)
 
-      return { wethAmount, oSqthAmount, position: result.uniPosition }
+      return { wethAmount, SBCHAmount, position: result.uniPosition }
     },
     [getPosition, isWethToken0],
   )
 
-  return getETHandOSQTHAmount
+  return getETHandSBCHAmount
 }

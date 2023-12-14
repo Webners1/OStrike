@@ -383,7 +383,7 @@ export async function getVolForTimestampFromTardis(timestamp: number, ethPrice: 
     })
     if (response.body === null) return 1
     const text = await response.text()
-    // only get second line (which is ETH at the 0:00 time)
+    // only get second line (which is BCH at the 0:00 time)
     const firstLine = text.split('\n')[1]
 
     const [, obj] = firstLine.split(' ')

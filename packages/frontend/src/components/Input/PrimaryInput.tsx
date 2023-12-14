@@ -177,7 +177,7 @@ export const PrimaryInput: React.FC<PrimaryInputType> = ({
           <Typography className={classes.unit}>{unit}</Typography>
         </div>
       </div>
-      {isLoading && (!error || hint === 'Insufficient ETH balance') ? (
+      {isLoading && (!error || hint === 'Insufficient BCH balance') ? (
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <Typography variant="caption" color={error ? 'error' : 'textSecondary'}>
             {loadingMessage}

@@ -6,7 +6,7 @@ const VAULT_HISTORY_QUERY = gql`
       id
       timestamp
       totalEthCollateralAmount
-      oSqthAmount
+      SBCHAmount
       ethCollateralAmount
       action
       vaultId
@@ -20,7 +20,7 @@ export const VAULT_HISTORY_SUBSCRIPTION = gql`
       id
       timestamp
       totalEthCollateralAmount
-      oSqthAmount
+      SBCHAmount
       ethCollateralAmount
       action
       vaultId

@@ -39,11 +39,11 @@ const CapDetails: React.FC<CapType> = ({ maxCap, depositedAmount }) => {
           {depositedAmount.gt(maxCap)
             ? Number(maxCap.toFixed(4)).toLocaleString()
             : Number(depositedAmount.toFixed(4)).toLocaleString()}{' '}
-          ETH
+          BCH
         </Typography>
 
         <Typography className={clsx(classes.label, classes.value)}>
-          {Number(maxCap.toFixed(4)).toLocaleString()} ETH
+          {Number(maxCap.toFixed(4)).toLocaleString()} BCH
         </Typography>
       </Box>
       <div>

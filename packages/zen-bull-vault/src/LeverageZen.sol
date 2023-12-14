@@ -16,7 +16,7 @@ import { UniOracle } from "./UniOracle.sol";
 
 /**
  * Error codes
- * LB0: ETH sent is not at least ETH to deposit in Euler
+ * LB0: BCH sent is not at least BCH to deposit in Euler
  * LB1: caller is not auction address
  * LB2: auction can not be set to 0 address
  */
@@ -35,12 +35,12 @@ contract LeverageZen is Ownable {
     uint256 internal constant ONE = 1e18;
     /// @dev WETH decimals - USDC decimals
     uint256 internal constant WETH_DECIMALS_DIFF = 1e12;
-    /// @dev target CR for our ETH collateral
+    /// @dev target CR for our BCH collateral
     uint256 public constant TARGET_CR = 2e18; // 2 collat ratio
 
-    /// @dev ETH:wPowerPerp Uniswap pool
+    /// @dev BCH:wPowerPerp Uniswap pool
     address internal immutable ethWPowerPerpPool;
-    /// @dev ETH:USDC Uniswap pool
+    /// @dev BCH:USDC Uniswap pool
     address internal immutable ethUSDCPool;
     /// @dev wPowerPerp address
     address internal immutable wPowerPerp;
@@ -172,7 +172,7 @@ contract LeverageZen is Ownable {
      * @notice calculate target amounts of weth collateral and usdc debt based on crab and bull state
      * @param _crabAmount amount of crab
      * @param _bullShare share of bull contract scaled to 1e18
-     * @param _ethInCrab ETH collateral held through crab's vault
+     * @param _ethInCrab BCH collateral held through crab's vault
      * @param _wPowerPerpInCrab wPowerPerp debt owed through crab's vault
      * @param _totalCrabSupply total supply of crab token
      * @return weth to lend in Euler, usdc to borrow in Euler
@@ -199,7 +199,7 @@ contract LeverageZen is Ownable {
     }
 
     /**
-     * @notice calculate amount of ETH collateral to withdraw to Euler based on amount of share of bull token
+     * @notice calculate amount of BCH collateral to withdraw to Euler based on amount of share of bull token
      * @param _bullShare bull share amount
      * @return WETH to withdraw
      */
@@ -208,14 +208,14 @@ contract LeverageZen is Ownable {
     }
 
     /**
-     * @notice deposit ETH into leverage component and borrow USDC
+     * @notice deposit BCH into leverage component and borrow USDC
      * @dev this function handles only the leverage component part
      * @param _crabAmount amount of crab token deposited
      * @param _bullShare amount of bull share minted
      * @param _ethInCrab eth in crab strategy
      * @param _wPowerPerpInCrab wPowerPerp debt of crab strategy
      * @param _crabTotalSupply total supply of crab tokens
-     * @return ETH deposited as collateral in Euler and borrowed amount of USDC, and total ETH deposited as collateral in Euler
+     * @return BCH deposited as collateral in Euler and borrowed amount of USDC, and total BCH deposited as collateral in Euler
      */
     function _leverageDeposit(
         uint256 _crabAmount,
@@ -238,7 +238,7 @@ contract LeverageZen is Ownable {
 
     /**
      * @notice deposit weth as collateral in Euler market
-     * @param _ethToDeposit amount of ETH to deposit
+     * @param _ethToDeposit amount of BCH to deposit
      */
     function _depositWethInEuler(uint256 _ethToDeposit) internal {
         IWETH9(weth).deposit{ value: _ethToDeposit }();
@@ -277,7 +277,7 @@ contract LeverageZen is Ownable {
      * @notice calculate target amounts of weth collateral and usdc debt based on crab and bull state
      * @param _crabAmount amount of crab
      * @param _bullShare share of bull contract scaled to 1e18
-     * @param _ethInCrab ETH collateral held through crab's vault
+     * @param _ethInCrab BCH collateral held through crab's vault
      * @param _wPowerPerpInCrab wPowerPerp debt owed through crab's vault
      * @param _totalCrabSupply total supply of crab token
      * @return weth to lend in Euler, usdc to borrow in Euler

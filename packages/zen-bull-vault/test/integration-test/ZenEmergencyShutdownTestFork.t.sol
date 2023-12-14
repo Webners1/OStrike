@@ -116,7 +116,7 @@ contract ZenEmergencyShutdownTestFork is Test {
         vm.label(eulerMarketsModule, "EulerMarkets");
         vm.label(usdc, "USDC");
         vm.label(weth, "WETH");
-        vm.label(wPowerPerp, "oSQTH");
+        vm.label(wPowerPerp, "SBCH");
         vm.label(address(crabV2), "crabV2");
         vm.label(user2, "User 2");
 

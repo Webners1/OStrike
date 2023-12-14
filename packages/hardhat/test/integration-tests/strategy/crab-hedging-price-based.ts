@@ -602,7 +602,7 @@ describe("Crab flashswap integration test: price based hedging", function () {
 
       await expect(
         crabStrategy.connect(depositor).priceHedge(auctionTriggerTimer, isSellAuction, expectedAuctionWSqueethEthPrice, {value: 1})
-      ).to.be.revertedWith("ETH attached for buy auction");
+      ).to.be.revertedWith("BCH attached for buy auction");
     })   
 
     it("it should revert if the limit price is breached", async () => {      

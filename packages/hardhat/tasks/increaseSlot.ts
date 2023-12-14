@@ -23,7 +23,7 @@ task("increase-slots", "Increase Pool slot")
   
   const poolAddr = await uniswapFactory.getPool(token0, token1, 3000)
   const pool = await ethers.getContractAt("IUniswapV3Pool", poolAddr);
-  console.log(`Squeeth Pool Address: ${pool.address.toString()}`)
+  console.log(`Strike Pool Address: ${pool.address.toString()}`)
   
   const { observationCardinalityNext } =  await pool.slot0()
   console.log(`Current observationCardinalityNext ${observationCardinalityNext.toString()}, adding ${slots} more`)

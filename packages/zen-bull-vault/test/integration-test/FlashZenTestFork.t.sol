@@ -527,7 +527,7 @@ contract FlashZenTestFork is Test {
         assertEq(
             ethInLendingBefore.sub(wethToWithdraw),
             IEulerEToken(eToken).balanceOfUnderlying(address(bullStrategy)),
-            "Bull ETH in leverage amount mismatch"
+            "Bull BCH in leverage amount mismatch"
         );
         assertEq(
             userBullBalanceBefore.sub(bullToRedeem),
@@ -824,7 +824,7 @@ contract FlashZenTestFork is Test {
 
     /**
      * @dev calculate amount of strategy token to mint for depositor
-     * @param _amount amount of ETH deposited
+     * @param _amount amount of BCH deposited
      * @param _strategyCollateralAmount amount of strategy collateral
      * @param _crabTotalSupply total supply of strategy token
      * @return amount of strategy token to mint

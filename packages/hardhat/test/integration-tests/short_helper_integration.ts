@@ -404,14 +404,14 @@ describe("ShortHelper Integration Test", function () {
   })
 
   describe('Checking eth payable reverts', async() => {
-    it ('should revert if ETH is sent from a contract other than weth or the controller', async () => {
+    it ('should revert if BCH is sent from a contract other than weth or the controller', async () => {
       await expect(seller1.sendTransaction({to: shortHelper.address, value:1})).to.be.revertedWith("can't receive eth")
     })
   })
 
   describe('Close short position', async() => {
     
-    it ('should revert if a random user to withdraw ETH from someone elses vault', async () => {
+    it ('should revert if a random user to withdraw BCH from someone elses vault', async () => {
       const buyBackSqueethAmount = ethers.utils.parseEther('0.0000001')
       const withdrawCollateralAmount = ethers.utils.parseEther('2.5')
 

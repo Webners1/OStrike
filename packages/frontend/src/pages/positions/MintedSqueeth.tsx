@@ -21,7 +21,7 @@ export default function MintedSqueeth({ vaultExists }: Props) {
   return (
     <div className={classes.position}>
       <div className={classes.positionTitle}>
-        <Typography>Minted Squeeth</Typography>
+        <Typography>Minted Strike</Typography>
         <Typography className={classes.link}>
           {vaultExists ? <Link href={`vault/${vaultId}`}>Manage</Link> : null}
         </Typography>
@@ -33,8 +33,8 @@ export default function MintedSqueeth({ vaultExists }: Props) {
               Amount
             </Typography>
             <Typography variant="body1">
-              {isPositionLoading ? 'Loading' : <span id="pos-page-minted-osqth-bal">{mintedDebt.toFixed(8)}</span>}{' '}
-              &nbsp; oSQTH
+              {isPositionLoading ? 'Loading' : <span id="pos-page-minted-SBCH-bal">{mintedDebt.toFixed(8)}</span>}{' '}
+              &nbsp; SBCH
             </Typography>
           </div>
         </div>
@@ -57,7 +57,7 @@ export default function MintedSqueeth({ vaultExists }: Props) {
               Collateral (Amt / Ratio)
             </Typography>
             <Typography variant="body1">
-              {isVaultLoading && existingCollat.isEqualTo(0) ? 'Loading' : existingCollat.toFixed(4)} ETH
+              {isVaultLoading && existingCollat.isEqualTo(0) ? 'Loading' : existingCollat.toFixed(4)} BCH
               {new BigNumber(existingCollatPercent).isFinite() ? ' (' + existingCollatPercent + ' %)' : null}
             </Typography>
           </div>

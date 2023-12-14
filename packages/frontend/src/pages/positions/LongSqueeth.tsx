@@ -25,21 +25,21 @@ export default function LongSqueeth() {
   return (
     <div className={classes.position}>
       <div className={classes.positionTitle}>
-        <Typography>Long Squeeth</Typography>
+        <Typography>Long Strike</Typography>
       </div>
       <div className={classes.shortPositionData}>
         <div className={classes.innerPositionData}>
           <div style={{ width: '50%' }}>
             <Typography variant="caption" component="span" color="textSecondary">
-              oSQTH Amount
+              SBCH Amount
             </Typography>
             <Typography variant="body1">
               {isPositionLoading && squeethAmount.isEqualTo(0) ? (
                 'Loading'
               ) : (
-                <span id="pos-page-long-osqth-bal">{squeethAmount.toFixed(8)}</span>
+                <span id="pos-page-long-SBCH-bal">{squeethAmount.toFixed(8)}</span>
               )}{' '}
-              &nbsp; oSQTH
+              &nbsp; SBCH
             </Typography>
           </div>
           <div style={{ width: '50%' }}>
@@ -67,9 +67,9 @@ export default function LongSqueeth() {
               ) : (
                 <>
                   <Typography variant="body1" className={longGain.isLessThan(0) ? classes.red : classes.green}>
-                    $ {longUnrealizedPNL.usd.toFixed(2)} ({longUnrealizedPNL.eth.toFixed(5)} ETH)
+                    $ {longUnrealizedPNL.usd.toFixed(2)} ({longUnrealizedPNL.eth.toFixed(5)} BCH)
                     {/* ${sellQuote.amountOut.minus(wethAmount.abs()).times(toTokenAmount(index, 18).sqrt()).toFixed(2)}{' '}
-              ({sellQuote.amountOut.minus(wethAmount.abs()).toFixed(5)} ETH) */}
+              ({sellQuote.amountOut.minus(wethAmount.abs()).toFixed(5)} BCH) */}
                   </Typography>
                   <Typography variant="caption" className={longGain.isLessThan(0) ? classes.red : classes.green}>
                     {(longGain || 0).toFixed(2)}%

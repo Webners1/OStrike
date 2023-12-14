@@ -115,7 +115,7 @@ const Header: React.FC = () => {
     return (
       <>
         <Typography variant="h3" className={classes.title}>
-          Long Squeeth: ETH&sup2; Leverage
+          Long Strike: BCH&sup2; Leverage
           <a
             href="https://medium.com/opyn/squeeth-primer-a-guide-to-understanding-opyns-implementation-of-squeeth-a0f5e8b95684"
             target="_blank"
@@ -145,7 +145,7 @@ const Header: React.FC = () => {
     return (
       <>
         <Typography variant="h3" className={classes.title}>
-          Covered Short Squeeth: Short ETH&sup2; Position
+          Covered Short Strike: Short BCH&sup2; Position
           <a
             href="https://medium.com/opyn/squeeth-primer-a-guide-to-understanding-opyns-implementation-of-squeeth-a0f5e8b95684"
             target="_blank"
@@ -167,7 +167,7 @@ const Header: React.FC = () => {
           </a>
         </Typography>
         <Typography variant="subtitle1" className={classes.description}>
-          Earn premiums for selling ETH collateralized squeeth
+          Earn premiums for selling BCH collateralized squeeth
         </Typography>
       </>
     )
@@ -219,8 +219,8 @@ function TradePage() {
   return (
     <>
       <NextSeo
-        title="Opyn Squeeth - Leverage without liquidations "
-        description="Bet on ETH with unlimited upside, protected downside, and no liquidations."
+        title="Opyn Strike - Leverage without liquidations "
+        description="Bet on BCH with unlimited upside, protected downside, and no liquidations."
         canonical={SQUEETH_BASE_URL}
         openGraph={{
           images: [
@@ -228,7 +228,7 @@ function TradePage() {
               url: SQUEETH_BASE_URL + '/images/previews/squeeth.png',
               width: 1200,
               height: 630,
-              alt: 'Squeeth',
+              alt: 'Strike',
             },
           ],
         }}

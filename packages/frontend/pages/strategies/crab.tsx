@@ -64,8 +64,8 @@ const Crab: React.FC = () => {
   return (
     <>
       <NextSeo
-        title="Opyn Crab Strategy - Stack USDC"
-        description="Stack USDC when ETH is flat"
+        title="Opyn Crab Strategy - Stack BCH"
+        description="Stack BCH when BCH is flat"
         canonical={SQUEETH_BASE_URL}
         openGraph={{
           images: [

@@ -403,7 +403,7 @@ describe("Crab flashswap integration test: uniswap price based hedging", functio
       ).to.be.revertedWith("ds-math-sub-underflow");
     })
 
-    it("it should revert if profit is less than min ETH", async () => {
+    it("it should revert if profit is less than min BCH", async () => {
       const currentBlockTimestamp = (await provider.getBlock(await provider.getBlockNumber())).timestamp
       await buyWSqueeth(swapRouter, wSqueeth, weth, owner.address, ethers.utils.parseUnits('10000'), currentBlockTimestamp + 10)
 
@@ -449,7 +449,7 @@ describe("Crab flashswap integration test: uniswap price based hedging", functio
 
       await expect(
         crabStrategy.connect(depositor).priceHedgeOnUniswap(auctionTriggerTimer, 0, ethers.utils.parseUnits('5'))
-      ).to.be.revertedWith("profit is less than min ETH");
+      ).to.be.revertedWith("profit is less than min BCH");
     })    
     
     it("it should allow a hedge based on price", async () => {

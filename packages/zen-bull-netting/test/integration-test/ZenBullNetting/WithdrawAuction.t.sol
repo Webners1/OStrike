@@ -48,7 +48,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         IERC20(ZEN_BULL).transfer(user1, 15e18);
         IERC20(ZEN_BULL).transfer(user2, 15e18);
         vm.stopPrank();
-        // some oSQTH rich person
+        // some SBCH rich person
         vm.startPrank(0x0154d25120Ed20A516fE43991702e7463c5A6F6e);
         IERC20(WPOWERPERP).transfer(mm1, 1000e18);
         IERC20(WPOWERPERP).transfer(mm2, 1000e18);
@@ -59,12 +59,12 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         uint256 amount = 10e18;
         _queueZenBull(user1, amount);
 
-        uint256 oSqthAmount;
+        uint256 SBCHAmount;
         {
             uint256 share = div(amount, IZenBullStrategy(ZEN_BULL).totalSupply());
             uint256 crabAmount = mul(share, IZenBullStrategy(ZEN_BULL).getCrabBalance());
             (, uint256 crabDebt) = IZenBullStrategy(ZEN_BULL).getCrabVaultDetails();
-            oSqthAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
+            SBCHAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
         }
         uint256 squeethEthPrice =
             IOracle(ORACLE).getTwap(ethSqueethPool, WPOWERPERP, WETH, 420, false);
@@ -78,7 +78,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             SigUtil.Order memory orderSig = SigUtil.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -89,7 +89,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             ZenBullNetting.Order memory orderData = ZenBullNetting.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -110,7 +110,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         });
 
         vm.prank(mm1);
-        IERC20(WPOWERPERP).approve(address(zenBullNetting), oSqthAmount);
+        IERC20(WPOWERPERP).approve(address(zenBullNetting), SBCHAmount);
 
         uint256 mm1WethBalanceBefore = IERC20(WETH).balanceOf(mm1);
         uint256 mm1WpowerPerpBalanceBefore = IERC20(WPOWERPERP).balanceOf(mm1);
@@ -131,9 +131,9 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         (, uint256 receiptAmountAfter,) = zenBullNetting.getWithdrawReceipt(0);
 
         assertEq(receiptAmountBefore - amount, receiptAmountAfter);
-        assertEq(IERC20(WPOWERPERP).balanceOf(mm1) + oSqthAmount, mm1WpowerPerpBalanceBefore);
+        assertEq(IERC20(WPOWERPERP).balanceOf(mm1) + SBCHAmount, mm1WpowerPerpBalanceBefore);
         assertEq(
-            IERC20(WETH).balanceOf(mm1) - (oSqthAmount * params.clearingPrice / 1e18),
+            IERC20(WETH).balanceOf(mm1) - (SBCHAmount * params.clearingPrice / 1e18),
             mm1WethBalanceBefore
         );
         assertLt(IERC20(WPOWERPERP).balanceOf(mm1), mm1WpowerPerpBalanceBefore);
@@ -155,11 +155,11 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         _queueZenBull(user1, amount * 2);
 
         (, uint256 crabDebt) = IZenBullStrategy(ZEN_BULL).getCrabVaultDetails();
-        uint256 oSqthAmount;
+        uint256 SBCHAmount;
         {
             uint256 share = div(amount, IZenBullStrategy(ZEN_BULL).totalSupply());
             uint256 crabAmount = mul(share, IZenBullStrategy(ZEN_BULL).getCrabBalance());
-            oSqthAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
+            SBCHAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
         }
         uint256 squeethEthPrice =
             IOracle(ORACLE).getTwap(ethSqueethPool, WPOWERPERP, WETH, 420, false);
@@ -173,7 +173,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             SigUtil.Order memory orderSig = SigUtil.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -184,7 +184,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             ZenBullNetting.Order memory orderData = ZenBullNetting.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -205,7 +205,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         });
 
         vm.prank(mm1);
-        IERC20(WPOWERPERP).approve(address(zenBullNetting), oSqthAmount);
+        IERC20(WPOWERPERP).approve(address(zenBullNetting), SBCHAmount);
 
         uint256 mm1WpowerPerpBalanceBefore = IERC20(WPOWERPERP).balanceOf(mm1);
         uint256 debtBalanceBefore =
@@ -220,7 +220,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         zenBullNetting.withdrawAuction(params);
         vm.stopPrank();
 
-        assertEq(IERC20(WPOWERPERP).balanceOf(mm1) + oSqthAmount, mm1WpowerPerpBalanceBefore);
+        assertEq(IERC20(WPOWERPERP).balanceOf(mm1) + SBCHAmount, mm1WpowerPerpBalanceBefore);
         assertEq(
             IEulerSimpleLens(EULER_SIMPLE_LENS).getDTokenBalance(USDC, ZEN_BULL) + usdcToRepay,
             debtBalanceBefore
@@ -242,11 +242,11 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         _queueZenBull(user1, amount);
 
         (, uint256 crabDebt) = IZenBullStrategy(ZEN_BULL).getCrabVaultDetails();
-        uint256 oSqthAmount;
+        uint256 SBCHAmount;
         {
             uint256 share = div(amount, IZenBullStrategy(ZEN_BULL).totalSupply());
             uint256 crabAmount = mul(share, IZenBullStrategy(ZEN_BULL).getCrabBalance());
-            oSqthAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
+            SBCHAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
         }
         uint256 squeethEthPrice =
             IOracle(ORACLE).getTwap(ethSqueethPool, WPOWERPERP, WETH, 420, false);
@@ -260,7 +260,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             SigUtil.Order memory orderSig = SigUtil.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -271,7 +271,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             ZenBullNetting.Order memory orderData = ZenBullNetting.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -292,7 +292,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         });
 
         vm.prank(mm1);
-        IERC20(WPOWERPERP).approve(address(zenBullNetting), oSqthAmount);
+        IERC20(WPOWERPERP).approve(address(zenBullNetting), SBCHAmount);
 
         uint256 mm1WpowerPerpBalanceBefore = IERC20(WPOWERPERP).balanceOf(mm1);
         uint256 debtBalanceBefore =
@@ -306,7 +306,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         zenBullNetting.withdrawAuction(params);
         vm.stopPrank();
 
-        assertEq(IERC20(WPOWERPERP).balanceOf(mm1) + oSqthAmount, mm1WpowerPerpBalanceBefore);
+        assertEq(IERC20(WPOWERPERP).balanceOf(mm1) + SBCHAmount, mm1WpowerPerpBalanceBefore);
         assertEq(
             IEulerSimpleLens(EULER_SIMPLE_LENS).getDTokenBalance(USDC, ZEN_BULL) + usdcToRepay,
             debtBalanceBefore
@@ -323,11 +323,11 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         _queueZenBull(user1, amount);
 
         (, uint256 crabDebt) = IZenBullStrategy(ZEN_BULL).getCrabVaultDetails();
-        uint256 oSqthAmount;
+        uint256 SBCHAmount;
         {
             uint256 share = div(amount, IZenBullStrategy(ZEN_BULL).totalSupply());
             uint256 crabAmount = mul(share, IZenBullStrategy(ZEN_BULL).getCrabBalance());
-            oSqthAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
+            SBCHAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
         }
         uint256 squeethEthPrice =
             IOracle(ORACLE).getTwap(ethSqueethPool, WPOWERPERP, WETH, 420, false);
@@ -341,7 +341,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             SigUtil.Order memory orderSig = SigUtil.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount / 2,
+                quantity: SBCHAmount / 2,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -352,7 +352,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             ZenBullNetting.Order memory orderData = ZenBullNetting.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount / 2,
+                quantity: SBCHAmount / 2,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -367,7 +367,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             orderSig = SigUtil.Order({
                 bidId: 1,
                 trader: mm2,
-                quantity: oSqthAmount / 2,
+                quantity: SBCHAmount / 2,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -378,7 +378,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             orderData = ZenBullNetting.Order({
                 bidId: 1,
                 trader: mm2,
-                quantity: oSqthAmount / 2,
+                quantity: SBCHAmount / 2,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -399,9 +399,9 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         });
 
         vm.prank(mm1);
-        IERC20(WPOWERPERP).approve(address(zenBullNetting), oSqthAmount / 2);
+        IERC20(WPOWERPERP).approve(address(zenBullNetting), SBCHAmount / 2);
         vm.prank(mm2);
-        IERC20(WPOWERPERP).approve(address(zenBullNetting), oSqthAmount / 2);
+        IERC20(WPOWERPERP).approve(address(zenBullNetting), SBCHAmount / 2);
 
         uint256 mm1WpowerPerpBalanceBefore = IERC20(WPOWERPERP).balanceOf(mm1);
         uint256 mm2WpowerPerpBalanceBefore = IERC20(WPOWERPERP).balanceOf(mm2);
@@ -416,8 +416,8 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         zenBullNetting.withdrawAuction(params);
         vm.stopPrank();
 
-        assertEq(IERC20(WPOWERPERP).balanceOf(mm1) + oSqthAmount / 2, mm1WpowerPerpBalanceBefore);
-        assertEq(IERC20(WPOWERPERP).balanceOf(mm2) + oSqthAmount / 2, mm2WpowerPerpBalanceBefore);
+        assertEq(IERC20(WPOWERPERP).balanceOf(mm1) + SBCHAmount / 2, mm1WpowerPerpBalanceBefore);
+        assertEq(IERC20(WPOWERPERP).balanceOf(mm2) + SBCHAmount / 2, mm2WpowerPerpBalanceBefore);
         assertEq(
             IEulerSimpleLens(EULER_SIMPLE_LENS).getDTokenBalance(USDC, ZEN_BULL) + usdcToRepay,
             debtBalanceBefore
@@ -434,11 +434,11 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         _queueZenBull(user1, amount);
 
         (, uint256 crabDebt) = IZenBullStrategy(ZEN_BULL).getCrabVaultDetails();
-        uint256 oSqthAmount;
+        uint256 SBCHAmount;
         {
             uint256 share = div(amount, IZenBullStrategy(ZEN_BULL).totalSupply());
             uint256 crabAmount = mul(share, IZenBullStrategy(ZEN_BULL).getCrabBalance());
-            oSqthAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
+            SBCHAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
         }
         uint256 squeethEthPrice =
             IOracle(ORACLE).getTwap(ethSqueethPool, WPOWERPERP, WETH, 420, false);
@@ -452,7 +452,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             SigUtil.Order memory orderSig = SigUtil.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice + 1,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -463,7 +463,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             ZenBullNetting.Order memory orderData = ZenBullNetting.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice + 1,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -484,7 +484,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         });
 
         vm.prank(mm1);
-        IERC20(WPOWERPERP).approve(address(zenBullNetting), oSqthAmount);
+        IERC20(WPOWERPERP).approve(address(zenBullNetting), SBCHAmount);
 
         vm.startPrank(owner);
         vm.expectRevert(bytes("ZBN20"));
@@ -497,11 +497,11 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         _queueZenBull(user1, amount);
 
         (, uint256 crabDebt) = IZenBullStrategy(ZEN_BULL).getCrabVaultDetails();
-        uint256 oSqthAmount;
+        uint256 SBCHAmount;
         {
             uint256 share = div(amount, IZenBullStrategy(ZEN_BULL).totalSupply());
             uint256 crabAmount = mul(share, IZenBullStrategy(ZEN_BULL).getCrabBalance());
-            oSqthAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
+            SBCHAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
         }
         uint256 squeethEthPrice =
             IOracle(ORACLE).getTwap(ethSqueethPool, WPOWERPERP, WETH, 420, false);
@@ -515,7 +515,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             SigUtil.Order memory orderSig = SigUtil.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -526,7 +526,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             ZenBullNetting.Order memory orderData = ZenBullNetting.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -547,7 +547,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         });
 
         vm.prank(mm1);
-        IERC20(WPOWERPERP).approve(address(zenBullNetting), oSqthAmount);
+        IERC20(WPOWERPERP).approve(address(zenBullNetting), SBCHAmount);
 
         vm.startPrank(owner);
         vm.expectRevert(bytes("ZBN14"));
@@ -560,11 +560,11 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         _queueZenBull(user1, amount);
 
         (, uint256 crabDebt) = IZenBullStrategy(ZEN_BULL).getCrabVaultDetails();
-        uint256 oSqthAmount;
+        uint256 SBCHAmount;
         {
             uint256 share = div(amount, IZenBullStrategy(ZEN_BULL).totalSupply());
             uint256 crabAmount = mul(share, IZenBullStrategy(ZEN_BULL).getCrabBalance());
-            oSqthAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
+            SBCHAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
         }
         uint256 squeethEthPrice =
             IOracle(ORACLE).getTwap(ethSqueethPool, WPOWERPERP, WETH, 420, false);
@@ -578,7 +578,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             SigUtil.Order memory orderSig = SigUtil.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: true,
                 expiry: block.timestamp + 1000,
@@ -589,7 +589,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             ZenBullNetting.Order memory orderData = ZenBullNetting.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount,
+                quantity: SBCHAmount,
                 price: squeethEthPrice,
                 isBuying: true,
                 expiry: block.timestamp + 1000,
@@ -610,7 +610,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         });
 
         vm.prank(mm1);
-        IERC20(WPOWERPERP).approve(address(zenBullNetting), oSqthAmount);
+        IERC20(WPOWERPERP).approve(address(zenBullNetting), SBCHAmount);
 
         vm.startPrank(owner);
         vm.expectRevert(bytes("ZBN19"));
@@ -623,11 +623,11 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         _queueZenBull(user1, amount);
 
         (, uint256 crabDebt) = IZenBullStrategy(ZEN_BULL).getCrabVaultDetails();
-        uint256 oSqthAmount;
+        uint256 SBCHAmount;
         {
             uint256 share = div(amount, IZenBullStrategy(ZEN_BULL).totalSupply());
             uint256 crabAmount = mul(share, IZenBullStrategy(ZEN_BULL).getCrabBalance());
-            oSqthAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
+            SBCHAmount = div(mul(crabAmount, crabDebt), IERC20(CRAB).totalSupply());
         }
         uint256 squeethEthPrice =
             IOracle(ORACLE).getTwap(ethSqueethPool, WPOWERPERP, WETH, 420, false);
@@ -641,7 +641,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             SigUtil.Order memory orderSig = SigUtil.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount / 2,
+                quantity: SBCHAmount / 2,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -652,7 +652,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             ZenBullNetting.Order memory orderData = ZenBullNetting.Order({
                 bidId: 1,
                 trader: mm1,
-                quantity: oSqthAmount / 2,
+                quantity: SBCHAmount / 2,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -667,7 +667,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             orderSig = SigUtil.Order({
                 bidId: 2,
                 trader: mm1,
-                quantity: oSqthAmount / 2,
+                quantity: SBCHAmount / 2,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -678,7 +678,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
             orderData = ZenBullNetting.Order({
                 bidId: 2,
                 trader: mm1,
-                quantity: oSqthAmount / 2,
+                quantity: SBCHAmount / 2,
                 price: squeethEthPrice,
                 isBuying: false,
                 expiry: block.timestamp + 1000,
@@ -699,7 +699,7 @@ contract WithdrawAuction is ZenBullNettingBaseSetup {
         });
 
         vm.prank(mm1);
-        IERC20(WPOWERPERP).approve(address(zenBullNetting), oSqthAmount);
+        IERC20(WPOWERPERP).approve(address(zenBullNetting), SBCHAmount);
 
         vm.startPrank(owner);
         vm.expectRevert(bytes("ZBN18"));

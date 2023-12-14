@@ -33,14 +33,14 @@ const YourVaults: FC = () => {
                 <Grid item md={4}>
                   <LabelWithTooltip labelVariant="caption" label="Short Amount" />
                   <Typography variant="body1">
-                    {toTokenAmount(new BigNumber(vault.shortAmount), 18).toFixed(4)}&nbsp; oSQTH
+                    {toTokenAmount(new BigNumber(vault.shortAmount), 18).toFixed(4)}&nbsp; SBCH
                   </Typography>
                 </Grid>
 
                 <Grid item md={4}>
                   <LabelWithTooltip labelVariant="caption" label="Collateral Amount" />
                   <Typography variant="body1">
-                    {toTokenAmount(new BigNumber(vault.collateralAmount), 18).toFixed(4)}&nbsp; ETH
+                    {toTokenAmount(new BigNumber(vault.collateralAmount), 18).toFixed(4)}&nbsp; BCH
                   </Typography>
                 </Grid>
               </Grid>

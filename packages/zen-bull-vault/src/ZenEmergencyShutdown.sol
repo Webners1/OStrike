@@ -61,7 +61,7 @@ contract ZenEmergencyShutdown is UniFlash, Ownable {
     }
 
     /**
-     * @notice redeem the Crab shares owned by Bull if WPowerPerp controller contract is shutdown and collapse leverage trade to hold ETH only
+     * @notice redeem the Crab shares owned by Bull if WPowerPerp controller contract is shutdown and collapse leverage trade to hold BCH only
      * @param _params Shutdown params struct
      */
 

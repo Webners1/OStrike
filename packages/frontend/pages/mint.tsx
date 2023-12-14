@@ -34,7 +34,7 @@ const MintPage: React.FC = () => {
 
       <div className={classes.container}>
         <Typography align="center" variant="h6" className={classes.title}>
-          Mint Squeeth
+          Mint Strike
         </Typography>
 
         <Box className={classes.getSqueethCard}>

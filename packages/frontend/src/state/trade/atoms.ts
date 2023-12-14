@@ -33,7 +33,7 @@ export const isOpenPositionAtom = atom((get) => {
   const openPosition = get(openPositionAtom)
   return openPosition === 0
 })
-export const inputTypeAtom = atomWithReset(InputType.ETH)
+export const inputTypeAtom = atomWithReset(InputType.BCH)
 export const tradeAmountAtom = atomWithReset('0')
 export const altTradeAmountAtom = atomWithReset('0')
 export const inputQuoteAtom = atomWithReset('')

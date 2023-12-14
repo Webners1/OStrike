@@ -5,7 +5,7 @@ import { squeethInitialPriceAtom, squeethInitialPriceErrorAtom } from '@state/sq
 import { useETHPrice } from '@hooks/useETHPrice'
 import useAppEffect from '@hooks/useAppEffect'
 
-export const useOSQTHPrice = () => {
+export const useSBCHPrice = () => {
   const [loading, setLoading] = useState(false)
 
   const ethPrice = useETHPrice()

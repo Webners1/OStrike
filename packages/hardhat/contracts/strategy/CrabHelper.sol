@@ -53,9 +53,9 @@ contract CrabHelper is StrategySwap, ReentrancyGuard {
 
     /**
      * @notice allows user to flash deposit into crab from an aribtrary ERC20
-     * @param _ethToDeposit amount of ETH to deposit
+     * @param _ethToDeposit amount of BCH to deposit
      * @param _amountIn amount of ERC20 token to swap for weth
-     * @param _minEthToGet min amount of ETH to receive in the swap
+     * @param _minEthToGet min amount of BCH to receive in the swap
      * @param _erc20Fee pool fee for transfer ERC20/eth pool (3000 = 30bps)
      * @param _wPowerPerpFee pool fee for wPowerPerp/eth pool (3000 = 30bps)
      * @param _tokenIn ERC20 token to pay
@@ -121,7 +121,7 @@ contract CrabHelper is StrategySwap, ReentrancyGuard {
     }
 
     /**
-     * @notice receive function to allow ETH transfer to this contract
+     * @notice receive function to allow BCH transfer to this contract
      */
     receive() external payable {
         require(msg.sender == weth || msg.sender == crab, "Cannot receive eth");

@@ -10,7 +10,7 @@ import { isSimilar, wmul, wdiv, one, oracleScaleFactor } from "../../utils"
 
 BigNumberJs.set({ EXPONENTIAL_AT: 30 })
 
-describe("Crab V2 integration test: Shutdown of Squeeth Power Perp contracts", function () {
+describe("Crab V2 integration test: Shutdown of Strike Power Perp contracts", function () {
   const startingEthPrice = 3000
   const startingEthPrice1e18 = BigNumber.from(startingEthPrice).mul(one) // 3000 * 1e18
   const scaledStartingSqueethPrice1e18 = startingEthPrice1e18.div(oracleScaleFactor) // 0.3 * 1e18

@@ -49,7 +49,7 @@ const BullPosition: React.FC = () => {
             <Tooltip title={Tooltips.CrabMigratedDeposit}>
               <InfoIcon fontSize="small" className={classes.infoIcon} />
             </Tooltip>
-            <Typography variant="body1">{bullDepositedETH.toFixed(6)}&nbsp;ETH</Typography>
+            <Typography variant="body1">{bullDepositedETH.toFixed(6)}&nbsp;BCH</Typography>
             <Typography variant="body2" color="textSecondary">
               <span id="pos-page-crab-deposited-amount">${bullDepositedUSD.toFixed(2)}</span>
             </Typography>
@@ -58,7 +58,7 @@ const BullPosition: React.FC = () => {
             <Typography variant="caption" component="span" color="textSecondary">
               Current Position
             </Typography>
-            <Typography variant="body1">{!loading ? `${bullCurrentETH.toFixed(6)}` : 'Loading'} ETH</Typography>
+            <Typography variant="body1">{!loading ? `${bullCurrentETH.toFixed(6)}` : 'Loading'} BCH</Typography>
             <Typography variant="body2" color="textSecondary">
               {!loading ? `$${bullCurrentUSD.toFixed(2)}` : 'Loading'}
             </Typography>
@@ -77,7 +77,7 @@ const BullPosition: React.FC = () => {
               className={bullEthPnl.isLessThan(0) ? classes.red : classes.green}
               id="pos-page-crab-pnl-amount"
             >
-              {!loading ? `${bullEthPnl.toFixed(6)} ETH` : 'Loading'}
+              {!loading ? `${bullEthPnl.toFixed(6)} BCH` : 'Loading'}
             </Typography>
             <Typography variant="caption" className={bullEthPnlInPerct.isLessThan(0) ? classes.red : classes.green}>
               {!loading ? `${bullEthPnlInPerct.toFixed(2)}` + '%' : 'Loading'}

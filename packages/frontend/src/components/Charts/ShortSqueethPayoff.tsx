@@ -38,7 +38,7 @@ const chartOptions = {
       {
         display: true,
         scaleLabel: {
-          labelString: 'ETH price',
+          labelString: 'BCH price',
           display: true,
         },
         ticks: {
@@ -62,7 +62,7 @@ const chartOptions = {
         return `${data.datasets[tooltipItem.datasetIndex].label}: ${tooltipItem.yLabel} %`
       },
       title: function (tooltipItem: any) {
-        return `ETH Price: $${tooltipItem[0].xLabel}`
+        return `BCH Price: $${tooltipItem[0].xLabel}`
       },
     },
   },

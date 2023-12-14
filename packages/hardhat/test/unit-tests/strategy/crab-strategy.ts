@@ -137,7 +137,7 @@ describe("Crab Strategy", function () {
         hedgePriceTolerance, 
         auctionTime, 
         minAuctionSlippage, 
-        maxAuctionSlippage)).to.be.revertedWith("invalid ETH:WSqueeth address");
+        maxAuctionSlippage)).to.be.revertedWith("invalid BCH:WSqueeth address");
     });
 
     it("Should revert if hedge time tolerrance is 0", async function () {

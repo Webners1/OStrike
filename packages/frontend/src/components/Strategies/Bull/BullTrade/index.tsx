@@ -53,7 +53,7 @@ const BullTrade: React.FC = () => {
           <Confirmed
             confirmationMessage={`${
               confirmedTransactionData?.tradeType === BullTradeType.Deposit ? `Deposited` : `Withdrawn`
-            } ${confirmedTransactionData?.amount.toFixed(4)} ETH`}
+            } ${confirmedTransactionData?.amount.toFixed(4)} BCH`}
             txnHash={transactionData?.hash ?? ''}
             confirmType={ConfirmType.BULL}
           />

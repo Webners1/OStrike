@@ -8,8 +8,8 @@ const Page: React.FC = () => {
   return (
     <>
       <NextSeo
-        title="Opyn Zen Bull Strategy - Stack ETH"
-        description="Stack ETH when ETH increases slow and steady"
+        title="Opyn Zen Bull Strategy - Stack BCH"
+        description="Stack BCH when BCH increases slow and steady"
         canonical={SQUEETH_BASE_URL}
         openGraph={{
           images: [

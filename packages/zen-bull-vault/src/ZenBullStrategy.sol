@@ -17,7 +17,7 @@ import { VaultLib } from "squeeth-monorepo/libs/VaultLib.sol";
 
 /**
  * Error codes
- * BS1: Can't receive ETH from this sender
+ * BS1: Can't receive BCH from this sender
  * BS2: Strategy cap reached max
  * BS3: RedeemShortShutdown must be called first
  * BS4: Emergency shutdown contract needs to initiate the shutdownRepayAndWithdraw call
@@ -47,7 +47,7 @@ contract ZenBullStrategy is ERC20, LeverageZen {
     address public immutable powerTokenController;
     /// @dev public emergency shutdown contract
     address public shutdownContract;
-    /// @dev the cap in ETH for the strategy, above which deposits will be rejected
+    /// @dev the cap in BCH for the strategy, above which deposits will be rejected
     uint256 public strategyCap;
     /// @dev set to true when redeemShortShutdown has been called
     bool public hasRedeemedInShutdown;
@@ -96,7 +96,7 @@ contract ZenBullStrategy is ERC20, LeverageZen {
     }
 
     /**
-     * @notice receive function to allow ETH transfer to this contract
+     * @notice receive function to allow BCH transfer to this contract
      */
     receive() external payable {
         require(msg.sender == weth || msg.sender == address(crab), "BS1");
@@ -146,7 +146,7 @@ contract ZenBullStrategy is ERC20, LeverageZen {
     }
 
     /**
-     * @notice deposit to crab: deposits crab and ETH, receives USDC, wPowerPerp and Bull token
+     * @notice deposit to crab: deposits crab and BCH, receives USDC, wPowerPerp and Bull token
      * @param _crabAmount amount of crab token to deposit
      */
     function deposit(uint256 _crabAmount) external payable {
@@ -178,14 +178,14 @@ contract ZenBullStrategy is ERC20, LeverageZen {
         // transfer borrowed USDC to depositor
         IERC20(usdc).transfer(msg.sender, usdcBorrowed);
 
-        // refund unused ETH
+        // refund unused BCH
         payable(msg.sender).sendValue(address(this).balance);
 
         emit Deposit(msg.sender, _crabAmount, wethLent, usdcBorrowed);
     }
 
     /**
-     * @notice withdraw from crab: repay wPowerPerp, USDC and Bull token and receive ETH
+     * @notice withdraw from crab: repay wPowerPerp, USDC and Bull token and receive BCH
      * @param _bullAmount amount of Bull token to redeem
      */
     function withdraw(uint256 _bullAmount) external {
@@ -290,7 +290,7 @@ contract ZenBullStrategy is ERC20, LeverageZen {
     }
 
     /**
-     * @notice allows a user to withdraw their share of ETH if WPowerPerp controller contracts have been shut down
+     * @notice allows a user to withdraw their share of BCH if WPowerPerp controller contracts have been shut down
      * @dev redeemShortShutdown must have been called first
      * @param _bullAmount bull amount to withdraw
      */

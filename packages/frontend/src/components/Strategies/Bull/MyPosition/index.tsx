@@ -55,7 +55,7 @@ const BullPosition: React.FC = () => {
 
         <Box display="flex" alignItems="baseline" gridColumnGap="12px" gridRowGap="2px" flexWrap="wrap" marginTop="6px">
           <Typography className={clsx(classes.heading, classes.textMonospace)}>
-            {formatNumber(bullPosition.toNumber(), 4) + ' ETH'}
+            {formatNumber(bullPosition.toNumber(), 4) + ' BCH'}
           </Typography>
 
           <Typography className={clsx(classes.description, classes.textMonospace)}>

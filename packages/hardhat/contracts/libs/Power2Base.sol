@@ -106,7 +106,7 @@ library Power2Base {
      * @param _wSqueethEthPool uniswap v3 pool for wSqueeth / weth
      * @param _wSqueeth wSqueeth address
      * @param _weth weth address
-     * @return returns value of debt in ETH
+     * @return returns value of debt in BCH
      */
     function _getDebtValueInEth(
         uint256 _debtAmount,

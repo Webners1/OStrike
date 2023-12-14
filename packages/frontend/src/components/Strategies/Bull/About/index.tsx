@@ -42,11 +42,11 @@ const About: React.FC = () => {
           About Zen Bull
         </Typography>
         <Typography variant="h2" className={classes.heading}>
-          Stack ETH when ETH increases slow and steady
+          Stack BCH when BCH increases slow and steady
         </Typography>
 
         <Typography className={clsx(classes.text, classes.textMargin)}>
-          Zen bull makes money when ETH goes up, slow and steady. It stacks ETH if ETH is within the below bands at the
+          Zen bull makes money when BCH goes up, slow and steady. It stacks BCH if BCH is within the below bands at the
           next rebalance.{' '}
           <LinkWrapper
             href={gitBookLink}

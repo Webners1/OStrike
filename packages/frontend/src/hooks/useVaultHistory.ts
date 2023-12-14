@@ -87,14 +87,14 @@ export const useVaultHistory = (vaultId: number) => {
       vaultHistory?.reduce(
         (acc, s) => {
           if (s.action === Action.MINT) {
-            acc.mintedSqueeth = acc.mintedSqueeth.plus(s.oSqthAmount)
+            acc.mintedSqueeth = acc.mintedSqueeth.plus(s.SBCHAmount)
           } else if (s.action === Action.BURN) {
-            acc.mintedSqueeth = acc.mintedSqueeth.minus(s.oSqthAmount)
-            acc.burnedSqueeth = acc.burnedSqueeth.plus(s.oSqthAmount)
+            acc.mintedSqueeth = acc.mintedSqueeth.minus(s.SBCHAmount)
+            acc.burnedSqueeth = acc.burnedSqueeth.plus(s.SBCHAmount)
           } else if (s.action === Action.OPEN_SHORT) {
-            acc.openShortSqueeth = acc.openShortSqueeth.plus(s.oSqthAmount)
+            acc.openShortSqueeth = acc.openShortSqueeth.plus(s.SBCHAmount)
           } else if (s.action === Action.CLOSE_SHORT) {
-            acc.closeShortSqueeth = acc.closeShortSqueeth.plus(s.oSqthAmount)
+            acc.closeShortSqueeth = acc.closeShortSqueeth.plus(s.SBCHAmount)
             // users fully close short position
             if (
               acc.closeShortSqueeth.isEqualTo(acc.openShortSqueeth.plus(acc.mintedSqueeth)) &&
@@ -105,7 +105,7 @@ export const useVaultHistory = (vaultId: number) => {
               acc.openShortSqueeth = BIG_ZERO
               acc.closeShortSqueeth = BIG_ZERO
             } else {
-              acc.openShortSqueeth = acc.openShortSqueeth.minus(s.oSqthAmount)
+              acc.openShortSqueeth = acc.openShortSqueeth.minus(s.SBCHAmount)
             }
           }
           //if user burn all their osqueeth, reset all values

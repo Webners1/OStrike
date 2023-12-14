@@ -144,14 +144,14 @@ function LongChart() {
 
     if (mode === ChartType.PNL)
       return [
-        { data: longEthPNL, legend: 'Long ETH PNL (%)' },
+        { data: longEthPNL, legend: 'Long BCH PNL (%)' },
         {
           data: longSeries.slice(0, liveIndex),
-          legend: `Long Squeeth PNL (%) Simulated incl. premiums`,
+          legend: `Long Strike PNL (%) Simulated incl. premiums`,
         },
         {
           data: longSeries.slice(liveIndex),
-          legend: `Long Squeeth PNL (%) (incl. premiums)`,
+          legend: `Long Strike PNL (%) (incl. premiums)`,
         },
       ]
     if (mode === ChartType.PositionSize) return [{ data: positionSizeSeries, legend: 'Position Size' }]
@@ -250,9 +250,9 @@ function LongChart() {
             What is squeeth?
           </Typography>
           <Typography variant="body2" className={classes.cardDetail}>
-            Long squeeth (ETH&sup2;) gives you a leveraged position with unlimited upside, protected downside, and no
-            liquidations. Compared to a 2x leveraged position, you make more when ETH goes up and lose less when ETH
-            goes down (excluding premiums). Eg. If ETH goes up 5x, squeeth goes up 25x. You pay a premium for this
+            Long squeeth (BCH&sup2;) gives you a leveraged position with unlimited upside, protected downside, and no
+            liquidations. Compared to a 2x leveraged position, you make more when BCH goes up and lose less when BCH
+            goes down (excluding premiums). Eg. If BCH goes up 5x, squeeth goes up 25x. You pay a premium for this
             position. Enter the position by purchasing an ERC20 token.{' '}
             <a
               className={classes.header}
@@ -269,13 +269,13 @@ function LongChart() {
           </Typography>
           <Typography variant="body2" className={classes.cardDetail}>
             Funding is paid out of your position, meaning you sell a small amount of squeeth at funding, reducing your
-            position size. Holding the position for a long period of time without upward movements in ETH can lose
+            position size. Holding the position for a long period of time without upward movements in BCH can lose
             considerable funds to funding payments.
             <br /> <br />
-            Squeeth smart contracts are currently unaudited. This is experimental technology and we encourage caution
+            Strike smart contracts are currently unaudited. This is experimental technology and we encourage caution
             only risking funds you can afford to lose.
             <br /> <br />
-            If ETH goes down considerably, you may lose some or all of your initial investment.
+            If BCH goes down considerably, you may lose some or all of your initial investment.
           </Typography> */}
         </div>
       ) : mode === ChartType.Risks ? (
@@ -285,15 +285,15 @@ function LongChart() {
           </Typography>
           <Typography variant="body2" className={classes.cardDetail}>
             Premiums are paid out of your position, similar to selling a small amount of squeeth as you earn premiums,
-            reducing your position size. Holding the position for a long period of time without upward movements in ETH
+            reducing your position size. Holding the position for a long period of time without upward movements in BCH
             can lose considerable funds to premium payments.
             <br /> <br />
-            Squeeth smart contracts have been audited by Trail of Bits, Akira, and Sherlock. However, smart contracts
+            Strike smart contracts have been audited by Trail of Bits, Akira, and Sherlock. However, smart contracts
             are experimental technology and we encourage caution only risking funds you can afford to lose.
             <br /> <br />
             Profitability also depends on the price you enter and exit, which is dependent on implied volatility (the
-            premium of squeeth to ETH). If the squeeth premium to ETH decreases, without a change in ETH price, a long
-            position will incur a loss because it is not worth as much ETH. If ETH goes down considerably, you may lose
+            premium of squeeth to BCH). If the squeeth premium to BCH decreases, without a change in BCH price, a long
+            position will incur a loss because it is not worth as much BCH. If BCH goes down considerably, you may lose
             some or all of your initial investment.
             <a
               className={classes.header}
@@ -333,15 +333,15 @@ function LongChart() {
             )}
 
             <div className={classes.legendBox}>
-              {lineSeries && lineSeries[0].data.length > 0 && <LegendBox bgColor="#018FFB" text="ETH PNL" />}
+              {lineSeries && lineSeries[0].data.length > 0 && <LegendBox bgColor="#018FFB" text="BCH PNL" />}
               {lineSeries && lineSeries[1].data.length > 0 && (
                 <LegendBox
                   bgColor="#00E396"
-                  text="Squeeth Simulated PnL"
-                  tooltip="The Squeeth Simulated PnL comes from using at the money implied vol from Deribit"
+                  text="Strike Simulated PnL"
+                  tooltip="The Strike Simulated PnL comes from using at the money implied vol from Deribit"
                 />
               )}
-              {lineSeries && lineSeries[2].data.length > 0 && <LegendBox bgColor="#FEB01B" text="Squeeth LIVE PNL" />}
+              {lineSeries && lineSeries[2].data.length > 0 && <LegendBox bgColor="#FEB01B" text="Strike LIVE PNL" />}
             </div>
           </div>
 
@@ -350,9 +350,9 @@ function LongChart() {
               What is squeeth?
             </Typography>
             <Typography variant="body2" className={classes.cardDetail} style={{ fontSize: '14px' }}>
-              Long squeeth (ETH&sup2;) gives you a leveraged position with unlimited upside, protected downside, and no
-              liquidations. Compared to a 2x leveraged position, you make more when ETH goes up and lose less when ETH
-              goes down (excluding premiums). Eg. If ETH goes up 5x, squeeth goes up 25x. You pay premiums for this
+              Long squeeth (BCH&sup2;) gives you a leveraged position with unlimited upside, protected downside, and no
+              liquidations. Compared to a 2x leveraged position, you make more when BCH goes up and lose less when BCH
+              goes down (excluding premiums). Eg. If BCH goes up 5x, squeeth goes up 25x. You pay premiums for this
               position. Enter the position by purchasing an ERC20 token.{' '}
               <a
                 className={classes.header}

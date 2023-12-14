@@ -74,9 +74,9 @@ export const BLOCKED_IP_VALUE = 'BLOCKED'
 
 // V2 Migration details
 export const V2_MIGRATION_ETH_PRICE = 1611.71
-export const V2_MIGRATION_OSQTH_PRICE = 0.0897
+export const V2_MIGRATION_SBCH_PRICE = 0.0897
 export const V2_MIGRATION_ETH_AMOUNT = 790.186510787310292814
-export const V2_MIGRATION_OSQTH_AMOUNT = 4604.57349514942255453
+export const V2_MIGRATION_SBCH_AMOUNT = 4604.57349514942255453
 export const V2_MIGRATION_SUPPLY = 519.994374902152348633
 
 export const squeethRefVolDocLink = 'https://colab.research.google.com/drive/1HTM_2j0jmda9tzN_uskBPz9Rpma8Lp3C'
@@ -88,8 +88,8 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const STRATEGY_DEPOSIT_LIMIT = 1000_000
 export const SQUEETH_BASE_URL = 'https://opyn.co'
 
-export const SiteMetaTitle = 'Opyn - Stack your ETH and Stables'
-export const SiteMetaDescription = 'DeFi Investment Strategies Powered by Squeeth'
+export const SiteMetaTitle = 'Opyn - Stack your BCH and Stables'
+export const SiteMetaDescription = 'DeFi Investment Strategies Powered by Strike'
 export const SiteMetaImage = SQUEETH_BASE_URL + '/images/previews/opyn.png'
 
 export const TOS_UPDATE_DATE = '2023-04-21'

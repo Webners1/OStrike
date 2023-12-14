@@ -56,7 +56,7 @@ const SelectMethod: React.FC = () => {
 
   return (
     <>
-      <Typography className={classes.title}>Obtain Squeeth</Typography>
+      <Typography className={classes.title}>Obtain Strike</Typography>
       <div className={classes.obtainItemContainer}>
         <motion.div
           initial={{ x: '-5%', opacity: 0.8 }}
@@ -68,9 +68,9 @@ const SelectMethod: React.FC = () => {
           <Image src={Logo} alt="Comparison Chart" height={60} width={60} />
           <Box>
             <Typography className={classes.obtainItemTitle} variant="h6">
-              Mint Squeeth to LP
+              Mint Strike to LP
             </Typography>
-            <Typography className={classes.obtainItemDetail}>Mint by depositing ETH as collateral</Typography>
+            <Typography className={classes.obtainItemDetail}>Mint by depositing BCH as collateral</Typography>
           </Box>
         </motion.div>
         <motion.div
@@ -83,7 +83,7 @@ const SelectMethod: React.FC = () => {
           <Image src={UniswapLogo} alt="Comparison Chart" height={60} width={60} />
           <Box>
             <Typography className={classes.obtainItemTitle} variant="h6">
-              Buy Squeeth to LP
+              Buy Strike to LP
             </Typography>
             <Typography className={classes.obtainItemDetail}>Buy directly from Uniswap</Typography>
           </Box>

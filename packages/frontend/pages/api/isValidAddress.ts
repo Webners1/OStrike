@@ -12,7 +12,7 @@ const handleRequest = async (req: NextApiRequest, res: NextApiResponse) => {
       [
         {
           network: 'Ethereum',
-          asset: 'ETH',
+          asset: 'BCH',
           address,
         },
       ],

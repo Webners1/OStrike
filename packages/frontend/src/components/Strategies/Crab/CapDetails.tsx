@@ -41,14 +41,14 @@ const CapDetails: React.FC<CapType> = ({ maxCap, depositedAmount }) => {
             {depositedAmount.gt(maxCap)
               ? Number(maxCap.toFixed(4)).toLocaleString()
               : Number(depositedAmount.toFixed(4)).toLocaleString()}{' '}
-            ETH
+            BCH
           </Typography>
         </div>
         <div>
           <Typography variant="body2" color="textSecondary">
             Strategy Capacity
           </Typography>
-          <Typography variant="h6">{Number(maxCap.toFixed(4)).toLocaleString()} ETH</Typography>
+          <Typography variant="h6">{Number(maxCap.toFixed(4)).toLocaleString()} BCH</Typography>
         </div>
       </div>
       <div className={classes.vaultProgress}>

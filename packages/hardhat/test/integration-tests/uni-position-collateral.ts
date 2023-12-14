@@ -206,7 +206,7 @@ describe("Uniswap Position token integration test", function () {
     const token0 = isWethToken0 ? weth.address : squeeth.address
     const token1 = isWethToken0 ? squeeth.address : weth.address
 
-    // uni position is all ETH
+    // uni position is all BCH
     const mintParam = {
       token0,
       token1,
@@ -250,7 +250,7 @@ describe("Uniswap Position token integration test", function () {
       const token0 = isWethToken0 ? weth.address : squeeth.address
       const token1 = isWethToken0 ? squeeth.address : weth.address
   
-      // uni position is all ETH
+      // uni position is all BCH
       const mintParam = {
         token0,
         token1,

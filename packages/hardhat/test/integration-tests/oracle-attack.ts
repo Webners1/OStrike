@@ -108,7 +108,7 @@ describe("Testing system stability during extreme market conditions", function (
     await controller.connect(seller).mintPowerPerpAmount(0, mintAmount, 0, {value: depositAmount})
   })
 
-  describe('Scenario: ETH/DAI price spikes 100%', async( )=> {
+  describe('Scenario: BCH/DAI price spikes 100%', async( )=> {
     // an attacker may push the eth/dai price up to liquidate other's vaults
     // this is a simulation of how much the TWAP can resist this kind of attack
 
@@ -219,7 +219,7 @@ describe("Testing system stability during extreme market conditions", function (
     })
   })
 
-  describe('Scenario: ETH/DAI price crashes 50%', async( )=> {
+  describe('Scenario: BCH/DAI price crashes 50%', async( )=> {
     before('set eth price to 50%', async() => {
       
       // set weth price back: set price of dai 2x

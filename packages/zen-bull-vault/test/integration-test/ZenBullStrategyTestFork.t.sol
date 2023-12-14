@@ -107,7 +107,7 @@ contract ZenBullStrategyTestFork is Test {
         vm.label(eulerMarketsModule, "EulerMarkets");
         vm.label(usdc, "USDC");
         vm.label(weth, "WETH");
-        vm.label(wPowerPerp, "oSQTH");
+        vm.label(wPowerPerp, "SBCH");
         vm.label(address(crabV2), "crabV2");
 
         vm.deal(user1, 100000000e18);
@@ -212,7 +212,7 @@ contract ZenBullStrategyTestFork is Test {
         (uint256 wethToLend,) = testUtil.calcCollateralAndBorrowAmount(crabToDeposit);
         IERC20(crabV2).approve(address(bullStrategy), crabToDeposit);
         vm.expectRevert(bytes("LB0"));
-        // Deposit 1 ETH less than needed
+        // Deposit 1 BCH less than needed
         bullStrategy.deposit{ value: wethToLend.sub(1e18) }(crabToDeposit);
         vm.stopPrank();
     }
@@ -226,7 +226,7 @@ contract ZenBullStrategyTestFork is Test {
         (uint256 wethToLend, uint256 usdcToBorrow) =
             testUtil.calcCollateralAndBorrowAmount(crabToDeposit);
         IERC20(crabV2).approve(address(bullStrategy), crabToDeposit);
-        // Deposit 1 ETH more than needed (will refund)
+        // Deposit 1 BCH more than needed (will refund)
         bullStrategy.deposit{ value: wethToLend.add(1e18) }(crabToDeposit);
         vm.stopPrank();
         uint256 userEthBalanceAfter = address(user1).balance;
@@ -317,7 +317,7 @@ contract ZenBullStrategyTestFork is Test {
         uint256 bullToRedeem = crabToDeposit.sub(WETH_DECIMALS_DIFF);
         (uint256 wPowerPerpToRedeem,) = _calcWPowerPerpAndCrabNeededForWithdraw(bullToRedeem);
         uint256 usdcToRepay = _calcUsdcNeededForWithdraw(bullToRedeem);
-        // transfer some oSQTH from some squeether
+        // transfer some SBCH from some squeether
         vm.prank(0x56178a0d5F301bAf6CF3e1Cd53d9863437345Bf9);
         IERC20(wPowerPerp).transfer(user1, wPowerPerpToRedeem);
 
@@ -342,7 +342,7 @@ contract ZenBullStrategyTestFork is Test {
             _calcWPowerPerpAndCrabNeededForWithdraw(bullToMint);
         uint256 usdcToRepay = _calcUsdcNeededForWithdraw(bullToMint);
         uint256 wethToWithdraw = testUtil.calcWethToWithdraw(bullToMint);
-        // transfer some oSQTH from some squeether
+        // transfer some SBCH from some squeether
         vm.prank(0x56178a0d5F301bAf6CF3e1Cd53d9863437345Bf9);
         IERC20(wPowerPerp).transfer(user1, wPowerPerpToRedeem);
 
@@ -368,7 +368,7 @@ contract ZenBullStrategyTestFork is Test {
         assertEq(
             ethInLendingBefore.sub(wethToWithdraw),
             IEulerEToken(eToken).balanceOfUnderlying(address(bullStrategy)),
-            "Bull ETH in leverage amount mismatch"
+            "Bull BCH in leverage amount mismatch"
         );
         assertEq(
             userUsdcBalanceBefore.sub(usdcToRepay),
@@ -383,7 +383,7 @@ contract ZenBullStrategyTestFork is Test {
         assertEq(
             userWPowerPerpBalanceBefore.sub(wPowerPerpToRedeem),
             IERC20(wPowerPerp).balanceOf(user1),
-            "User1 oSQTH balance mismatch"
+            "User1 SBCH balance mismatch"
         );
         assertEq(
             crabBalanceBefore.sub(crabToRedeem),

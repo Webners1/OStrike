@@ -112,7 +112,7 @@ contract ZenBullStrategyTest is Test {
         vm.label(eulerMarketsModule, "EulerMarkets");
         vm.label(usdc, "USDC");
         vm.label(weth, "WETH");
-        vm.label(wPowerPerp, "oSQTH");
+        vm.label(wPowerPerp, "SBCH");
         vm.label(address(crabV2), "crabV2");
 
         vm.deal(user1, 100000000e18);

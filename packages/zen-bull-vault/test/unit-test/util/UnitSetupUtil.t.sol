@@ -64,8 +64,8 @@ contract BullStrategyUnitTest is Test {
         vm.warp(block.timestamp + 1000);
         IUniswapV3Pool(ethUsdcPool).increaseObservationCardinalityNext(500);
 
-        wPowerPerp = new WPowerPerp("oSQTH", "oSQTH");
-        address _shortPowerPerp = address(new ShortPowerPerp("ShortPowerPerp", "sOSQTH"));
+        wPowerPerp = new WPowerPerp("SBCH", "SBCH");
+        address _shortPowerPerp = address(new ShortPowerPerp("ShortPowerPerp", "sSBCH"));
         address _oracle = address(new Oracle());
 
         ethWPowerPerpPool = _createUniPoolAndInitialize(

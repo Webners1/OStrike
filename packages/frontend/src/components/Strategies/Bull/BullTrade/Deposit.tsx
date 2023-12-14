@@ -21,7 +21,7 @@ import {
   WETH_DECIMALS,
 } from '@constants/index'
 import { useGetFlashBulldepositParams, useBullFlashDeposit } from '@state/bull/hooks'
-import { impliedVolAtom, indexAtom, normFactorAtom, osqthRefVolAtom } from '@state/controller/atoms'
+import { impliedVolAtom, indexAtom, normFactorAtom, SBCHRefVolAtom } from '@state/controller/atoms'
 import { useSelectWallet, useWalletBalance } from '@state/wallet/hooks'
 import { toTokenAmount } from '@utils/calculations'
 import { formatNumber } from '@utils/formatter'
@@ -65,7 +65,7 @@ const BullDeposit: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) =
   const bullDepositedEth = useAtomValue(bullDepositedEthInEulerAtom)
   const crabCap = useAtomValue(maxCapAtomV2)
   const crabDepositedEth = useAtomValue(crabStrategyVaultAtomV2)?.collateralAmount || BIG_ZERO
-  const osqthRefVol = useAtomValue(osqthRefVolAtom)
+  const SBCHRefVol = useAtomValue(SBCHRefVolAtom)
 
   const [quote, setQuote] = useState({
     ethToCrab: BIG_ZERO,
@@ -73,7 +73,7 @@ const BullDeposit: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) =
     minEthFromUsdc: BIG_ZERO,
     ethOutForSqth: BIG_ZERO,
     ethOutForUsdc: BIG_ZERO,
-    oSqthIn: BIG_ZERO,
+    SBCHIn: BIG_ZERO,
     usdcIn: BIG_ZERO,
     wPowerPerpPoolFee: 0,
     usdcPoolFee: 0,
@@ -147,16 +147,16 @@ const BullDeposit: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) =
     const impliedVolDiff = new BigNumber(-VOL_PERCENT_SCALAR)
     const impliedVolDiffLowVol = new BigNumber(-VOL_PERCENT_FIXED)
     const threshold = BigNumber.max(
-      new BigNumber(osqthRefVol / 100).times(new BigNumber(1).plus(impliedVolDiff)),
-      new BigNumber(osqthRefVol / 100).plus(impliedVolDiffLowVol),
+      new BigNumber(SBCHRefVol / 100).times(new BigNumber(1).plus(impliedVolDiff)),
+      new BigNumber(SBCHRefVol / 100).plus(impliedVolDiffLowVol),
     )
 
     const showFundingWarning = new BigNumber(impliedVol).lt(threshold) ? true : false
     return showFundingWarning
-  }, [osqthRefVol, impliedVol])
+  }, [SBCHRefVol, impliedVol])
 
   const depositPriceImpactWarning = useAppMemo(() => {
-    const squeethPrice = quote.ethOutForSqth.div(quote.oSqthIn).times(1.003) // Adding Fee
+    const squeethPrice = quote.ethOutForSqth.div(quote.SBCHIn).times(1.003) // Adding Fee
 
     const scalingFactor = new BigNumber(INDEX_SCALE)
     const fundingPeriod = new BigNumber(FUNDING_PERIOD).div(YEAR)
@@ -170,11 +170,11 @@ const BullDeposit: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) =
         .abs()
         .gt(BigNumber.max(new BigNumber(impliedVol).times(VOL_PERCENT_SCALAR), VOL_PERCENT_FIXED))
     return showPriceImpactWarning
-  }, [quote.ethOutForSqth, quote.oSqthIn, normFactor, ethIndexPrice, impliedVol])
+  }, [quote.ethOutForSqth, quote.SBCHIn, normFactor, ethIndexPrice, impliedVol])
 
   const depositError = useAppMemo(() => {
     if (depositAmountBN.gt(toTokenAmount(balance ?? BIG_ZERO, 18))) {
-      return 'Insufficient ETH balance'
+      return 'Insufficient BCH balance'
     }
     if (quote.ethToCrab.plus(crabDepositedEth).gt(crabCap) || quote.wethToLend.plus(bullDepositedEth).gt(bullCap)) {
       return 'Deposit amount exceeds cap. Try a smaller amount.'
@@ -259,7 +259,7 @@ const BullDeposit: React.FC<{ onTxnConfirm: (txn: BullTransactionConfirmation) =
           onInputChange={onInputChange}
           balance={toTokenAmount(balance ?? BIG_ZERO, 18)}
           logo={ethLogo}
-          symbol={'ETH'}
+          symbol={'BCH'}
           usdPrice={ethIndexPrice}
           error={!!depositError}
           helperText={depositError}

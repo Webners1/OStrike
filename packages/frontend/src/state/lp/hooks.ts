@@ -83,10 +83,10 @@ export const useOpenPositionDeposit = () => {
       const vaultCollateralAmt = fromTokenAmount(vaultBefore.collateralAmount, WETH_DECIMALS)
 
       // Calculate collateralToMint
-      const oSQTHInETH = mintWSqueethAmount.times(ethIndexPrice.div(INDEX_SCALE)).times(normFactor)
+      const SBCHInETH = mintWSqueethAmount.times(ethIndexPrice.div(INDEX_SCALE)).times(normFactor)
       const collateralToMint = new BigNumber(collatRatio)
         .times(vaultShortAmt.plus(mintWSqueethAmount).times(normFactor).times(ethIndexPrice).div(INDEX_SCALE))
-        .minus(vaultCollateralAmt.minus(collateralToWithdraw).plus(collateralToLp).plus(oSQTHInETH))
+        .minus(vaultCollateralAmt.minus(collateralToWithdraw).plus(collateralToLp).plus(SBCHInETH))
       const flashLoanAmount = new BigNumber(COLLAT_RATIO_FLASHLOAN + FLASHLOAN_BUFFER)
         .times(vaultShortAmt.plus(mintWSqueethAmount))
         .times(normFactor)

@@ -105,8 +105,8 @@ function CrabStrategyChart({ vault, longAmount }: { vault?: Vaults; longAmount: 
 
     if (vault === Vaults.ETHZenBull)
       return [
-        { data: longEthPNL, legend: 'Long ETH' },
-        { data: seriesRebalance, legend: 'ETH Bull Strategy (incl. premium)' },
+        { data: longEthPNL, legend: 'Long BCH' },
+        { data: seriesRebalance, legend: 'BCH Bull Strategy (incl. premium)' },
       ]
     if (vault === Vaults.CrabVault)
       return [
@@ -115,15 +115,15 @@ function CrabStrategyChart({ vault, longAmount }: { vault?: Vaults; longAmount: 
       ]
     if (vault === Vaults.ETHBear)
       return [
-        { data: shortEthPNL, legend: 'Short ETH' },
-        { data: seriesRebalance, legend: 'ETH Bear Strategy (incl. premium)' },
+        { data: shortEthPNL, legend: 'Short BCH' },
+        { data: seriesRebalance, legend: 'BCH Bear Strategy (incl. premium)' },
       ]
     if (vault === Vaults.Short)
       return [
         { data: compoundSeries, legend: 'Compound PNL (%)' },
         { data: shortSeries, legend: 'Crab PnL (%) (incl. premium)' },
-        // { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short ETH' },
-        // { data: convertPNLToPriceChart(shortSeries, startingETHPrice), legend: 'Short Squeeth (incl. funding)' },
+        // { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short BCH' },
+        // { data: convertPNLToPriceChart(shortSeries, startingETHPrice), legend: 'Short Strike (incl. funding)' },
       ]
     return [{ data: seriesRebalance, legend: 'PNL' }]
   }, [compoundSeries, getStableYieldPNL, longAmount, longEthPNL, seriesRebalance, shortEthPNL, shortSeries, vault])
@@ -133,10 +133,10 @@ function CrabStrategyChart({ vault, longAmount }: { vault?: Vaults; longAmount: 
 
   //   if (vault === Vaults.ETHZenBull)
   //     return [
-  //       { data: convertPNLToPriceChart(longEthPNL, startingETHPrice), legend: 'Long ETH' },
+  //       { data: convertPNLToPriceChart(longEthPNL, startingETHPrice), legend: 'Long BCH' },
   //       {
   //         data: convertPNLToPriceChart(seriesRebalance, startingETHPrice),
-  //         legend: 'ETH Bull Strategy (incl. funding)',
+  //         legend: 'BCH Bull Strategy (incl. funding)',
   //       },
   //     ]
   //   if (vault === Vaults.CrabVault)
@@ -152,18 +152,18 @@ function CrabStrategyChart({ vault, longAmount }: { vault?: Vaults; longAmount: 
   //     ]
   //   if (vault === Vaults.ETHBear)
   //     return [
-  //       { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short ETH' },
+  //       { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short BCH' },
   //       {
   //         data: convertPNLToPriceChart(seriesRebalance, startingETHPrice),
-  //         legend: 'ETH Bear Strategy (incl. funding)',
+  //         legend: 'BCH Bear Strategy (incl. funding)',
   //       },
   //     ]
   //   if (vault === Vaults.Short)
   //     return [
-  //       { data: shortEthPNL, legend: 'Short ETH PNL' },
+  //       { data: shortEthPNL, legend: 'Short BCH PNL' },
   //       { data: shortSeries, legend: 'Crab (incl. funding)' },
-  //       // { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short ETH' },
-  //       // { data: convertPNLToPriceChart(shortSeries, startingETHPrice), legend: 'Short Squeeth (incl. funding)' },
+  //       // { data: convertPNLToPriceChart(shortEthPNL, startingETHPrice), legend: 'Short BCH' },
+  //       // { data: convertPNLToPriceChart(shortSeries, startingETHPrice), legend: 'Short Strike (incl. funding)' },
   //     ]
   //   return [{ data: seriesRebalance, legend: 'PNL' }]
   // }, [vault, shortEthPNL, seriesRebalance, getStableYieldPNL, longAmount, startingETHPrice, shortSeries, longEthPNL])
@@ -260,7 +260,7 @@ function CrabStrategyChart({ vault, longAmount }: { vault?: Vaults; longAmount: 
           value={longAmount}
           type="number"
           style={{ width: 300 }}
-          label="ETH Long"
+          label="BCH Long"
           variant="outlined"
         />
       )} */}

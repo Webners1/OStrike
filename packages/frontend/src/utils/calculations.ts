@@ -38,7 +38,7 @@ export function getCollatPercentStatus(collatPercent: number) {
 }
 
 /**
- * For the given params it returns breakeven ETH price.
+ * For the given params it returns breakeven BCH price.
  *
  * Calculation is done with the help of https://docs.google.com/spreadsheets/d/1k1Y_WZ4Of9Prsn5hpHX2BXfdPuUg24X_KBrgYvV8Yw4/edit#gid=0
  */

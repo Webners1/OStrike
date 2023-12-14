@@ -4,7 +4,7 @@ import TradePage from '../pages/trade'
 
 const trade = new TradePage()
 
-// need to change close long component to manually sell osqth, add these two lines:
+// need to change close long component to manually sell SBCH, add these two lines:
 // const mintedDebt = useMintedDebt()
 // const longSqthBal = mintedDebt
 
@@ -39,9 +39,9 @@ describe('Trade on trade page', () => {
         cy.get('#close-btn').click({ force: true })
       })
       it('can create short position with manual selling with custom input', () => {
-        cy.get('#close-long-osqth-input').clear().type('0.1', { force: true, delay: 200 }).should('have.value', '0.1')
+        cy.get('#close-long-SBCH-input').clear().type('0.1', { force: true, delay: 200 }).should('have.value', '0.1')
         cy.get('#close-long-submit-tx-btn').then((btn) => {
-          if (btn.text().includes('Approve oSQTH')) {
+          if (btn.text().includes('Approve SBCH')) {
             cy.get('#close-long-submit-tx-btn').click({ force: true })
             trade.confirmMetamaskPermissionToSpend()
             trade.waitForTransactionSuccess()

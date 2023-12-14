@@ -95,13 +95,13 @@ function MyApp({ Component, pageProps }: any) {
   }, [track])
 
   useEffect(() => {
-    Crisp.configure(process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID as string)
+    // Crisp.configure(process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID as string)
   }, [])
 
   useEffect(() => {
-    if (router.pathname !== '/') {
-      showCrispChat()
-    } else hideCrispChat()
+    // if (router.pathname !== '/') {
+    //   showCrispChat()
+    // } else hideCrispChat()
   }, [router])
 
   return (

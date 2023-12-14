@@ -13,7 +13,7 @@ export default function ShortSqueethLiquidated() {
   return (
     <div className={classes.position}>
       <div className={classes.positionTitle}>
-        <Typography className={classes.red}>Short Squeeth - Liquidated</Typography>
+        <Typography className={classes.red}>Short Strike - Liquidated</Typography>
         <Typography className={classes.link}>
           <Link href={`vault/${vaultId}`}>Manage</Link>
         </Typography>
@@ -25,7 +25,7 @@ export default function ShortSqueethLiquidated() {
               Redeemable Collateral
             </Typography>
             <Typography variant="body1">
-              {isPositionLoading && existingCollat.isEqualTo(0) ? 'Loading' : existingCollat.toFixed(4)} ETH
+              {isPositionLoading && existingCollat.isEqualTo(0) ? 'Loading' : existingCollat.toFixed(4)} BCH
               {new BigNumber(existingCollatPercent).isFinite() ? ' (' + existingCollatPercent + ' %)' : null}
             </Typography>
           </div>

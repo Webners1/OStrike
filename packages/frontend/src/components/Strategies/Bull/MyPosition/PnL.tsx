@@ -48,7 +48,7 @@ const PnL: React.FC<PnLProps> = ({ isPnlLoading, bullEthPnl, bullEthPnlPercent }
 
         <Typography className={textClassName}>
           ({isPnlPositive && '+'}
-          {formatNumber(bullEthPnl.toNumber(), 4) + ' ETH'})
+          {formatNumber(bullEthPnl.toNumber(), 4) + ' BCH'})
         </Typography>
       </Box>
       <Typography className={classes.description}>since deposit</Typography>

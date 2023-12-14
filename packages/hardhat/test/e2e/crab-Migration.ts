@@ -17,7 +17,7 @@ describe("Crab Migration", function () {
     let crabMigration: CrabMigration;
     let controller: Controller;
     let oracle: Oracle;
-    let oSqth: WPowerPerp;
+    let SBCH: WPowerPerp;
     let squeethPool: IUniswapV3Pool;
 
     let weth: WETH9;
@@ -52,7 +52,7 @@ describe("Crab Migration", function () {
     const squeethControllerAddress = "0x64187ae08781B09368e6253F9E94951243A493D5";
     const oracleAddress = "0x65D66c76447ccB45dAf1e8044e918fA786A483A1";
     const uniswapFactoryAddress = "0x1F98431c8aD98523631AE4a59f267346ea31F984";
-    const wethOsqthPoolAddress = "0x82c427AdFDf2d245Ec51D8046b41c4ee87F0d29C";
+    const wethSBCHPoolAddress = "0x82c427AdFDf2d245Ec51D8046b41c4ee87F0d29C";
     const squeethAddress = "0xf1b99e3e573a1a9c5e6b2ce818b617f0e664e86b";
 
     let deposit1Amount: BigNumber
@@ -82,8 +82,8 @@ describe("Crab Migration", function () {
         crabStrategyV1 = await ethers.getContractAt("CrabStrategy", crabV1Address);
         controller = await ethers.getContractAt("Controller", squeethControllerAddress);
         oracle = await ethers.getContractAt("Oracle", oracleAddress);
-        oSqth = await ethers.getContractAt("WPowerPerp", squeethAddress);
-        squeethPool = await ethers.getContractAt("IUniswapV3Pool", wethOsqthPoolAddress);
+        SBCH = await ethers.getContractAt("WPowerPerp", squeethAddress);
+        squeethPool = await ethers.getContractAt("IUniswapV3Pool", wethSBCHPoolAddress);
 
         squeethPoolFee = BigNumber.from(await squeethPool.fee())
 
@@ -153,7 +153,7 @@ describe("Crab Migration", function () {
             oracleAddress,
             wethAddress,
             uniswapFactoryAddress,
-            wethOsqthPoolAddress,
+            wethSBCHPoolAddress,
             timelock.address,
             crabMigration.address,
             1,
@@ -269,11 +269,11 @@ describe("Crab Migration", function () {
 
             expect(ethAmountDepositedToCrabV2).to.be.equal(ethAmountRemovedFromCrabV1);
 
-            // 4. check that oSqth amt minted in crab v1 matches oSqth amt minted in crab v2
-            const oSqthDebtPaidCrabV1 = crabV1VaultDetailsBefore[3].sub(crabV1VaultDetailsAfter[3])
-            const oSqthMintedCrabV2 = crabV2VaultDetailsAfter[3].sub(crabV2VaultDetailsBefore[3]);
+            // 4. check that SBCH amt minted in crab v1 matches SBCH amt minted in crab v2
+            const SBCHDebtPaidCrabV1 = crabV1VaultDetailsBefore[3].sub(crabV1VaultDetailsAfter[3])
+            const SBCHMintedCrabV2 = crabV2VaultDetailsAfter[3].sub(crabV2VaultDetailsBefore[3]);
 
-            expect(oSqthDebtPaidCrabV1).to.be.equal(oSqthMintedCrabV2);
+            expect(SBCHDebtPaidCrabV1).to.be.equal(SBCHMintedCrabV2);
 
             // 5. check that crab v2 is now initialized
             const isInitialized = await crabStrategyV2.isInitialized();
@@ -305,7 +305,7 @@ describe("Crab Migration", function () {
 
             const d2sharesV2ToMigrate = d2sharesInMigrationBefore.add(1);
 
-            await expect(crabMigration.connect(d2).claimAndWithdraw(d2sharesV2ToMigrate, ethers.constants.MaxUint256, squeethPoolFee)).to.be.revertedWith("M5") // Set ETH slippage higher!
+            await expect(crabMigration.connect(d2).claimAndWithdraw(d2sharesV2ToMigrate, ethers.constants.MaxUint256, squeethPoolFee)).to.be.revertedWith("M5") // Set BCH slippage higher!
         })
 
         it("d2 Claim and flash withdraw 50 percent of tokens", async () => {
@@ -317,18 +317,18 @@ describe("Crab Migration", function () {
             const d2sharesV2ToMigrate = d2sharesV1ToMigrate
 
             const [ethToGet, sqthToSell] = await getV2SqthAndEth(d2sharesV2ToMigrate);
-            const sqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+            const sqthPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
             const ethSpentToBuyBack = wdiv(wmul(wmul(sqthToSell, sqthPrice), BigNumber.from(105)), BigNumber.from(100))
 
-            await crabMigration.connect(d2).claimAndWithdraw(d2sharesV2ToMigrate, ethSpentToBuyBack, squeethPoolFee) // Set ETH slippage higher!
+            await crabMigration.connect(d2).claimAndWithdraw(d2sharesV2ToMigrate, ethSpentToBuyBack, squeethPoolFee) // Set BCH slippage higher!
             const d2sharesInMigrationAfter = await crabMigration.sharesDeposited(d2.address)
             const constractSharesAfter = await crabStrategyV2.balanceOf(crabMigration.address);
             const d2EthBalanceAfter = await provider.getBalance(d2.address);
 
             expect(d2sharesInMigrationAfter).to.be.equal(d2sharesInMigrationBefore.sub(d2sharesV1ToMigrate))
             expect(constractSharesAfter).to.be.equal(constractSharesBefore.sub(d2sharesV2ToMigrate))
-            // Check if minimum ETH is returned
+            // Check if minimum BCH is returned
             expect(d2EthBalanceAfter.sub(d2EthBalanceBefore).gte(ethToGet.sub(ethSpentToBuyBack))).to.be.true
         })
 
@@ -338,18 +338,18 @@ describe("Crab Migration", function () {
             const d2EthBalanceBefore = await provider.getBalance(d2.address);
 
             const [ethToGet, sqthToSell] = await getV2SqthAndEth(d2sharesV2ToMigrate);
-            const sqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+            const sqthPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
             const ethSpentToBuyBack = wdiv(wmul(wmul(sqthToSell, sqthPrice), BigNumber.from(105)), BigNumber.from(100))
 
 
-            await crabMigration.connect(d2).claimAndWithdraw(d2sharesV2ToMigrate, ethSpentToBuyBack, squeethPoolFee) // Set ETH slippage higher!
+            await crabMigration.connect(d2).claimAndWithdraw(d2sharesV2ToMigrate, ethSpentToBuyBack, squeethPoolFee) // Set BCH slippage higher!
             const d2sharesInMigrationAfter = await crabMigration.sharesDeposited(d2.address)
             const constractSharesAfter = await crabStrategyV2.balanceOf(crabMigration.address);
             const d2EthBalanceAfter = await provider.getBalance(d2.address);
 
             expect(d2sharesInMigrationAfter).to.be.equal("0")
             expect(constractSharesAfter).to.be.equal(constractSharesBefore.sub(d2sharesV2ToMigrate))
-            // Check if minimum ETH is returned
+            // Check if minimum BCH is returned
             expect(d2EthBalanceAfter.sub(d2EthBalanceBefore).gte(ethToGet.sub(ethSpentToBuyBack))).to.be.true
         })
 
@@ -388,7 +388,7 @@ describe("Crab Migration", function () {
     }
 
     const increaseCR1 = async (amount: BigNumber) => {
-        // Set ETH to crab contract and use that ETH deposit collat to increase CR1
+        // Set BCH to crab contract and use that BCH deposit collat to increase CR1
         await provider.send("hardhat_setBalance", [crabStrategyV1.address, amount.add(one).toHexString()])
         await provider.send("hardhat_impersonateAccount", [crabStrategyV1.address]);
 
@@ -466,7 +466,7 @@ describe("Crab Migration", function () {
             const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
             const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
             const userEthBalanceAfter = await provider.getBalance(d4.address)
-            const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+            const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
             expect(crabV1SharesAfter).to.be.equal('0')
             expect(crabV1SharesInMigration).to.be.equal('0')
@@ -482,32 +482,32 @@ describe("Crab Migration", function () {
             let gasPaid = BigNumber.from(0)
             await initialize(d5.address)
             await decreaseCR1(ethers.utils.parseEther('10'))
-            const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+            const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
 
 
             expect(wdiv(collatV1, shortV1).gt(wdiv(collatV2, shortV2))).to.be.false
             expect(isFlashMigrate).to.be.false
             expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
 
-            const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+            const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-            const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-            const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+            const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+            const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
             const ethToFlashLoan = wdiv(numerator, denominator)
             const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-            const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-            const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .1% slippage
+            const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+            const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .1% slippage
             const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
             const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
             const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-            const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+            const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
             const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
             const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
 
             const tx1 = await crabStrategyV1.connect(d5).approve(crabMigration.address, ethers.constants.MaxUint256);
             gasPaid = await getGasPaid(tx1)
-            // Don't flash deposit and return back ETH. For the sake of simplicity. Flash deposit is already tested in previous tests
+            // Don't flash deposit and return back BCH. For the sake of simplicity. Flash deposit is already tested in previous tests
             const tx2 = await crabMigration.connect(d5).flashMigrateAndWithdrawFromV1toV2(crabV1SharesBefore, 0, ethToFlashLoan, maxEthToPay, squeethPoolFee)
             gasPaid = gasPaid.add(await getGasPaid(tx2))
 
@@ -536,7 +536,7 @@ describe("Crab Migration", function () {
 
             this.beforeAll("Deploy and seed crab V1", async () => {
                 const CrabStrategyContract = await ethers.getContractFactory("CrabStrategy");
-                crabStrategyV1 = (await CrabStrategyContract.deploy(controller.address, oracle.address, weth.address, uniswapFactoryAddress, wethOsqthPoolAddress, hedgeTimeThreshold, hedgePriceThreshold, auctionTime, minPriceMultiplier, maxPriceMultiplier)) as CrabStrategy;
+                crabStrategyV1 = (await CrabStrategyContract.deploy(controller.address, oracle.address, weth.address, uniswapFactoryAddress, wethSBCHPoolAddress, hedgeTimeThreshold, hedgePriceThreshold, auctionTime, minPriceMultiplier, maxPriceMultiplier)) as CrabStrategy;
                 crabStrategyV1.setStrategyCap(ethers.utils.parseEther('100'))
                 const d1Amt = ethers.utils.parseEther('20');
                 const d2Amt = ethers.utils.parseEther('5');
@@ -547,9 +547,9 @@ describe("Crab Migration", function () {
                 crabStrategyV1.connect(d3).deposit({ value: d3Amt })
                 // crabStrategyV1.connect(d4).deposit({ value: d4Amt })
 
-                oSqth.connect(d1).transfer(random.address, await oSqth.balanceOf(d1.address))
-                oSqth.connect(d2).transfer(random.address, await oSqth.balanceOf(d1.address))
-                oSqth.connect(d3).transfer(random.address, await oSqth.balanceOf(d1.address))
+                SBCH.connect(d1).transfer(random.address, await SBCH.balanceOf(d1.address))
+                SBCH.connect(d2).transfer(random.address, await SBCH.balanceOf(d1.address))
+                SBCH.connect(d3).transfer(random.address, await SBCH.balanceOf(d1.address))
             })
 
             this.beforeAll("Deploy migration contract and crab v2", async () => {
@@ -562,7 +562,7 @@ describe("Crab Migration", function () {
                     oracleAddress,
                     wethAddress,
                     uniswapFactoryAddress,
-                    wethOsqthPoolAddress,
+                    wethSBCHPoolAddress,
                     timelock.address,
                     crabMigration.address,
                     1,
@@ -644,7 +644,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d2.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
 
                 expect(crabV1SharesAfter).to.be.equal('0')
@@ -660,21 +660,21 @@ describe("Crab Migration", function () {
                 let gasPaid = BigNumber.from(0)
                 await initialize(d3.address)
                 await decreaseCR1(ethers.utils.parseEther('2'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
 
 
                 expect(wdiv(collatV1, shortV1).gt(wdiv(collatV2, shortV2))).to.be.false
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .1% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .1% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
@@ -684,7 +684,7 @@ describe("Crab Migration", function () {
 
                 const tx1 = await crabStrategyV1.connect(d3).approve(crabMigration.address, ethers.constants.MaxUint256);
                 gasPaid = await getGasPaid(tx1)
-                // Don't flash deposit and return back ETH. For the sake of simplicity. Flash deposit is already tested in previous tests
+                // Don't flash deposit and return back BCH. For the sake of simplicity. Flash deposit is already tested in previous tests
                 const tx2 = await crabMigration.connect(d3).flashMigrateAndWithdrawFromV1toV2(crabV1SharesBefore, 0, ethToFlashLoan, maxEthToPay, squeethPoolFee)
                 gasPaid = gasPaid.add(await getGasPaid(tx2))
 
@@ -693,7 +693,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d3.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
 
                 expect(crabV1SharesAfter).to.be.equal('0')
@@ -715,7 +715,7 @@ describe("Crab Migration", function () {
 
             this.beforeAll("Deploy and seed crab V1", async () => {
                 const CrabStrategyContract = await ethers.getContractFactory("CrabStrategy");
-                crabStrategyV1 = (await CrabStrategyContract.deploy(controller.address, oracle.address, weth.address, uniswapFactoryAddress, wethOsqthPoolAddress, hedgeTimeThreshold, hedgePriceThreshold, auctionTime, minPriceMultiplier, maxPriceMultiplier)) as CrabStrategy;
+                crabStrategyV1 = (await CrabStrategyContract.deploy(controller.address, oracle.address, weth.address, uniswapFactoryAddress, wethSBCHPoolAddress, hedgeTimeThreshold, hedgePriceThreshold, auctionTime, minPriceMultiplier, maxPriceMultiplier)) as CrabStrategy;
                 crabStrategyV1.setStrategyCap(ethers.utils.parseEther('100'))
                 const d1Amt = ethers.utils.parseEther('20').add(1);
                 const d2Amt = ethers.utils.parseEther('5');
@@ -727,9 +727,9 @@ describe("Crab Migration", function () {
                 crabStrategyV1.connect(d3).deposit({ value: d3Amt })
                 crabStrategyV1.connect(d4).deposit({ value: d4Amt })
 
-                oSqth.connect(d1).transfer(random.address, await oSqth.balanceOf(d1.address))
-                oSqth.connect(d2).transfer(random.address, await oSqth.balanceOf(d1.address))
-                oSqth.connect(d3).transfer(random.address, await oSqth.balanceOf(d1.address))
+                SBCH.connect(d1).transfer(random.address, await SBCH.balanceOf(d1.address))
+                SBCH.connect(d2).transfer(random.address, await SBCH.balanceOf(d1.address))
+                SBCH.connect(d3).transfer(random.address, await SBCH.balanceOf(d1.address))
             })
 
             this.beforeAll("Deploy migration contract and crab v2", async () => {
@@ -742,7 +742,7 @@ describe("Crab Migration", function () {
                     oracleAddress,
                     wethAddress,
                     uniswapFactoryAddress,
-                    wethOsqthPoolAddress,
+                    wethSBCHPoolAddress,
                     timelock.address,
                     crabMigration.address,
                     1,
@@ -814,7 +814,7 @@ describe("Crab Migration", function () {
                 const ethToFlashDeposit = excessEth.mul(195).div(100) // Something less than 200%
 
                 const depositShare = wdiv(ethNeededForV2, collatV2.add(ethNeededForV2))
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
                 const expectedSupply = crabV2Supply.add(expectedV2Shares)
                 const expectedCollat = collatV2.add(ethNeededForV2)
@@ -823,8 +823,8 @@ describe("Crab Migration", function () {
                 const depositShareFromFlashDeposit = wdiv(ethToFlashDeposit, expectedCollat.add(ethToFlashDeposit))
                 const expectedV2SharesFlashDeposit = wdiv(wmul(depositShareFromFlashDeposit, expectedSupply), one.sub(depositShareFromFlashDeposit))
 
-                const oSqthToMintedFlash = wdiv(wmul(ethToFlashDeposit, expectedShort), expectedCollat);
-                const ethToReturned = wmul(oSqthToMintedFlash, oSqthPrice)
+                const SBCHToMintedFlash = wdiv(wmul(ethToFlashDeposit, expectedShort), expectedCollat);
+                const ethToReturned = wmul(SBCHToMintedFlash, SBCHPrice)
 
                 const expectedEth = excessEth.sub(ethToReturned)
 
@@ -840,12 +840,12 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d2.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const [, , collat, short] = await crabStrategyV2.getVaultDetails()
                 expect(await crabStrategyV2.totalSupply()).to.be.equal(expectedSupply.add(expectedV2SharesFlashDeposit))
                 expect(collat).to.be.equal(expectedCollat.add(ethToFlashDeposit))
-                expect(short).to.be.equal(expectedShort.add(oSqthToMintedFlash))
+                expect(short).to.be.equal(expectedShort.add(SBCHToMintedFlash))
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
                 expect(crabV2SharesBefore).to.be.equal('0')
@@ -859,21 +859,21 @@ describe("Crab Migration", function () {
                 let gasPaid = BigNumber.from(0)
                 await initialize(d3.address)
                 await decreaseCR1(ethers.utils.parseEther('2'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
 
 
                 expect(wdiv(collatV1, shortV1).gt(wdiv(collatV2, shortV2))).to.be.false
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .1% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .1% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
@@ -883,7 +883,7 @@ describe("Crab Migration", function () {
 
                 const tx1 = await crabStrategyV1.connect(d3).approve(crabMigration.address, ethers.constants.MaxUint256);
                 gasPaid = await getGasPaid(tx1)
-                // Don't flash deposit and return back ETH. For the sake of simplicity. Flash deposit is already tested in previous tests
+                // Don't flash deposit and return back BCH. For the sake of simplicity. Flash deposit is already tested in previous tests
                 const tx2 = await crabMigration.connect(d3).flashMigrateAndWithdrawFromV1toV2(crabV1SharesBefore, 0, ethToFlashLoan, maxEthToPay, squeethPoolFee)
                 gasPaid = gasPaid.add(await getGasPaid(tx2))
 
@@ -892,7 +892,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d3.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
 
                 expect(crabV1SharesAfter).to.be.equal('0')
@@ -914,7 +914,7 @@ describe("Crab Migration", function () {
 
             this.beforeAll("Deploy and seed crab V1", async () => {
                 const CrabStrategyContract = await ethers.getContractFactory("CrabStrategy");
-                crabStrategyV1 = (await CrabStrategyContract.deploy(controller.address, oracle.address, weth.address, uniswapFactoryAddress, wethOsqthPoolAddress, hedgeTimeThreshold, hedgePriceThreshold, auctionTime, minPriceMultiplier, maxPriceMultiplier)) as CrabStrategy;
+                crabStrategyV1 = (await CrabStrategyContract.deploy(controller.address, oracle.address, weth.address, uniswapFactoryAddress, wethSBCHPoolAddress, hedgeTimeThreshold, hedgePriceThreshold, auctionTime, minPriceMultiplier, maxPriceMultiplier)) as CrabStrategy;
                 crabStrategyV1.setStrategyCap(ethers.utils.parseEther('100'))
                 const d1Amt = ethers.utils.parseEther('20');
                 const d2Amt = ethers.utils.parseEther('5');
@@ -925,9 +925,9 @@ describe("Crab Migration", function () {
                 crabStrategyV1.connect(d3).deposit({ value: d3Amt })
                 // crabStrategyV1.connect(d4).deposit({ value: d4Amt })
 
-                oSqth.connect(d1).transfer(random.address, await oSqth.balanceOf(d1.address))
-                oSqth.connect(d2).transfer(random.address, await oSqth.balanceOf(d1.address))
-                oSqth.connect(d3).transfer(random.address, await oSqth.balanceOf(d1.address))
+                SBCH.connect(d1).transfer(random.address, await SBCH.balanceOf(d1.address))
+                SBCH.connect(d2).transfer(random.address, await SBCH.balanceOf(d1.address))
+                SBCH.connect(d3).transfer(random.address, await SBCH.balanceOf(d1.address))
             })
 
             this.beforeAll("Deploy migration contract and crab v2", async () => {
@@ -940,7 +940,7 @@ describe("Crab Migration", function () {
                     oracleAddress,
                     wethAddress,
                     uniswapFactoryAddress,
-                    wethOsqthPoolAddress,
+                    wethSBCHPoolAddress,
                     timelock.address,
                     crabMigration.address,
                     1,
@@ -1006,7 +1006,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d2.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
 
                 expect(crabV1SharesAfter).to.be.equal(v1CrabToMigrate)
@@ -1037,21 +1037,21 @@ describe("Crab Migration", function () {
                 await initialize(d2.address)
                 await decreaseCR1(ethers.utils.parseEther('2'))
                 const v1CrabToMigrate = crabV1SharesBefore.div(2);
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(v1CrabToMigrate)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(v1CrabToMigrate)
 
 
                 expect(wdiv(collatV1, shortV1).gt(wdiv(collatV2, shortV2))).to.be.false
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
@@ -1061,7 +1061,7 @@ describe("Crab Migration", function () {
 
                 const tx1 = await crabStrategyV1.connect(d2).approve(crabMigration.address, ethers.constants.MaxUint256);
                 gasPaid = await getGasPaid(tx1)
-                // Don't flash deposit and return back ETH. For the sake of simplicity. Flash deposit is already tested in previous tests
+                // Don't flash deposit and return back BCH. For the sake of simplicity. Flash deposit is already tested in previous tests
                 const tx2 = await crabMigration.connect(d2).flashMigrateAndWithdrawFromV1toV2(v1CrabToMigrate, 0, ethToFlashLoan, maxEthToPay, squeethPoolFee)
                 gasPaid = gasPaid.add(await getGasPaid(tx2))
 
@@ -1070,7 +1070,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d2.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
 
                 expect(crabV1SharesAfter).to.be.equal(v1CrabToMigrate)
@@ -1097,7 +1097,7 @@ describe("Crab Migration", function () {
 
         const deployAndSeedV1 = async () => {
             const CrabStrategyContract = await ethers.getContractFactory("CrabStrategy");
-            crabStrategyV1 = (await CrabStrategyContract.deploy(controller.address, oracle.address, weth.address, uniswapFactoryAddress, wethOsqthPoolAddress, hedgeTimeThreshold, hedgePriceThreshold, auctionTime, minPriceMultiplier, maxPriceMultiplier)) as CrabStrategy;
+            crabStrategyV1 = (await CrabStrategyContract.deploy(controller.address, oracle.address, weth.address, uniswapFactoryAddress, wethSBCHPoolAddress, hedgeTimeThreshold, hedgePriceThreshold, auctionTime, minPriceMultiplier, maxPriceMultiplier)) as CrabStrategy;
             await crabStrategyV1.setStrategyCap(ethers.utils.parseEther('100'))
             const d1Amt = ethers.utils.parseEther('20');
             const d2Amt = ethers.utils.parseEther('10');
@@ -1113,11 +1113,11 @@ describe("Crab Migration", function () {
             await crabStrategyV1.connect(d5).deposit({ value: d5Amt })
             await crabStrategyV1.connect(random).deposit({ value: d1Amt })
 
-            const p1 = oSqth.connect(d1).transfer(random.address, await oSqth.balanceOf(d1.address))
-            const p2 = oSqth.connect(d2).transfer(random.address, await oSqth.balanceOf(d2.address))
-            const p3 = oSqth.connect(d3).transfer(random.address, await oSqth.balanceOf(d3.address))
-            const p4 = oSqth.connect(d4).transfer(random.address, await oSqth.balanceOf(d4.address))
-            const p5 = oSqth.connect(d5).transfer(random.address, await oSqth.balanceOf(d5.address))
+            const p1 = SBCH.connect(d1).transfer(random.address, await SBCH.balanceOf(d1.address))
+            const p2 = SBCH.connect(d2).transfer(random.address, await SBCH.balanceOf(d2.address))
+            const p3 = SBCH.connect(d3).transfer(random.address, await SBCH.balanceOf(d3.address))
+            const p4 = SBCH.connect(d4).transfer(random.address, await SBCH.balanceOf(d4.address))
+            const p5 = SBCH.connect(d5).transfer(random.address, await SBCH.balanceOf(d5.address))
 
             await Promise.all([p1, p2, p3, p4, p5])
         }
@@ -1132,7 +1132,7 @@ describe("Crab Migration", function () {
                 oracleAddress,
                 wethAddress,
                 uniswapFactoryAddress,
-                wethOsqthPoolAddress,
+                wethSBCHPoolAddress,
                 timelock.address,
                 crabMigration.address,
                 1,
@@ -1150,7 +1150,7 @@ describe("Crab Migration", function () {
             await crabStrategyV1.connect(d2).approve(crabMigration.address, shareToDeposit);
             await crabMigration.connect(d2).depositV1Shares(shareToDeposit);
 
-            await crabMigration.connect(owner).batchMigrate(one.mul(200)) // 200 ETH as cap
+            await crabMigration.connect(owner).batchMigrate(one.mul(200)) // 200 BCH as cap
         }
 
         describe("Case 1: batchMigrate() -> 100% withdraw by claim -> flashMigrateAndWithdraw -> flashMigrate", async () => {
@@ -1178,23 +1178,23 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 expect(crabV2inMigrationBefore).to.be.equal('0') // Will be 0 because of 100% claim
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -1248,7 +1248,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -1310,7 +1310,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -1328,23 +1328,23 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 expect(crabV2inMigrationBefore).to.be.equal('0') // Will be 0 because of 100% claim
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -1392,24 +1392,24 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 const d2shares = await crabMigration.sharesDeposited(d2.address)
                 expect(crabV2inMigrationBefore).to.be.equal(d2shares) // As d2 did not claim it yet
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -1466,7 +1466,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -1524,7 +1524,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -1541,24 +1541,24 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 const d2shares = await crabMigration.sharesDeposited(d2.address)
                 expect(crabV2inMigrationBefore).to.be.equal(d2shares) // As d2 did not claim it yet
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -1601,19 +1601,19 @@ describe("Crab Migration", function () {
 
                 initialize(d1.address)
                 const d1SharesExpected = await crabMigration.sharesDeposited(d1.address)
-                const d1Osqth = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
-                let oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
-                const maxEthToPay = wmul(d1Osqth, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const d1SBCH = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
+                let SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
+                const maxEthToPay = wmul(d1SBCH, SBCHPrice).mul(1005).div(1000) // .5% slippage
 
                 await crabMigration.connect(d1).claimAndWithdraw(d1SharesExpected, maxEthToPay, 3000)
                 const d1Shares = await crabStrategyV2.balanceOf(d1.address)
                 expect(d1Shares).to.be.equal(0)
 
                 initialize(d2.address)
-                oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
                 const d2SharesExpected = await crabMigration.sharesDeposited(d2.address)
-                const d2Osqth = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
-                const maxEthToPay2 = wmul(d2Osqth, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const d2SBCH = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
+                const maxEthToPay2 = wmul(d2SBCH, SBCHPrice).mul(1005).div(1000) // .5% slippage
 
                 await crabMigration.connect(d2).claimAndWithdraw(d2SharesExpected, maxEthToPay2, 3000)
                 const d2Shares = await crabStrategyV2.balanceOf(d2.address)
@@ -1625,23 +1625,23 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 expect(crabV2inMigrationBefore).to.be.equal('0') // 100% withdraw
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -1697,7 +1697,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -1725,9 +1725,9 @@ describe("Crab Migration", function () {
 
                 initialize(d1.address)
                 const d1SharesExpected = await crabMigration.sharesDeposited(d1.address)
-                const d1Osqth = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
-                let oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
-                const maxEthToPay = wmul(d1Osqth, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const d1SBCH = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
+                let SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
+                const maxEthToPay = wmul(d1SBCH, SBCHPrice).mul(1005).div(1000) // .5% slippage
 
                 await crabMigration.connect(d1).claimAndWithdraw(d1SharesExpected, maxEthToPay, 3000)
                 const d1SharesInMigration = await crabMigration.sharesDeposited(d1.address)
@@ -1736,10 +1736,10 @@ describe("Crab Migration", function () {
                 expect(d1SharesInMigration).to.be.equal(0)
 
                 initialize(d2.address)
-                oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
                 const d2SharesExpected = await crabMigration.sharesDeposited(d2.address)
-                const d2Osqth = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
-                const maxEthToPay2 = wmul(d2Osqth, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const d2SBCH = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
+                const maxEthToPay2 = wmul(d2SBCH, SBCHPrice).mul(1005).div(1000) // .5% slippage
 
                 await crabMigration.connect(d2).claimAndWithdraw(d2SharesExpected, maxEthToPay2, 3000)
                 const d2SharesInMigration = await crabMigration.sharesDeposited(d1.address)
@@ -1777,7 +1777,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -1794,23 +1794,23 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 expect(crabV2inMigrationBefore).to.be.equal('0') // 100% withdraw
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -1848,9 +1848,9 @@ describe("Crab Migration", function () {
             it("Should withdraw 50% via claimAndWithdraw", async () => {
                 initialize(d1.address)
                 const d1SharesExpected = await crabMigration.sharesDeposited(d1.address)
-                const d1Osqth = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
-                const maxEthToPay = wmul(d1Osqth, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const d1SBCH = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
+                const maxEthToPay = wmul(d1SBCH, SBCHPrice).mul(1005).div(1000) // .5% slippage
 
                 await crabMigration.connect(d1).claimAndWithdraw(d1SharesExpected, maxEthToPay, 3000)
                 const d1Shares = await crabStrategyV2.balanceOf(d1.address)
@@ -1864,24 +1864,24 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 const d2Shares = await crabMigration.sharesDeposited(d2.address)
                 expect(crabV2inMigrationBefore).to.be.equal(d2Shares) // 100% withdraw
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -1938,7 +1938,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -1961,9 +1961,9 @@ describe("Crab Migration", function () {
             it("Should withdraw 50% via claimAndWithdraw", async () => {
                 initialize(d1.address)
                 const d1SharesExpected = await crabMigration.sharesDeposited(d1.address)
-                const d1Osqth = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
-                const maxEthToPay = wmul(d1Osqth, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const d1SBCH = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
+                const maxEthToPay = wmul(d1SBCH, SBCHPrice).mul(1005).div(1000) // .5% slippage
 
                 await crabMigration.connect(d1).claimAndWithdraw(d1SharesExpected, maxEthToPay, 3000)
                 const d1Shares = await crabStrategyV2.balanceOf(d1.address)
@@ -2002,7 +2002,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -2019,24 +2019,24 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 const d2Shares = await crabMigration.sharesDeposited(d2.address)
                 expect(crabV2inMigrationBefore).to.be.equal(d2Shares) // As d2 did not claim it yet
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -2076,25 +2076,25 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 const d1Shares = await crabMigration.sharesDeposited(d1.address)
                 const d2Shares = await crabMigration.sharesDeposited(d2.address)
                 expect(crabV2inMigrationBefore).to.be.equal(d2Shares.add(d1Shares)) // As both d1 and d2 did not claim
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -2152,7 +2152,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -2203,7 +2203,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -2220,25 +2220,25 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 const d1Shares = await crabMigration.sharesDeposited(d1.address)
                 const d2Shares = await crabMigration.sharesDeposited(d2.address)
                 expect(crabV2inMigrationBefore).to.be.equal(d2Shares.add(d1Shares)) // As both d1 and d2 did not claim
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -2304,7 +2304,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -2321,25 +2321,25 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 const d1Shares = await crabMigration.sharesDeposited(d1.address)
                 const d2Shares = await crabMigration.sharesDeposited(d2.address)
                 expect(crabV2inMigrationBefore).to.be.equal(d1Shares.add(d2Shares)) // As both d1 and d2 did not claim
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))
@@ -2374,9 +2374,9 @@ describe("Crab Migration", function () {
 
                 initialize(d1.address)
                 const d1SharesExpected = await crabMigration.sharesDeposited(d1.address)
-                const d1Osqth = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
-                let oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
-                const maxEthToPay = wmul(d1Osqth, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const d1SBCH = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
+                let SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
+                const maxEthToPay = wmul(d1SBCH, SBCHPrice).mul(1005).div(1000) // .5% slippage
 
                 await crabMigration.connect(d1).claimAndWithdraw(d1SharesExpected, maxEthToPay, 3000)
                 const d1SharesInMigration = await crabMigration.sharesDeposited(d1.address)
@@ -2385,10 +2385,10 @@ describe("Crab Migration", function () {
                 expect(d1SharesInMigration).to.be.equal(0)
 
                 initialize(d2.address)
-                oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
                 const d2SharesExpected = await crabMigration.sharesDeposited(d2.address)
-                const d2Osqth = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
-                const maxEthToPay2 = wmul(d2Osqth, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const d2SBCH = wdiv(wmul(d1SharesExpected, shortV2), crabV2Supply)
+                const maxEthToPay2 = wmul(d2SBCH, SBCHPrice).mul(1005).div(1000) // .5% slippage
 
                 await crabMigration.connect(d2).claimAndWithdraw(d2SharesExpected, maxEthToPay2, 3000)
                 const d2SharesInMigration = await crabMigration.sharesDeposited(d1.address)
@@ -2436,7 +2436,7 @@ describe("Crab Migration", function () {
                 const crabV1SharesInMigration = await crabStrategyV1.balanceOf(crabMigration.address)
                 const crabV2SharesInMigration = await crabStrategyV2.balanceOf(crabMigration.address)
                 const userEthBalanceAfter = await provider.getBalance(d4.address)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 expect(crabV1SharesAfter).to.be.equal('0')
                 expect(crabV1SharesInMigration).to.be.equal('0')
@@ -2453,25 +2453,25 @@ describe("Crab Migration", function () {
                 const depositor = d3
                 await initialize(depositor.address)
                 await decreaseCR1(ethers.utils.parseEther('10'))
-                const [isFlashMigrate, ethNeededForV2, v1oSqthToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
+                const [isFlashMigrate, ethNeededForV2, v1SBCHToPay, ethToGetFromV1] = await crabMigration.flashMigrationDetails(crabV1SharesBefore)
                 expect(isFlashMigrate).to.be.false
                 expect(ethToGetFromV1.gt(ethNeededForV2)).to.be.false
                 const d1Shares = await crabMigration.sharesDeposited(d1.address)
                 const d2Shares = await crabMigration.sharesDeposited(d2.address)
                 expect(crabV2inMigrationBefore).to.be.equal(d1Shares.add(d2Shares)) // 100% withdraw
 
-                const oSqthPrice = await oracle.getTwap(wethOsqthPoolAddress, squeethAddress, wethAddress, 1, false)
+                const SBCHPrice = await oracle.getTwap(wethSBCHPoolAddress, squeethAddress, wethAddress, 1, false)
 
-                const numerator = ethToGetFromV1.sub(wmul(v1oSqthToPay, oSqthPrice).mul(101).div(100)) // 1% slippage
-                const denominator = one.sub(wdiv(oSqthPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
+                const numerator = ethToGetFromV1.sub(wmul(v1SBCHToPay, SBCHPrice).mul(101).div(100)) // 1% slippage
+                const denominator = one.sub(wdiv(SBCHPrice.mul(101).div(100), wdiv(collatV2, shortV2)))
                 const ethToFlashLoan = wdiv(numerator, denominator)
                 const expectedSqthFromV2 = wdiv(wmul(ethToFlashLoan, shortV2), collatV2)
-                const v1SqthToFlashWithdraw = v1oSqthToPay.sub(expectedSqthFromV2)
-                const maxEthToPay = wmul(v1SqthToFlashWithdraw, oSqthPrice).mul(1005).div(1000) // .5% slippage
+                const v1SqthToFlashWithdraw = v1SBCHToPay.sub(expectedSqthFromV2)
+                const maxEthToPay = wmul(v1SqthToFlashWithdraw, SBCHPrice).mul(1005).div(1000) // .5% slippage
                 const ethToGetFromWithdraw = wdiv(wmul(expectedSqthFromV2, collatV1), shortV1)
                 const ethToGetFromFlashWithdraw = wdiv(wmul(v1SqthToFlashWithdraw, collatV1), shortV1).sub(maxEthToPay)
                 const expectedEth = ethToGetFromFlashWithdraw.add(ethToGetFromWithdraw).sub(ethToFlashLoan)
-                const squeethBalance = await oSqth.balanceOf(crabMigration.address)
+                const squeethBalance = await SBCH.balanceOf(crabMigration.address)
 
                 const depositShare = wdiv(ethToFlashLoan, collatV2.add(ethToFlashLoan))
                 const expectedV2Shares = wdiv(wmul(depositShare, crabV2Supply), one.sub(depositShare))

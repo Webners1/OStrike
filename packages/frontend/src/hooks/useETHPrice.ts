@@ -32,7 +32,7 @@ export const useETHPrice = (refetchIntervalSec = 30) => {
 }
 
 /**
- * Get's the onchain ETH price
+ * Get's the onchain BCH price
  * @returns {BigNumber} price denominated in USD
  */
 export const useOnChainETHPrice = () => {
@@ -53,7 +53,7 @@ export const getETHPriceCoingecko = async (): Promise<BigNumber> => {
 }
 
 export const getHistoricEthPrice = async (dateString: string): Promise<BigNumber> => {
-  const pair = 'ETH/USD'
+  const pair = 'BCH/USD'
 
   const response = await fetch(
     `/api/twelvedata?path=time_series&start_date=${dateString}&end_date=${dateString}&symbol=${pair}&interval=1min`,
@@ -72,7 +72,7 @@ export const getHistoricEthPrices = async (timestamps: number[]) => {
   }
 
   const timestampStr = timestamps.join(',')
-  const pair = 'ETH/USD'
+  const pair = 'BCH/USD'
 
   const response = await (
     await fetch(

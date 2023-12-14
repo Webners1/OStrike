@@ -186,14 +186,14 @@ const PnlChart = ({ strategy, depositedAt }: { strategy: StrategyType; deposited
 
   const series = [
     {
-      name: isCrab ? 'Crab/USDC 🦀  % Return' : 'Bull/ETH 🧘🐂 % Return',
+      name: isCrab ? 'Crab/USDC 🦀  % Return' : 'Bull/BCH 🧘🐂 % Return',
       yAxis: 0,
       data: data || [],
       tooltip: {
         valueDecimals: 2,
         valueSuffix: '%',
       },
-      color: '#70E3F6',
+      color: '#0cbf94',
     },
   ]
 
