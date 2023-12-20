@@ -171,6 +171,7 @@ const tenderlyVerify = async ({ contractName, contractAddress }) => {
     "goerli",
     "mainnet",
     "rinkeby",
+    'bscTestnet',
     "ropsten",
     "matic",
     "mumbai",

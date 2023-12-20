@@ -16,6 +16,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const wPowerPerpArgs = ['Opyn Squeeth', 'oSQTH']
   await deploy("WPowerPerp", { from: deployer, log: true, args: wPowerPerpArgs, skipIfAlreadyDeployed: true });
   createArgumentFile('WPowerPerp', network.name, wPowerPerpArgs)
+  
 }
 
 export default func;

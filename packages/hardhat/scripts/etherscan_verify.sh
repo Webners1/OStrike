@@ -3,7 +3,7 @@
 
 #!/bin/bash
 
-etherscanKey=$KEY
+etherscanKey=WKC1YZXG13SBDIMCT9UBAU9SP87IGKPQYR
 
 echo "Using the current etherscan key: ${etherscanKey}" 
 

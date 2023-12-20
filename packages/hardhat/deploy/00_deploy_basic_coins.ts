@@ -43,9 +43,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     // Deploy USD
     const usdcAddress = networkNameToUSDC(network.name as string)
     if (usdcAddress === undefined) {
-      await deploy("MockErc20", { from: deployer, args: ["USDC", "USDC", 6], skipIfAlreadyDeployed: true });
-      const usdc = await ethers.getContract("MockErc20", deployer);
-      console.log(`USDC Deployed at ${usdc.address} 🍇`)
+      await deploy("MockErc20", { from: deployer, args: ["USDT", "USDT", 18], skipIfAlreadyDeployed: true });
+      createArgumentFile('MockErc20', network.name,[])
+      // console.log(`USDC Deployed at ${usdc.address} 🍇`)
     } else {
       console.log(`Using USDC at ${usdcAddress}`)
     }

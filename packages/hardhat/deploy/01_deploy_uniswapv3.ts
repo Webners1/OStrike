@@ -42,7 +42,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const weth9 = await getWETH(ethers, deployer, network.name)
 
   // Deploy Uniswap Factory
-  await deploy("UniswapV3Factory", {
+  const uniswapFactory = await deploy("UniswapV3Factory", {
     from: deployer,
     log: true,
     contract: {
@@ -51,7 +51,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     }
   });
   console.log(`UniswapV3Factory Deployed 🍹`)
-  const uniswapFactory = await ethers.getContract("UniswapV3Factory", deployer);
 
   await deploy("SwapRouter", {
     from: deployer,

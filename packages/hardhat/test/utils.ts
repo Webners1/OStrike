@@ -1,7 +1,7 @@
 import { BigNumber, ContractTransaction } from "ethers";
 import { BigNumber as BigNumberJs } from "bignumber.js";
 import { ethers } from "hardhat";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
+// import { any } from "@nomiclabs/hardhat-ethers/dist/src/signer-with-address";
 
 export const one = BigNumber.from(10).pow(18);
 export const oracleScaleFactor = BigNumber.from(10).pow(4);
@@ -41,7 +41,7 @@ export const wdiv = (x: BigNumber, y: BigNumber): BigNumber => {
     return z;
 };
 
-export const signTypedData = async (signer: SignerWithAddress, domainData: any, type: any, data: any) => {
+export const signTypedData = async (signer: any, domainData: any, type: any, data: any) => {
     const signature2 = await signer._signTypedData(domainData, type, data);
     const { r: r1, s: s1, v: v1 } = ethers.utils.splitSignature(signature2);
     return {

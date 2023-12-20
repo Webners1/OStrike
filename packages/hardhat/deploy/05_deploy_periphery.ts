@@ -7,7 +7,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
     
-  const controller = await ethers.getContract("Controller", deployer);
+  const controller = await ethers.getContractAt("Controller", "0xC1f463ab045ce3c68513744e2641158d829a1dFA");
   const weth = await getWETH(ethers, deployer, network.name)
   const { swapRouter } = await getUniswapDeployments(ethers, deployer, network.name)
 

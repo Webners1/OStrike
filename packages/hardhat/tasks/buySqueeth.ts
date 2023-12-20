@@ -14,7 +14,7 @@ task("buySqueeth", "Buy Squeeth from the pool")
   
   const { swapRouter } = await getUniswapDeployments(ethers, deployer, network.name);
 
-  const squeeth = await ethers.getContract("WPowerPerp", deployer);
+  const squeeth = await ethers.getContractAt("WPowerPerp", deployer);
   const weth = await getWETH(ethers, deployer, network.name)
 
   const inputWETHAmount = ethers.utils.parseEther(inputAmount) 
@@ -52,7 +52,7 @@ task("buySqueeth", "Buy Squeeth from the pool")
 
   const tx = await swapRouter.exactInputSingle(exactInputParam)
   await tx.wait()
-
+//@ts-ignore
   const squeethBalanceAfter = await squeeth.balanceOf(deployer)
   const wethBalanceAfter = await weth.balanceOf(deployer)
 

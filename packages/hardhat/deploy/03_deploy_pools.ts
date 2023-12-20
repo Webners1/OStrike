@@ -18,7 +18,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const usdc = await getUSDC(ethers, deployer, network.name);  
 
   // Create ETH/SQUEETH Pool with positionManager
-  const squeeth = await ethers.getContract("WPowerPerp", deployer);
+
+  //@ts-ignore
+
+  const squeeth = await ethers.getContractAt("WPowerPerp", "0xB58c687d4645FfC502036c13253373AA1548Fb00");
 
   // update this number to initial price we want to start the pool with.
 

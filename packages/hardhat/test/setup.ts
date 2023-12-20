@@ -40,19 +40,22 @@ export const deployUniswapV3 = async(weth: Contract) => {
   const accounts = await ethers.getSigners();
   
   // Deploy UniswapV3Factory
+//@ts-ignore
   const UniswapV3FactoryFactory = new ethers.ContractFactory(FACTORY_ABI, FACTORY_BYTECODE, accounts[0]);
   const uniswapFactory = await UniswapV3FactoryFactory.deploy();
 
   // Deploy UniswapV3SwapRouter
+//@ts-ignore
   const SwapRouterFactory = new ethers.ContractFactory(SWAP_ROUTER_ABI, SWAP_ROUTER_BYTECODE, accounts[0]);
   const swapRouter = await SwapRouterFactory.deploy(uniswapFactory.address, weth.address);
 
   // tokenDescriptor is only used to query tokenURI() on NFT. Don't need that in our deployment
   const tokenDescriptorAddress = ethers.constants.AddressZero
   // Deploy NonfungibleTokenManager
+//@ts-ignore
   const positionManagerFactory = new ethers.ContractFactory(POSITION_MANAGER_ABI, POSITION_MANAGER_BYTECODE, accounts[0]);
   const positionManager = await positionManagerFactory.deploy(uniswapFactory.address, weth.address, tokenDescriptorAddress);
-
+//@ts-ignore
   const quoterFactory = new ethers.ContractFactory(QUOTER_ABI, QUOTER_BYTECODE, accounts[0]);
   const quoter = await quoterFactory.deploy(uniswapFactory.address, weth.address);
 
@@ -76,7 +79,7 @@ export const createUniPool = async(
   tokenB: Contract,
   positionManager: Contract,
   univ3Factory: Contract,
-  feeTier = 3000 // default fee = 0.3%
+  feeTier = 10000 // default fee = 0.3%
 ): Promise<Contract> => {
   const isTokenAToken0 = parseInt(tokenA.address, 16) < parseInt(tokenB.address, 16)
 

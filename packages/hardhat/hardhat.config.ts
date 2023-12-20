@@ -107,6 +107,10 @@ const config: HardhatUserConfig = {
       url: `https://mainnet.infura.io/v3/${InfuraKey}`, // <---- YOUR INFURA ID! (or it won't work)
       accounts,
     },
+    bscTestnet: {
+      url: `https://bsc-testnet.publicnode.com`, // <---- YOUR INFURA ID! (or it won't work)
+      accounts,
+    },
     ropsten: {
       url: `https://ropsten.infura.io/v3/${InfuraKey}`, // <---- YOUR INFURA ID! (or it won't work)
       accounts,
@@ -208,6 +212,7 @@ const config: HardhatUserConfig = {
       }
     }
   },
+  //@ts-ignore
   ovm: {
     solcVersion: "0.7.6",
   },
@@ -227,7 +232,7 @@ const config: HardhatUserConfig = {
     enabled: process.env.REPORT_GAS === "true",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_KEY
+    apiKey: "WKC1YZXG13SBDIMCT9UBAU9SP87IGKPQYR"
   }
 };
 
